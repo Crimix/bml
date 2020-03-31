@@ -182,6 +182,26 @@ artifacts {
     archives sourceJar
 }
 
+curseforge {
+    apiKey = priv.apiKey
+    project {
+        addArtifact (sourceJar)
+        id = '371791'
+        changelogType = 'markdown'
+        changelog = file('changelog.txt')
+        releaseType = 'release'
+        addGameVersion 'Forge'
+        addGameVersion 'Java 8'
+        addGameVersion '1.15.2'
+    }
+}
+
+task clearChangelog() {
+    doLast{
+        clearFile(file('changelog.txt'))
+    }
+}
+
 def clearFile(File f) {
     f.withWriter  {
     	writer -> writer.write('')
