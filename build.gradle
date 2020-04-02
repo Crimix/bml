@@ -22,6 +22,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: "com.wynprice.cursemaven"
+apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 
 ext.priv = parseConfig(file('private.properties'))
@@ -213,5 +214,24 @@ def parseConfig(File config) {
         def prop = new Properties()
         prop.load(it)
         return (new ConfigSlurper().parse(prop))
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/crimix/bml")
+            credentials {
+                username = priv.githubUser
+                password = priv.githubToken
+            }
+        }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+            artifact sourceJar
+        }
     }
 }
