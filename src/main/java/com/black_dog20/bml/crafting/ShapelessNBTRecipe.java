@@ -12,6 +12,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 
+import java.util.function.Supplier;
+
 /**
  * Special class for shapeless recipes using NBT data.
  *
@@ -19,7 +21,7 @@ import net.minecraftforge.common.crafting.CraftingHelper;
  */
 public class ShapelessNBTRecipe extends ShapelessRecipe {
 
-    private ShapelessNBTRecipe(final ResourceLocation id, final String group, final ItemStack recipeOutput, final NonNullList<Ingredient> recipeItems) {
+    public ShapelessNBTRecipe(final ResourceLocation id, final String group, final ItemStack recipeOutput, final NonNullList<Ingredient> recipeItems) {
         super(id, group, recipeOutput, recipeItems);
     }
 
@@ -31,14 +33,27 @@ public class ShapelessNBTRecipe extends ShapelessRecipe {
         return BmlCrafting.SHAPELESS_NBT.get();
     }
 
+    /**
+     * When ever you are extending this recipe and implementing new logic, remember to change this factory.
+     */
+    public static Supplier<Serializer> factory() {
+        return () -> new Serializer(ShapelessNBTRecipe::new);
+    }
+
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapelessRecipe> {
+
+        private final ShapelessNBTRecipeConsumer consumer;
+
+        public Serializer(ShapelessNBTRecipeConsumer consumer) {
+            this.consumer = consumer;
+        }
 
         public ShapelessRecipe read(ResourceLocation recipeId, JsonObject json) {
             final String group = JSONUtils.getString(json, "group", "");
             final NonNullList<Ingredient> ingredients = RecipeUtil.parseShapeless(json);
             final ItemStack result = CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
 
-            return new ShapelessNBTRecipe(recipeId, group, result, ingredients);
+            return consumer.create(recipeId, group, result, ingredients);
 
         }
 
@@ -52,7 +67,7 @@ public class ShapelessNBTRecipe extends ShapelessRecipe {
             }
 
             final ItemStack result = buffer.readItemStack();
-            return new ShapelessNBTRecipe(recipeId, group, result, ingredients);
+            return consumer.create(recipeId, group, result, ingredients);
         }
 
         public void write(PacketBuffer buffer, ShapelessRecipe recipe) {

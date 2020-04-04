@@ -15,8 +15,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class BmlCrafting {
     public static final DeferredRegister<IRecipeSerializer<?>> RECIPE_SERIALIZERS = new DeferredRegister<>(ForgeRegistries.RECIPE_SERIALIZERS, Bml.MOD_ID);
 
-    public static final RegistryObject<IRecipeSerializer<?>> SHAPED_NBT = RECIPE_SERIALIZERS.register("shaped_nbt", ShapedNBTRecipe.Serializer::new);
-    public static final RegistryObject<IRecipeSerializer<?>> SHAPELESS_NBT = RECIPE_SERIALIZERS.register("shapeless_nbt", ShapelessNBTRecipe.Serializer::new);
+    public static final RegistryObject<IRecipeSerializer<?>> SHAPED_NBT = RECIPE_SERIALIZERS.register("shaped_nbt", ShapedNBTRecipe.factory());
+    public static final RegistryObject<IRecipeSerializer<?>> SHAPELESS_NBT = RECIPE_SERIALIZERS.register("shapeless_nbt", ShapelessNBTRecipe.factory());
 
     public static void registerRecipeSerialziers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
         CraftingHelper.register(new ResourceLocation(Bml.MOD_ID, "nbt"), IngredientNBT.Serializer.INSTANCE);

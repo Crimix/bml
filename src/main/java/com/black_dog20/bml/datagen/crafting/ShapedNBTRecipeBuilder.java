@@ -41,21 +41,40 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
     private static final Field KEY = ObfuscationReflectionHelper.findField(ShapedRecipeBuilder.class, "field_200478_e" /* key */);
 
     private final ItemStack result;
+    private final IRecipeSerializer<?> serializer;
     private String itemGroup;
 
     private ShapedNBTRecipeBuilder(final ItemStack result) {
         super(result.getItem(), result.getCount());
         this.result = result;
+        this.serializer = BmlCrafting.SHAPED_NBT.get();
+    }
+
+    private ShapedNBTRecipeBuilder(final ItemStack result, final IRecipeSerializer<?> serializer) {
+        super(result.getItem(), result.getCount());
+        this.result = result;
+        this.serializer = serializer;
     }
 
     /**
      * Factory for recipe builder.
      *
-     * @param result The end result of the recipe with its NBT data.
+     * @param result the end result of the recipe with its NBT data.
      * @return ShapedNBTRecipeBuilder.
      */
     public static ShapedNBTRecipeBuilder shapedNBTRecipe(final ItemStack result) {
         return new ShapedNBTRecipeBuilder(result);
+    }
+
+    /**
+     * Factory for recipe builder.
+     *
+     * @param serializer the custom serializer to use.
+     * @param result     the end result of the recipe with its NBT data.
+     * @return ShapedNBTRecipeBuilder.
+     */
+    public static ShapedNBTRecipeBuilder customShapedNBTRecipe(IRecipeSerializer<?> serializer, final ItemStack result) {
+        return new ShapedNBTRecipeBuilder(result, serializer);
     }
 
     /**
@@ -201,7 +220,7 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
 
             final ResourceLocation advancementID = new ResourceLocation(id.getNamespace(), "recipes/" + itemGroupName + "/" + id.getPath());
 
-            consumer.accept(new Result(id, result, group, pattern, key, advancementBuilder, advancementID));
+            consumer.accept(new Result(id, result, group, pattern, key, advancementBuilder, advancementID, serializer));
         } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to build Shaped NBT Recipe " + id, e);
         }
@@ -212,15 +231,17 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      */
     public class Result extends ShapedRecipeBuilder.Result {
         private final CompoundNBT resultNBT;
+        private final IRecipeSerializer<?> serializer;
 
-        private Result(final ResourceLocation id, final ItemStack result, final String group, final List<String> pattern, final Map<Character, Ingredient> key, final Advancement.Builder advancementBuilder, final ResourceLocation advancementID) {
+        private Result(final ResourceLocation id, final ItemStack result, final String group, final List<String> pattern, final Map<Character, Ingredient> key, final Advancement.Builder advancementBuilder, final ResourceLocation advancementID, final IRecipeSerializer<?> serializer) {
             super(id, result.getItem(), result.getCount(), group, pattern, key, advancementBuilder, advancementID);
             resultNBT = result.getTag();
+            this.serializer = serializer;
         }
 
         @Override
         public IRecipeSerializer<?> getSerializer() {
-            return BmlCrafting.SHAPED_NBT.get();
+            return serializer;
         }
 
         @Override

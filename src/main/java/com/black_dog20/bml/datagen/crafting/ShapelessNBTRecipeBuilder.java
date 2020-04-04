@@ -34,11 +34,19 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
     private static final Field INGREDIENTS = ObfuscationReflectionHelper.findField(ShapelessRecipeBuilder.class, "field_200496_d" /* ingredients */);
 
     private final ItemStack result;
+    private final IRecipeSerializer<?> serializer;
     private String itemGroup;
 
     private ShapelessNBTRecipeBuilder(final ItemStack result) {
         super(result.getItem(), result.getCount());
         this.result = result;
+        this.serializer = BmlCrafting.SHAPELESS_NBT.get();
+    }
+
+    private ShapelessNBTRecipeBuilder(final ItemStack result, final IRecipeSerializer<?> serializer) {
+        super(result.getItem(), result.getCount());
+        this.result = result;
+        this.serializer = serializer;
     }
 
     /**
@@ -49,6 +57,17 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
      */
     public static ShapelessNBTRecipeBuilder shapelessNBTRecipe(final ItemStack result) {
         return new ShapelessNBTRecipeBuilder(result);
+    }
+
+    /**
+     * Factory for recipe builder.
+     *
+     * @param serializer the custom serializer to use.
+     * @param result     the end result of the recipe with its NBT data.
+     * @return ShapelessNBTRecipeBuilder.
+     */
+    public static ShapelessNBTRecipeBuilder customShapelessNBTRecipe(final ItemStack result, final IRecipeSerializer<?> serializer) {
+        return new ShapelessNBTRecipeBuilder(result, serializer);
     }
 
     /**
@@ -202,7 +221,7 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
 
             final ResourceLocation advancementID = new ResourceLocation(id.getNamespace(), "recipes/" + itemGroupName + "/" + id.getPath());
 
-            consumer.accept(new Result(id, result, group, ingredients, advancementBuilder, advancementID));
+            consumer.accept(new Result(id, result, group, ingredients, advancementBuilder, advancementID, serializer));
         } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to build Shapeless NBT Recipe " + id, e);
         }
@@ -213,15 +232,17 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
      */
     public class Result extends ShapelessRecipeBuilder.Result {
         private final CompoundNBT resultNBT;
+        private final IRecipeSerializer<?> serializer;
 
-        private Result(final ResourceLocation id, final ItemStack result, final String group, final List<Ingredient> ingredients, final Advancement.Builder advancementBuilder, final ResourceLocation advancementID) {
+        private Result(final ResourceLocation id, final ItemStack result, final String group, final List<Ingredient> ingredients, final Advancement.Builder advancementBuilder, final ResourceLocation advancementID, final IRecipeSerializer<?> serializer) {
             super(id, result.getItem(), result.getCount(), group, ingredients, advancementBuilder, advancementID);
             resultNBT = result.getTag();
+            this.serializer = serializer;
         }
 
         @Override
         public IRecipeSerializer<?> getSerializer() {
-            return BmlCrafting.SHAPELESS_NBT.get();
+            return serializer;
         }
 
         @Override

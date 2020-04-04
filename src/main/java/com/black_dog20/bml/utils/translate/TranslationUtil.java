@@ -21,6 +21,17 @@ public class TranslationUtil {
     }
 
     /**
+     * Translates a key to a string.
+     *
+     * @param translation an enum containing the key and modid.
+     * @param color       the color for the text.
+     * @return the formatted translated text as a string.
+     */
+    public static String translateToString(ITranslation translation, TextFormatting color) {
+        return translate(translation, color).getFormattedText();
+    }
+
+    /**
      * Translates a key to a string and formats it with the objects.
      *
      * @param translation an enum containing the key and modid.
@@ -60,9 +71,8 @@ public class TranslationUtil {
      * @return the formatted translated text.
      */
     public static TranslationTextComponent translate(ITranslation translation, TextFormatting color) {
-        TranslationTextComponent text = new TranslationTextComponent(String.format("%s.%s", translation.getModId(), translation.getKey()));
-        text.getStyle().setColor(color);
-        return text;
+        return (TranslationTextComponent) new TranslationTextComponent(String.format("%s.%s", translation.getModId(), translation.getKey()))
+                .applyTextStyle(color);
     }
 
     /**
@@ -74,8 +84,7 @@ public class TranslationUtil {
      * @return the formatted translated text.
      */
     public static TranslationTextComponent translate(ITranslation translation, TextFormatting color, Object... objs) {
-        TranslationTextComponent text = new TranslationTextComponent(String.format("%s.%s", translation.getModId(), translation.getKey()), objs);
-        text.getStyle().setColor(color);
-        return text;
+        return (TranslationTextComponent) new TranslationTextComponent(String.format("%s.%s", translation.getModId(), translation.getKey()), objs)
+                .applyTextStyle(color);
     }
 }

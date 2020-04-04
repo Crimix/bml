@@ -1,4 +1,4 @@
-package com.black_dog20.bml.utils.item;
+package com.black_dog20.bml.utils.nbt;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

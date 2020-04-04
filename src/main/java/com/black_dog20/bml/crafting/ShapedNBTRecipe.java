@@ -12,13 +12,16 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 
+import java.util.function.Supplier;
+
 /**
  * Special class for shaped recipes using NBT data.
  *
  * @author black_dog20
  */
 public class ShapedNBTRecipe extends ShapedRecipe {
-    private ShapedNBTRecipe(final ResourceLocation id, final String group, final int recipeWidth, final int recipeHeight, final NonNullList<Ingredient> ingredients, final ItemStack recipeOutput) {
+
+    public ShapedNBTRecipe(final ResourceLocation id, final String group, final int recipeWidth, final int recipeHeight, final NonNullList<Ingredient> ingredients, final ItemStack recipeOutput) {
         super(id, group, recipeWidth, recipeHeight, ingredients, recipeOutput);
     }
 
@@ -30,14 +33,28 @@ public class ShapedNBTRecipe extends ShapedRecipe {
         return BmlCrafting.SHAPED_NBT.get();
     }
 
+
+    /**
+     * When ever you are extending this recipe and implementing new logic, remember to change this factory.
+     */
+    public static Supplier<Serializer> factory() {
+        return () -> new Serializer(ShapedNBTRecipe::new);
+    }
+
     public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapedRecipe> {
+
+        private final ShapedNBTRecipeConsumer consumer;
+
+        public Serializer(ShapedNBTRecipeConsumer consumer) {
+            this.consumer = consumer;
+        }
 
         public ShapedRecipe read(ResourceLocation recipeId, JsonObject json) {
             final String group = JSONUtils.getString(json, "group", "");
             final RecipeUtil.ShapedPrimer primer = RecipeUtil.parseShaped(json);
             final ItemStack result = CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
 
-            return new ShapedNBTRecipe(recipeId, group, primer.getRecipeWidth(), primer.getRecipeHeight(), primer.getIngredients(), result);
+            return consumer.create(recipeId, group, primer.getRecipeWidth(), primer.getRecipeHeight(), primer.getIngredients(), result);
 
         }
 
@@ -52,7 +69,7 @@ public class ShapedNBTRecipe extends ShapedRecipe {
             }
 
             ItemStack itemstack = buffer.readItemStack();
-            return new ShapedNBTRecipe(recipeId, s, i, j, nonnulllist, itemstack);
+            return consumer.create(recipeId, s, i, j, nonnulllist, itemstack);
         }
 
         public void write(PacketBuffer buffer, ShapedRecipe recipe) {
