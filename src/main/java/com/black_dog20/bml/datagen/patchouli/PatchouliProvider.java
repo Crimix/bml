@@ -5,18 +5,26 @@ import com.black_dog20.bml.datagen.patchouli.objects.Category;
 import com.black_dog20.bml.datagen.patchouli.objects.Entry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
+import net.minecraft.item.Item;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.commons.lang3.text.translate.JavaUnicodeEscaper;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -33,6 +41,7 @@ public abstract class PatchouliProvider implements IDataProvider {
     private Book book;
     private List<Entry> entries = new ArrayList<>();
     private List<Category> categories = new ArrayList<>();
+    private JsonObject languageFile;
 
     /**
      * The constructor for the provider.
@@ -51,6 +60,7 @@ public abstract class PatchouliProvider implements IDataProvider {
 
     @Override
     public void act(DirectoryCache cache) throws IOException {
+        languageFile = getLangFile(cache, locale);
         add();
         Path bookPath = this.gen.getOutputFolder().resolve("data/" + modid + "/patchouli_books/" + bookname);
         Path localePath = this.gen.getOutputFolder().resolve(bookPath + "/" + locale);
@@ -125,5 +135,37 @@ public abstract class PatchouliProvider implements IDataProvider {
 
     private static String sanitize(String s) {
         return s.toLowerCase().replace(' ', '_');
+    }
+
+    private static JsonObject getLangFile(DirectoryCache cache, String locale) {
+        Gson gson = new Gson();
+        try {
+            Field field = ObfuscationReflectionHelper.findField(DirectoryCache.class, "field_208329_f");
+            field.setAccessible(true);
+            Map<Path, String> createdFiles = (Map<Path, String>) field.get(cache);
+            for (Path path : createdFiles.keySet()) {
+                if (path.endsWith(locale + ".json")) {
+                    BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()));
+                    return gson.fromJson(bufferedReader, JsonObject.class);
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    protected String getBlockName(Block block) {
+        if (languageFile.has(block.getTranslationKey())) {
+            return languageFile.get(block.getTranslationKey()).getAsString();
+        }
+        throw new IllegalStateException(block.getTranslationKey() + " was not found in lang file");
+    }
+
+    protected String getItemName(Item item) {
+        if (languageFile.has(item.getTranslationKey())) {
+            return languageFile.get(item.getTranslationKey()).getAsString();
+        }
+        throw new IllegalStateException(item.getTranslationKey() + " was not found in lang file");
     }
 }

@@ -59,11 +59,19 @@ public class TextFormatting {
     }
 
     public static Format entryLink(String entryId, String text) {
-        return new Format("$(l:" + entryId + ")", text, "$(/l)");
+        return new Format("$(l:" + sanitize(entryId) + ")", text, "$(/l)");
+    }
+
+    public static Format entryLink(String entryId, Format text) {
+        return new Format("$(l:" + sanitize(entryId) + ")", text.toString(), "$(/l)");
     }
 
     public static Format entryLinkWithAnchor(String entryId, String anchor, String text) {
-        return new Format("$(l:" + entryId + "#" + anchor + ")", text, "$(/l)");
+        return new Format("$(l:" + sanitize(entryId) + "#" + anchor + ")", text, "$(/l)");
+    }
+
+    public static Format entryLinkWithAnchor(String entryId, String anchor, Format text) {
+        return new Format("$(l:" + sanitize(entryId) + "#" + anchor + ")", text.toString(), "$(/l)");
     }
 
     public static Format webLink(String url, String text) {
@@ -156,4 +164,7 @@ public class TextFormatting {
         }
     }
 
+    private static String sanitize(String s) {
+        return s.toLowerCase().replace(' ', '_');
+    }
 }
