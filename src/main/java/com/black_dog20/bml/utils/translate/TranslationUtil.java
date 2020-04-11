@@ -4,7 +4,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
 /**
- * Utility class for use in translating tool tips.
+ * Utility class for use in translations.
  *
  * @author black_dog20
  */

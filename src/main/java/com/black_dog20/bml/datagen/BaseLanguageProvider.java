@@ -45,6 +45,6 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
         if (!modid.equals(translation.getModId())) {
             throw new IllegalStateException("Mod id for translation is not the same as for the generator");
         }
-        add(String.format("%s.%s", translation.getModId(), translation.getKey()), text);
+        add(translation.getDescription(), text);
     }
 }

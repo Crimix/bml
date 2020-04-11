@@ -23,7 +23,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: "com.wynprice.cursemaven"
 apply plugin: 'maven-publish'
-apply plugin: 'eclipse'
+apply plugin: 'idea'
 
 ext.priv = parseConfig(file('private.properties'))
 
@@ -56,7 +56,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                bml {
+                blackdogsmoddinglibrary {
                     source sourceSets.main
                 }
             }
@@ -72,7 +72,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                bml {
+                blackdogsmoddinglibrary {
                     source sourceSets.main
                 }
             }
@@ -87,10 +87,10 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'bml', '--all', '--output', file("src/main/generated_resources"), '--existing', file('src/main/resources/')
+            args '--mod', 'blackdogsmoddinglibrary', '--all', '--output', file("src/main/generated_resources"), '--existing', file('src/main/resources/')
 
             mods {
-                bml {
+                blackdogsmoddinglibrary {
                     source sourceSets.main
                 }
             }
@@ -115,14 +115,6 @@ repositories {
 	name = "forge"
 	url = "https://files.minecraftforge.net/maven/"
   }
-  maven {
-  	name = "theillusivec4"
-    url = "https://maven.theillusivec4.top/"
-  }
-  maven {
-	name = "Curse"
-	url = "https://minecraft.curseforge.com/api/maven/"
-  }  
 }
 
 dependencies {

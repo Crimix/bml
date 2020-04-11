@@ -10,4 +10,8 @@ public interface ITranslation {
     String getKey();
 
     String getModId();
+
+    default String getDescription() {
+        return String.format("%s.%s", getModId(), getKey());
+    }
 }
