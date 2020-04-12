@@ -92,7 +92,11 @@ public abstract class AbstractRadialMenu extends Screen {
 
     public AbstractRadialMenu(ITextComponent title, List<IRadialItem> items) {
         super(title);
-        this.items = items;
+        if (items.size() == 1 && items.get(0) instanceof IRadialCategory) {
+            this.items = ((IRadialCategory) items.get(0)).getItems();
+        } else {
+            this.items = items;
+        }
         maxPages = (int) Math.ceil(items.size() / (double) getMaxItemsPerPage());
         currentPage = 1;
         this.visibleItems = getItemForPage(currentPage);
@@ -178,10 +182,11 @@ public abstract class AbstractRadialMenu extends Screen {
     /**
      * Override to change the footer.
      *
-     * @param width the width.
-     * @param y     the y point to draw from.
+     * @param width     the width.
+     * @param y         the y point to draw from.
+     * @param radiusOut the outer radius.
      */
-    public void drawFooter(float width, float y) {
+    public void drawFooter(float width, float y, float radiusOut) {
         String pageString = InternalTranslations.translateToString(PAGE_FOOTER, currentPage, maxPages);
         font.drawStringWithShadow(pageString, (width - font.getStringWidth(pageString)) / 2.0f, y, 0xFFFFFFFF);
     }
@@ -189,16 +194,19 @@ public abstract class AbstractRadialMenu extends Screen {
     /**
      * Override to draw a header above the radial.
      *
-     * @param width the width.
-     * @param y     the y point to draw from.
+     * @param width     the width.
+     * @param y         the y point to draw from.
+     * @param radiusOut the outer radius.
      */
-    public void drawHeader(float width, float y) {
+    public void drawHeader(float width, float y, float radiusOut) {
     }
 
     /**
      * Override to draw extras on the screen.
+     *
+     * @param radiusOut the outer radius.
      */
-    public void drawExtras() {
+    public void drawExtras(float radiusOut) {
 
     }
 
@@ -380,9 +388,9 @@ public abstract class AbstractRadialMenu extends Screen {
             }
 
             drawTooltips(mouseX, mouseY);
-            drawFooter(width, height / 2.0f + radiusOut * 1.05f);
-            drawHeader(width, height / 2.0f - radiusOut * 1.05f - font.FONT_HEIGHT);
-            drawExtras();
+            drawFooter(width, height / 2.0f + radiusOut * 1.05f, radiusOut);
+            drawHeader(width, height / 2.0f - radiusOut * 1.05f - font.FONT_HEIGHT, radiusOut);
+            drawExtras(radiusOut);
 
         }
     }

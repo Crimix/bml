@@ -17,6 +17,13 @@ public interface IRadialCategory extends IRadialItem {
     List<IRadialItem> getItems();
 
     /**
+     * Adds an item to this category;
+     *
+     * @param item the radial item to add.
+     */
+    void addItem(IRadialItem item);
+
+    /**
      * If this category is empty should the radial menu close.
      *
      * @return true if the radial menu should close.

@@ -2,6 +2,7 @@ package com.black_dog20.bml.client.radial.items;
 
 import com.black_dog20.bml.client.radial.api.DrawingContext;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
@@ -31,15 +32,15 @@ public class TextRadialItem implements IRadialItem {
      */
     @Override
     public void draw(DrawingContext context) {
-        String unformattedString = "[" + text.getUnformattedComponentText() + "]";
-        String textString = "[" + text.getFormattedText() + "]";
+        String textString = text.getFormattedText();
+        String unformattedString = StringUtils.stripControlCodes(textString);
         float y = context.y - context.fontRenderer.FONT_HEIGHT / 2.0f;
         // Split on space
         String[] unformattedStrings = unformattedString.split(" ");
         String[] strings = textString.split(" ");
         // No spaces, if too long hard split
         if (unformattedStrings.length == 1) {
-            if (unformattedStrings[0].length() > 8) {
+            if (unformattedStrings[0].length() > 16) {
                 int l = context.fontRenderer.getStringWidth(strings[0]);
                 strings = (String[]) context.fontRenderer.listFormattedStringToWidth(strings[0], l / 2).toArray();
             }
