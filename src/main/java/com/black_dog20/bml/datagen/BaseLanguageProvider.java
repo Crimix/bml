@@ -2,6 +2,8 @@ package com.black_dog20.bml.datagen;
 
 import com.black_dog20.bml.utils.translate.ITranslation;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.data.LanguageProvider;
 
 /**
@@ -46,5 +48,30 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
             throw new IllegalStateException("Mod id for translation is not the same as for the generator");
         }
         add(translation.getDescription(), text);
+    }
+
+    /**
+     * Adds a prefixed text in the following format: modid.key:text
+     *
+     * @param key   the key.
+     * @param text  the text.
+     * @param color the color.
+     */
+    protected void addPrefixed(String key, String text, TextFormatting color) {
+        add(String.format("%s.%s", modid, key), new StringTextComponent(text).applyTextStyle(color).getFormattedText());
+    }
+
+    /**
+     * Adds a prefixed text in the following format: modid.key:text
+     *
+     * @param translation the key.
+     * @param text        the text.
+     * @param color       the color.
+     */
+    protected void addPrefixed(ITranslation translation, String text, TextFormatting color) {
+        if (!modid.equals(translation.getModId())) {
+            throw new IllegalStateException("Mod id for translation is not the same as for the generator");
+        }
+        add(translation.getDescription(), new StringTextComponent(text).applyTextStyle(color).getFormattedText());
     }
 }

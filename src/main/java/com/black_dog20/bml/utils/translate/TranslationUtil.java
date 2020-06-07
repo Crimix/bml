@@ -43,6 +43,18 @@ public class TranslationUtil {
     }
 
     /**
+     * Translates a key to a string and formats it with the objects.
+     *
+     * @param translation an enum containing the key and modid.
+     * @param color       the color for the text.
+     * @param objs        the objects.
+     * @return the formatted translated text as a string.
+     */
+    public static String translateToString(ITranslation translation, TextFormatting color, Object... objs) {
+        return translate(translation, color, objs).getFormattedText();
+    }
+
+    /**
      * Translates a key.
      *
      * @param translation an enum containing the key and modid.
