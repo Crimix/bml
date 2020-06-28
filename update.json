@@ -1,7 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/bml",
   "1.15.2": {
-    "1.0.10": "Changelog: https://github.com/Crimix/bml/blob/master/CHANGELOG.md"
+    "1.0.10": "https://github.com/Crimix/bml/blob/master/CHANGELOG.md"
   },
   "promos": {
     "1.15.2-latest": "1.0.10",
