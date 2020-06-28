@@ -1,3 +1,6 @@
 {
-  "blackdogsmoddinglibrary.radial.page_footer": "Page %d of %d"
+  "blackdogsmoddinglibrary.dialogs.confirm.title": "Confirm",
+  "blackdogsmoddinglibrary.radial.page_footer": "Page %d of %d",
+  "blackdogsmoddinglibrary.radial.right_click_for": "\u00A79Right click\u00A7r to %s",
+  "blackdogsmoddinglibrary.radial.right_click_for_options": "\u00A79Right click\u00A7r for options"
 }

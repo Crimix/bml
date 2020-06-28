@@ -1,6 +1,9 @@
 package com.black_dog20.bml.client.radial.items;
 
 import com.black_dog20.bml.client.radial.api.DrawingContext;
+import com.black_dog20.bml.client.radial.api.items.IRadialItem;
+import com.black_dog20.bml.internal.utils.InternalTranslations;
+import com.black_dog20.bml.utils.translate.TranslationUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
@@ -67,6 +70,14 @@ public class ItemRadialCategory extends TextRadialCategory {
     private List<String> getItemToolTip(ItemStack stack) {
         Minecraft minecraft = Minecraft.getInstance();
         List<ITextComponent> list = stack.getTooltip(minecraft.player, minecraft.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+        if (!getContextItems().isEmpty()) {
+            if (getContextItems().size() == 1 && skipMenuIfSingleContextItem()) {
+                IRadialItem item = getContextItems().get(0);
+                list.add(TranslationUtil.translate(InternalTranslations.Translations.RIGHT_CLICK_TO, item.getCenterText().getFormattedText()));
+            } else {
+                list.add(TranslationUtil.translate(InternalTranslations.Translations.RIGHT_CLICK_FOR_OPTIONS));
+            }
+        }
         return list.stream()
                 .map(ITextComponent::getFormattedText)
                 .collect(Collectors.toList());

@@ -5,6 +5,9 @@ import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.client.gui.GuiUtils;
+
+import java.util.List;
 
 /**
  * Radial item for a text item.
@@ -68,7 +71,8 @@ public class TextRadialItem implements IRadialItem {
      */
     @Override
     public void drawTooltips(DrawingContext context) {
-
+        List<String> tooltips = getTooltips();
+        GuiUtils.drawHoveringText(tooltips, (int) context.x, (int) context.y, context.width, context.height, -1, context.fontRenderer);
     }
 
     /**

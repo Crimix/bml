@@ -6,7 +6,11 @@ import com.black_dog20.bml.utils.translate.TranslationUtil;
 
 public class InternalTranslations extends TranslationUtil {
     public enum Translations implements ITranslation {
-        PAGE_FOOTER("radial.page_footer");
+        PAGE_FOOTER("radial.page_footer"),
+        RIGHT_CLICK_FOR_OPTIONS("radial.right_click_for_options"),
+        RIGHT_CLICK_TO("radial.right_click_for"),
+        CONFIRM("dialogs.confirm.title"),
+        ;
 
 
         Translations(String modId, String key) {

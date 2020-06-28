@@ -55,6 +55,8 @@ public class ArmorEventHandler {
 
     @SubscribeEvent
     public static void onTick(TickEvent.PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.START)
+            return;
         LazyOptional<IArmorInventoryCapability> capability = event.player.getCapability(ArmorInventoryCapability.CAP);
 
         capability.ifPresent(cap -> {

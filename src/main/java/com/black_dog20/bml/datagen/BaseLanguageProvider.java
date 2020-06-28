@@ -2,6 +2,7 @@ package com.black_dog20.bml.datagen;
 
 import com.black_dog20.bml.utils.translate.ITranslation;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -73,5 +74,21 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
             throw new IllegalStateException("Mod id for translation is not the same as for the generator");
         }
         add(translation.getDescription(), new StringTextComponent(text).applyTextStyle(color).getFormattedText());
+    }
+
+    /**
+     * Adds a prefixed text in the following format: modid.key:text
+     * Objects can either be Strings or TextFormatting, they are applied in order.
+     *
+     * @param text   the text.
+     * @param styles the styles to apply.
+     * @return a formatted string.
+     */
+    protected String style(String text, TextFormatting... styles) {
+        ITextComponent styledText = new StringTextComponent(text);
+
+        for (TextFormatting formatting : styles)
+            styledText.applyTextStyle(formatting);
+        return styledText.getFormattedText();
     }
 }

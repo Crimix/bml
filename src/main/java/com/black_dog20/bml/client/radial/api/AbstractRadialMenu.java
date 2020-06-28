@@ -264,7 +264,7 @@ public abstract class AbstractRadialMenu extends Screen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int state) {
-        processClick(true);
+        processClick(true, state);
         return super.mouseReleased(mouseX, mouseY, state);
     }
 
@@ -284,34 +284,54 @@ public abstract class AbstractRadialMenu extends Screen {
             return;
         }
         if (!isKeyDown()) {
-            processClick(false);
+            processClick(false, 0);
         }
     }
 
-    private void processClick(boolean triggeredByMouse) {
-        switch (state) {
-            case NORMAL:
-                if (getHoveredItem() != null) {
-                    if (getHoveredItem() instanceof IRadialCategory) {
-                        IRadialCategory category = (IRadialCategory) getHoveredItem();
+    private void processClick(boolean triggeredByMouse, int button) {
+        if (state == State.NORMAL) {
+            if (getHoveredItem() != null) {
+                if (getHoveredItem() instanceof IRadialCategory) {
+                    IRadialCategory category = (IRadialCategory) getHoveredItem();
+                    if (button == 1) {
+                        List<IRadialItem> items = category.getContextItems();
+                        if (!items.isEmpty()) {
+                            if (items.size() == 1 && category.skipMenuIfSingleContextItem()) {
+                                items.get(0).click();
+                                if (items.get(0).closeOnClick())
+                                    close();
+                            } else
+                                visibleItems = items;
+                        }
+                    } else {
                         List<IRadialItem> items = category.getItems();
                         if (items.isEmpty() && category.closeIfEmpty()) {
                             close();
                         } else {
                             visibleItems = items;
                         }
-                    } else {
-                        getHoveredItem().click();
-                        if (getHoveredItem().closeOnClick()) {
-                            close();
-                        }
                     }
                 } else {
-                    onClickOutside();
+                    IRadialItem item = getHoveredItem();
+                    if (button == 1) {
+                        List<IRadialItem> items = item.getContextItems();
+                        if (!items.isEmpty()) {
+                            if (items.size() == 1 && item.skipMenuIfSingleContextItem()) {
+                                items.get(0).click();
+                                if (items.get(0).closeOnClick())
+                                    close();
+                            } else
+                                visibleItems = items;
+                        }
+                    } else {
+                        item.click();
+                        if (item.closeOnClick())
+                            close();
+                    }
                 }
-                break;
-            default:
-                break;
+            } else {
+                onClickOutside();
+            }
         }
     }
 
