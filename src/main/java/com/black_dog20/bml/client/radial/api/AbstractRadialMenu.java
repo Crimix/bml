@@ -92,14 +92,7 @@ public abstract class AbstractRadialMenu extends Screen {
 
     public AbstractRadialMenu(ITextComponent title, List<IRadialItem> items) {
         super(title);
-        if (items.size() == 1 && items.get(0) instanceof IRadialCategory) {
-            this.items = ((IRadialCategory) items.get(0)).getItems();
-        } else {
-            this.items = items;
-        }
-        maxPages = (int) Math.ceil(items.size() / (double) getMaxItemsPerPage());
-        currentPage = 1;
-        this.visibleItems = getItemForPage(currentPage);
+        this.changeItems(items);
 
         Minecraft minecraft = Minecraft.getInstance();
         this.startAnimation = minecraft.world.getGameTime() + (double) minecraft.getRenderPartialTicks();
@@ -301,15 +294,15 @@ public abstract class AbstractRadialMenu extends Screen {
                                 if (items.get(0).closeOnClick())
                                     close();
                             } else
-                                visibleItems = items;
+                                changeItems(items);
                         }
                     } else {
                         List<IRadialItem> items = category.getItems();
-                        if (items.isEmpty() && category.closeIfEmpty()) {
+                        if (items.isEmpty() && category.closeIfEmpty())
                             close();
-                        } else {
-                            visibleItems = items;
-                        }
+                        else
+                            changeItems(items);
+
                     }
                 } else {
                     IRadialItem item = getHoveredItem();
@@ -321,7 +314,7 @@ public abstract class AbstractRadialMenu extends Screen {
                                 if (items.get(0).closeOnClick())
                                     close();
                             } else
-                                visibleItems = items;
+                                changeItems(items);
                         }
                     } else {
                         item.click();
@@ -624,5 +617,16 @@ public abstract class AbstractRadialMenu extends Screen {
             currentPage++;
             visibleItems = getItemForPage(currentPage);
         }
+    }
+
+    private void changeItems(List<IRadialItem> items) {
+        if (items.size() == 1 && items.get(0) instanceof IRadialCategory) {
+            this.items = ((IRadialCategory) items.get(0)).getItems();
+        } else {
+            this.items = items;
+        }
+        maxPages = (int) Math.ceil(items.size() / (double) getMaxItemsPerPage());
+        currentPage = 1;
+        this.visibleItems = getItemForPage(currentPage);
     }
 }

@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Well it was released before, but now it has enough features to support the new mods soon to be released.
 
 # Example
-## [MC-Verion, VERSION] - Date of release
+## [MC-VERSION, VERSION] - Date of release
 ### Added
 - 
 ### Changed

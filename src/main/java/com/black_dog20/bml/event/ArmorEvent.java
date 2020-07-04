@@ -5,6 +5,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.LogicalSide;
@@ -87,8 +88,11 @@ public class ArmorEvent extends Event {
 
         public LogicalSide side;
 
-        public Tick(PlayerEntity player, ItemStack armor) {
+        public TickEvent.Phase phase;
+
+        public Tick(TickEvent.Phase phase, PlayerEntity player, ItemStack armor) {
             super(player, armor);
+            this.phase = phase;
             this.side = player instanceof ServerPlayerEntity ? LogicalSide.SERVER : LogicalSide.CLIENT;
         }
     }

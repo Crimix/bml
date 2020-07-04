@@ -55,8 +55,6 @@ public class ArmorEventHandler {
 
     @SubscribeEvent
     public static void onTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.START)
-            return;
         LazyOptional<IArmorInventoryCapability> capability = event.player.getCapability(ArmorInventoryCapability.CAP);
 
         capability.ifPresent(cap -> {
@@ -77,7 +75,7 @@ public class ArmorEventHandler {
                     }
                 }
                 if (!curr.isEmpty())
-                    MinecraftForge.EVENT_BUS.post(new ArmorEvent.Tick(event.player, curr));
+                    MinecraftForge.EVENT_BUS.post(new ArmorEvent.Tick(event.phase, event.player, curr));
                 cap.setStackInSlot(i, curr.copy());
             }
         });
