@@ -14,13 +14,8 @@ public class TeleportDestination {
     private float yaw;
     private float pitch;
 
-    public TeleportDestination(DimensionType dimension, BlockPos pos, ServerPlayerEntity player) {
-        this.dimension = dimension.getRegistryName().toString();
-        this.x = pos.getX();
-        this.y = pos.getY();
-        this.z = pos.getZ();
-        this.yaw = player.rotationYaw;
-        this.pitch = player.rotationPitch;
+    public TeleportDestination(DimensionType dimension, ServerPlayerEntity player) {
+        this(dimension, player.getPosition(), player.rotationYaw, player.rotationPitch);
     }
 
     public TeleportDestination(DimensionType dimension, BlockPos pos, float yaw, float pitch) {

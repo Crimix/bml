@@ -523,12 +523,24 @@ public abstract class AbstractRadialMenu extends Screen {
     @SubscribeEvent
     public void onMouseScroll(GuiScreenEvent.MouseScrollEvent.Pre event) {
         if (Minecraft.getInstance().currentScreen instanceof AbstractRadialMenu) {
-            if (event.getScrollDelta() > 0) {
-                nexPage();
-            } else if (event.getScrollDelta() < 0) {
-                prevPage();
+            if (!isScrollInverted()) {
+                if (event.getScrollDelta() < 0) {
+                    nexPage();
+                } else if (event.getScrollDelta() > 0) {
+                    prevPage();
+                }
+            } else {
+                if (event.getScrollDelta() > 0) {
+                    nexPage();
+                } else if (event.getScrollDelta() < 0) {
+                    prevPage();
+                }
             }
         }
+    }
+
+    public boolean isScrollInverted() {
+        return false;
     }
 
     private void processMouse(int mouseX, int mouseY) {
