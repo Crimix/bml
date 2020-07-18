@@ -197,7 +197,11 @@ publishing {
     }
     publications {
         mavenJava(MavenPublication) {
+            version mc_version + '-' + version_major + '.' + version_minor + '.' + version_patch
             artifact jar
+        }
+        mavenJava(MavenPublication) {
+            version mc_version + '-' + version_major + '.' + version_minor + '.' + version_patch
             artifact sourceJar
         }
     }

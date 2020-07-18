@@ -1,6 +1,6 @@
 package com.black_dog20.bml.api;
 
-import com.black_dog20.bml.utils.nbt.NBTUtil;
+import com.black_dog20.bml.utils.item.NBTUtil;
 import net.minecraft.item.ItemStack;
 
 public interface ISoulbindable {
