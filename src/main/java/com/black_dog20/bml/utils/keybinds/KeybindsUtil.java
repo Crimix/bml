@@ -28,7 +28,14 @@ public class KeybindsUtil {
     public static boolean isKeyDown(KeyBinding keyBinding) {
         Minecraft minecraft = Minecraft.getInstance();
         int keycode = keyBinding.getKey().getKeyCode();
-        return InputMappings.isKeyDown(minecraft.getMainWindow().getHandle(), keycode);
+        if (keyBinding.isInvalid())
+            return false;
+
+        boolean keyIsDown = InputMappings.isKeyDown(minecraft.getMainWindow().getHandle(), keycode);
+        boolean conflictContextActive = keyBinding.getKeyConflictContext().isActive();
+        boolean keyModifierActivate = keyBinding.getKeyModifier().isActive(keyBinding.getKeyConflictContext());
+
+        return keyIsDown && conflictContextActive && keyModifierActivate;
     }
 
     /**
