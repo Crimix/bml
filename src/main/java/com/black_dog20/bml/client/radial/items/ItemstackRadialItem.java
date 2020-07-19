@@ -1,8 +1,9 @@
 package com.black_dog20.bml.client.radial.items;
 
-import com.black_dog20.bml.client.radial.api.DrawingContext;
+import com.black_dog20.bml.client.DrawingContext;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.internal.utils.InternalTranslations;
+import com.black_dog20.bml.utils.text.TextUtil;
 import com.black_dog20.bml.utils.translate.TranslationUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -14,7 +15,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Radial item for an itemstack.
@@ -60,26 +60,24 @@ public class ItemstackRadialItem extends TextRadialItem {
     public void drawTooltips(DrawingContext context) {
         if (stack.getCount() > 0) {
             GuiUtils.preItemToolTip(stack);
-            GuiUtils.drawHoveringText(stack, getItemToolTip(stack), (int) context.x, (int) context.y, (int) context.width, (int) context.height, -1, context.fontRenderer);
+            GuiUtils.drawHoveringText(stack, context.matrixStack, getItemToolTip(stack), (int) context.x, (int) context.y, (int) context.width, (int) context.height, -1, context.fontRenderer);
             GuiUtils.postItemToolTip();
         } else {
             super.drawTooltips(context);
         }
     }
 
-    private List<String> getItemToolTip(ItemStack stack) {
+    private List<ITextComponent> getItemToolTip(ItemStack stack) {
         Minecraft minecraft = Minecraft.getInstance();
         List<ITextComponent> list = stack.getTooltip(minecraft.player, minecraft.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
         if (!getContextItems().isEmpty()) {
             if (getContextItems().size() == 1 && skipMenuIfSingleContextItem()) {
                 IRadialItem item = getContextItems().get(0);
-                list.add(TranslationUtil.translate(InternalTranslations.Translations.RIGHT_CLICK_TO, item.getCenterText().getFormattedText()));
+                list.add(TranslationUtil.translate(InternalTranslations.Translations.RIGHT_CLICK_TO, TextUtil.getFormattedText(item.getCenterText()).toLowerCase()));
             } else {
                 list.add(TranslationUtil.translate(InternalTranslations.Translations.RIGHT_CLICK_FOR_OPTIONS));
             }
         }
-        return list.stream()
-                .map(ITextComponent::getFormattedText)
-                .collect(Collectors.toList());
+        return list;
     }
 }

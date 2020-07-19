@@ -2,9 +2,9 @@ package com.black_dog20.bml.utils.player;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.WorldInfo;
+import net.minecraft.world.storage.IWorldInfo;
 
 /**
  * Utility class for teleporting players.
@@ -40,8 +40,8 @@ public class TeleportationUtil {
      */
     public static boolean teleportPlayerToSpawn(ServerPlayerEntity player) {
         try {
-            ServerWorld world = player.server.getWorld(DimensionType.getById(0));
-            WorldInfo worldInfo = world.getWorldInfo();
+            ServerWorld world = player.server.getWorld(World.field_234918_g_);
+            IWorldInfo worldInfo = world.getWorldInfo();
             player.teleport(world, worldInfo.getSpawnX(), worldInfo.getSpawnY(), worldInfo.getSpawnZ(), player.rotationYaw, player.rotationPitch);
             return true;
         } catch (Exception e) {

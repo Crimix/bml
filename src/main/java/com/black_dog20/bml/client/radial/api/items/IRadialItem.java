@@ -1,7 +1,8 @@
 package com.black_dog20.bml.client.radial.api.items;
 
-import com.black_dog20.bml.client.radial.api.DrawingContext;
+import com.black_dog20.bml.client.DrawingContext;
 import com.black_dog20.bml.internal.utils.InternalTranslations;
+import com.black_dog20.bml.utils.text.TextUtil;
 import com.black_dog20.bml.utils.translate.TranslationUtil;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
@@ -29,8 +30,8 @@ public interface IRadialItem {
      * @param context the drawing context.
      */
     default void drawTooltips(DrawingContext context) {
-        List<String> tooltips = getTooltips();
-        GuiUtils.drawHoveringText(tooltips, (int) context.x, (int) context.y, context.width, context.height, -1, context.fontRenderer);
+        List<ITextComponent> tooltips = getTooltips();
+        GuiUtils.drawHoveringText(context.matrixStack, tooltips, (int) context.x, (int) context.y, context.width, context.height, -1, context.fontRenderer);
     }
 
     /**
@@ -90,14 +91,14 @@ public interface IRadialItem {
      *
      * @return a list of tooltips.
      */
-    default List<String> getTooltips() {
-        List<String> tooltips = new ArrayList<>();
+    default List<ITextComponent> getTooltips() {
+        List<ITextComponent> tooltips = new ArrayList<>();
         if (!getContextItems().isEmpty()) {
             if (getContextItems().size() == 1 && skipMenuIfSingleContextItem()) {
                 IRadialItem item = getContextItems().get(0);
-                tooltips.add(TranslationUtil.translateToString(InternalTranslations.Translations.RIGHT_CLICK_TO, item.getCenterText().getFormattedText().toLowerCase()));
+                tooltips.add(TranslationUtil.translate(InternalTranslations.Translations.RIGHT_CLICK_TO, TextUtil.getFormattedText(item.getCenterText()).toLowerCase()));
             } else {
-                tooltips.add(TranslationUtil.translateToString(InternalTranslations.Translations.RIGHT_CLICK_FOR_OPTIONS));
+                tooltips.add(TranslationUtil.translate(InternalTranslations.Translations.RIGHT_CLICK_FOR_OPTIONS));
             }
         }
         return tooltips;

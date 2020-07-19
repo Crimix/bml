@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -88,7 +88,7 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
      * @return ShapelessNBTRecipeBuilder
      */
     @Override
-    public ShapelessNBTRecipeBuilder addIngredient(Tag<Item> tag) {
+    public ShapelessNBTRecipeBuilder addIngredient(ITag<Item> tag) {
         return (ShapelessNBTRecipeBuilder) super.addIngredient(tag);
     }
 
@@ -201,7 +201,7 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
 
             final Advancement.Builder advancementBuilder = ((Advancement.Builder) ADVANCEMENT_BUILDER.get(this))
                     .withParentId(new ResourceLocation("minecraft", "recipes/root"))
-                    .withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(id))
+                    .withCriterion("has_the_recipe", RecipeUnlockedTrigger.func_235675_a_(id))
                     .withRewards(AdvancementRewards.Builder.recipe(id))
                     .withRequirementsStrategy(IRequirementsStrategy.OR);
 

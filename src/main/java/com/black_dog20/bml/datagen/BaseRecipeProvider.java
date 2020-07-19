@@ -33,7 +33,7 @@ public abstract class BaseRecipeProvider extends RecipeProvider {
      * @return CustomRecipeBuilder.
      */
     protected CustomRecipeBuilder specialRecipe(SpecialRecipeSerializer<?> recipe) {
-        return CustomRecipeBuilder.func_218656_a(recipe);
+        return CustomRecipeBuilder.customRecipe(recipe);
     }
 
     /**

@@ -5,11 +5,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.FolderName;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Type;
+import java.nio.file.Path;
 import java.util.function.Supplier;
 
 public class FileUtil {
@@ -85,7 +87,8 @@ public class FileUtil {
      * @return a file pointing to the folder.
      */
     public static File getDirRelativeToWorldFolder(ServerWorld world, String dirName) {
-        File dir = world.getSaveHandler().getWorldDirectory();
+        Path path = world.getServer().func_240776_a_(FolderName.field_237245_a_);
+        File dir = path.toFile();
         if (!dirName.startsWith("/"))
             dirName = "/" + dirName;
         File dirFile = new File(dir.getPath() + dirName);

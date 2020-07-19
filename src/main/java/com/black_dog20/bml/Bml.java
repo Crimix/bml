@@ -8,11 +8,15 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
 
 @Mod(Bml.MOD_ID)
 public class Bml {
@@ -35,5 +39,17 @@ public class Bml {
 
     public static Logger getLogger() {
         return LOGGER;
+    }
+
+    public static String getVersion() {
+        Optional<? extends ModContainer> o = ModList.get().getModContainerById(MOD_ID);
+        if (o.isPresent()) {
+            return o.get().getModInfo().getVersion().toString();
+        }
+        return "NONE";
+    }
+
+    public static boolean isDevBuild() {
+        return "NONE".equals(getVersion());
     }
 }

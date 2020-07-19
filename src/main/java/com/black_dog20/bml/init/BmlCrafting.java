@@ -13,7 +13,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BmlCrafting {
-    public static final DeferredRegister<IRecipeSerializer<?>> RECIPE_SERIALIZERS = new DeferredRegister<>(ForgeRegistries.RECIPE_SERIALIZERS, Bml.MOD_ID);
+    public static final DeferredRegister<IRecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Bml.MOD_ID);
 
     public static final RegistryObject<IRecipeSerializer<?>> SHAPED_NBT = RECIPE_SERIALIZERS.register("shaped_nbt", ShapedNBTRecipe.factory());
     public static final RegistryObject<IRecipeSerializer<?>> SHAPELESS_NBT = RECIPE_SERIALIZERS.register("shapeless_nbt", ShapelessNBTRecipe.factory());

@@ -1,12 +1,15 @@
 package com.black_dog20.bml.client.screen;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,25 +26,25 @@ import java.util.function.BiConsumer;
  */
 @OnlyIn(Dist.CLIENT)
 public class ConfirmInputScreen extends Screen {
-    private final List<String> listLines = Lists.newArrayList();
+    private final List<ITextProperties> listLines = Lists.newArrayList();
     /**
      * The text shown for the first button in GuiYesNo
      */
-    protected final String confirmButtonText;
+    protected final ITextComponent confirmButtonText;
     /**
      * The text shown for the second button in GuiYesNo
      */
-    protected final String cancelButtonText;
+    protected final ITextComponent cancelButtonText;
     private int ticksUntilEnable;
     private TextFieldWidget textField;
     private final ITextComponent message;
     protected final BiConsumer<Boolean, String> callbackFunction;
 
     public ConfirmInputScreen(BiConsumer<Boolean, String> callbackFunction, ITextComponent title, ITextComponent message) {
-        this(callbackFunction, title, I18n.format("gui.yes"), I18n.format("gui.no"), message);
+        this(callbackFunction, title, DialogTexts.field_240634_e_, DialogTexts.field_240635_f_, message);
     }
 
-    public ConfirmInputScreen(BiConsumer<Boolean, String> callbackFunction, ITextComponent title, String confirmButtonText, String cancelButtonText, ITextComponent message) {
+    public ConfirmInputScreen(BiConsumer<Boolean, String> callbackFunction, ITextComponent title, ITextComponent confirmButtonText, ITextComponent cancelButtonText, ITextComponent message) {
         super(title);
         this.callbackFunction = callbackFunction;
         this.confirmButtonText = confirmButtonText;
@@ -52,8 +55,8 @@ public class ConfirmInputScreen extends Screen {
     protected void init() {
         super.init();
         this.listLines.clear();
-        this.listLines.addAll(this.font.listFormattedStringToWidth(this.message.getFormattedText(), this.width - 50));
-        textField = new TextFieldWidget(this.font, this.width / 2 - 100, 70 + ((listLines.size() + 1) * 9), 200, 20, "");
+        this.listLines.addAll(this.font.func_238425_b_(this.message, this.width - 50));
+        textField = new TextFieldWidget(this.font, this.width / 2 - 100, 70 + ((listLines.size() + 1) * 9), 200, 20, StringTextComponent.EMPTY);
         this.addButton(textField);
         this.addButton(new Button(this.width / 2 - 155, this.height / 6 + 96, 150, 20, this.confirmButtonText, (p_213002_1_) -> {
             this.callbackFunction.accept(true, textField.getText());
@@ -63,17 +66,18 @@ public class ConfirmInputScreen extends Screen {
         }));
     }
 
-    public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
-        this.renderBackground();
-        this.drawCenteredString(this.font, this.title.getFormattedText(), this.width / 2, 50, 16777215);
+    @Override
+    public void render(MatrixStack matrixStack, int p_render_1_, int p_render_2_, float p_render_3_) {
+        this.renderBackground(matrixStack);
+        this.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 50, 16777215);
 
         int i = 70;
 
-        for (String s : this.listLines) {
-            this.drawCenteredString(this.font, s, this.width / 2, i, 16777215);
+        for (ITextProperties textProperties : this.listLines) {
+            this.drawCenteredString(matrixStack, this.font, textProperties, this.width / 2, i, 16777215);
             i += 9;
         }
-        super.render(p_render_1_, p_render_2_, p_render_3_);
+        super.render(matrixStack, p_render_1_, p_render_2_, p_render_3_);
     }
 
     /**

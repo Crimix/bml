@@ -7,8 +7,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
 
 import javax.annotation.Nonnull;
 
@@ -18,18 +18,18 @@ import javax.annotation.Nonnull;
  * @author aidancbrady
  * @see <a href="https://github.com/mekanism/Mekanism">Mekanism</a>
  */
-public class Pos3D extends Vec3d {
+public class Pos3D extends Vector3d {
 
     public Pos3D() {
         this(0, 0, 0);
     }
 
-    public Pos3D(Vec3d vec) {
+    public Pos3D(Vector3d vec) {
         super(vec.x, vec.y, vec.z);
     }
 
-    public Pos3D(Vec3i vec) {
-        super(vec);
+    public Pos3D(Vector3i vec) {
+        super(vec.getX(), vec.getY(), vec.getZ());
     }
 
     public Pos3D(double x, double y, double z) {
@@ -75,9 +75,9 @@ public class Pos3D extends Vec3d {
     }
 
     public static Pos3D translateMatrix(double[] matrix, Pos3D translation) {
-        double x = translation.x * matrix[0] + translation.y * matrix[1] + translation.z * matrix[2] + matrix[3];
-        double y = translation.x * matrix[4] + translation.y * matrix[5] + translation.z * matrix[6] + matrix[7];
-        double z = translation.x * matrix[8] + translation.y * matrix[9] + translation.z * matrix[10] + matrix[11];
+        double x = translation.getX() * matrix[0] + translation.getY() * matrix[1] + translation.getZ() * matrix[2] + matrix[3];
+        double y = translation.getX() * matrix[4] + translation.getY() * matrix[5] + translation.getZ() * matrix[6] + matrix[7];
+        double z = translation.getX() * matrix[8] + translation.getY() * matrix[9] + translation.getZ() * matrix[10] + matrix[11];
         return new Pos3D(x, y, z);
     }
 
@@ -119,7 +119,7 @@ public class Pos3D extends Vec3d {
      * @param vec - Vec3 to subtract
      * @return difference of the two Pos3Ds
      */
-    public Pos3D diff(Vec3d vec) {
+    public Pos3D diff(Vector3d vec) {
         return new Pos3D(x - vec.x, y - vec.y, z - vec.z);
     }
 
@@ -148,7 +148,7 @@ public class Pos3D extends Vec3d {
      * @param pos - Pos3D value to translate by
      * @return translated Pos3D
      */
-    public Pos3D translate(Vec3d pos) {
+    public Pos3D translate(Vector3d pos) {
         return translate(pos.x, pos.y, pos.z);
     }
 
@@ -182,7 +182,7 @@ public class Pos3D extends Vec3d {
      * @param pos - the Pos3D to find the distance to
      * @return the distance between this and the defined Pos3D
      */
-    public double distance(Vec3d pos) {
+    public double distance(Vector3d pos) {
         double subX = x - pos.x;
         double subY = y - pos.y;
         double subZ = z - pos.z;
@@ -240,7 +240,7 @@ public class Pos3D extends Vec3d {
         return new Pos3D(xPos, yPos, zPos);
     }
 
-    public Pos3D multiply(Vec3d pos) {
+    public Pos3D multiply(Vector3d pos) {
         return scale(pos.x, pos.y, pos.z);
     }
 
@@ -331,7 +331,7 @@ public class Pos3D extends Vec3d {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Vec3d && ((Vec3d) obj).x == x && ((Vec3d) obj).y == y && ((Vec3d) obj).z == z;
+        return obj instanceof Vector3d && ((Vector3d) obj).x == x && ((Vector3d) obj).y == y && ((Vector3d) obj).z == z;
     }
 
     @Override

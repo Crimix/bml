@@ -1,9 +1,12 @@
 package com.black_dog20.bml.client.radial.api;
 
 import com.black_dog20.bml.Bml;
+import com.black_dog20.bml.client.DrawingContext;
 import com.black_dog20.bml.client.radial.api.items.IRadialCategory;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.internal.utils.InternalTranslations;
+import com.black_dog20.bml.utils.text.TextUtil;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -94,7 +97,6 @@ public abstract class AbstractRadialMenu extends Screen {
         super(title);
         this.changeItems(items);
 
-        Minecraft minecraft = Minecraft.getInstance();
         this.startAnimation = minecraft.world.getGameTime() + (double) minecraft.getRenderPartialTicks();
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -179,9 +181,9 @@ public abstract class AbstractRadialMenu extends Screen {
      * @param y         the y point to draw from.
      * @param radiusOut the outer radius.
      */
-    public void drawFooter(float width, float y, float radiusOut) {
+    public void drawFooter(MatrixStack matrixStack, float width, float y, float radiusOut) {
         String pageString = InternalTranslations.translateToString(PAGE_FOOTER, currentPage, maxPages);
-        font.drawStringWithShadow(pageString, (width - font.getStringWidth(pageString)) / 2.0f, y, 0xFFFFFFFF);
+        font.drawStringWithShadow(matrixStack, pageString, (width - font.getStringWidth(pageString)) / 2.0f, y, 0xFFFFFFFF);
     }
 
     /**
@@ -191,7 +193,7 @@ public abstract class AbstractRadialMenu extends Screen {
      * @param y         the y point to draw from.
      * @param radiusOut the outer radius.
      */
-    public void drawHeader(float width, float y, float radiusOut) {
+    public void drawHeader(MatrixStack matrixStack, float width, float y, float radiusOut) {
     }
 
     /**
@@ -199,7 +201,7 @@ public abstract class AbstractRadialMenu extends Screen {
      *
      * @param radiusOut the outer radius.
      */
-    public void drawExtras(float radiusOut) {
+    public void drawExtras(MatrixStack matrixStack, float radiusOut) {
 
     }
 
@@ -346,9 +348,9 @@ public abstract class AbstractRadialMenu extends Screen {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
-        draw(partialTicks, mouseX, mouseY);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        draw(matrixStack, partialTicks, mouseX, mouseY);
     }
 
     @Override
@@ -356,7 +358,7 @@ public abstract class AbstractRadialMenu extends Screen {
         return false;
     }
 
-    private void draw(float partialTicks, int mouseX, int mouseY) {
+    private void draw(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         updateAnimationState(partialTicks);
 
         if (isClosed())
@@ -376,15 +378,15 @@ public abstract class AbstractRadialMenu extends Screen {
         int y = height / 2;
         float z = 0;
 
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(0, animationTop, 0);
+        matrixStack.push();
+        matrixStack.translate(0, animationTop, 0);
 
-        drawBackground(x, y, z, radiusIn, radiusOut);
+        drawBackground(matrixStack, x, y, z, radiusIn, radiusOut);
 
-        RenderSystem.popMatrix();
+        matrixStack.pop();
 
         if (isReady()) {
-            drawItems(x, y, z, width, height, font, itemRenderer);
+            drawItems(matrixStack, x, y, z, width, height, font, itemRenderer);
 
             ITextComponent currentCenterText = null;
             for (IRadialItem item : visibleItems) {
@@ -396,14 +398,14 @@ public abstract class AbstractRadialMenu extends Screen {
             }
 
             if (currentCenterText != null && shouldDrawCenterText()) {
-                String text = currentCenterText.getFormattedText();
-                font.drawStringWithShadow(text, (width - font.getStringWidth(text)) / 2.0f, (height - font.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
+                String text = TextUtil.getFormattedText(currentCenterText);
+                font.drawStringWithShadow(matrixStack, text, (width - font.getStringWidth(text)) / 2.0f, (height - font.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
             }
 
-            drawTooltips(mouseX, mouseY);
-            drawFooter(width, height / 2.0f + radiusOut * 1.05f, radiusOut);
-            drawHeader(width, height / 2.0f - radiusOut * 1.05f - font.FONT_HEIGHT, radiusOut);
-            drawExtras(radiusOut);
+            drawTooltips(matrixStack, mouseX, mouseY);
+            drawFooter(matrixStack, width, height / 2.0f + radiusOut * 1.05f, radiusOut);
+            drawHeader(matrixStack, width, height / 2.0f - radiusOut * 1.05f - font.FONT_HEIGHT, radiusOut);
+            drawExtras(matrixStack, radiusOut);
 
         }
     }
@@ -429,23 +431,23 @@ public abstract class AbstractRadialMenu extends Screen {
         animationProgress = openAnimation;
     }
 
-    private void drawTooltips(int mouseX, int mouseY) {
+    private void drawTooltips(MatrixStack matrixStack, int mouseX, int mouseY) {
         for (int i = 0; i < visibleItems.size(); i++) {
             IRadialItem item = visibleItems.get(i);
             if (item.isHovered()) {
-                DrawingContext context = new DrawingContext(width, height, mouseX, mouseY, 0, font, itemRenderer);
+                DrawingContext context = new DrawingContext(matrixStack, width, height, mouseX, mouseY, 0, font, itemRenderer);
                 item.drawTooltips(context);
             }
         }
     }
 
-    private void drawItems(int x, int y, float z, int width, int height, FontRenderer font, ItemRenderer itemRenderer) {
+    private void drawItems(MatrixStack matrixStack, int x, int y, float z, int width, int height, FontRenderer font, ItemRenderer itemRenderer) {
         iterateVisible((item, s, e) -> {
             float middle = (s + e) * 0.5f;
             float posX = x + itemRadius * (float) Math.cos(middle);
             float posY = y + itemRadius * (float) Math.sin(middle);
 
-            DrawingContext context = new DrawingContext(width, height, posX, posY, z, font, itemRenderer);
+            DrawingContext context = new DrawingContext(matrixStack, width, height, posX, posY, z, font, itemRenderer);
             item.draw(context);
         });
     }
@@ -461,7 +463,7 @@ public abstract class AbstractRadialMenu extends Screen {
         }
     }
 
-    private void drawBackground(float x, float y, float z, float radiusIn, float radiusOut) {
+    private void drawBackground(MatrixStack matrixStack, float x, float y, float z, float radiusIn, float radiusOut) {
         RenderSystem.disableAlphaTest();
         RenderSystem.enableBlend();
         RenderSystem.disableTexture();

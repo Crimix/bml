@@ -1,5 +1,6 @@
-package com.black_dog20.bml.client.radial.api;
+package com.black_dog20.bml.client;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
 
@@ -34,7 +35,9 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+
 public class DrawingContext {
+    public final MatrixStack matrixStack;
     public final int width;
     public final int height;
     public final float x;
@@ -43,7 +46,8 @@ public class DrawingContext {
     public final FontRenderer fontRenderer;
     public final ItemRenderer itemRenderer;
 
-    public DrawingContext(int width, int height, float x, float y, float z, FontRenderer fontRenderer, ItemRenderer itemRenderer) {
+    public DrawingContext(MatrixStack matrixStack, int width, int height, float x, float y, float z, FontRenderer fontRenderer, ItemRenderer itemRenderer) {
+        this.matrixStack = matrixStack;
         this.width = width;
         this.height = height;
         this.x = x;
@@ -51,5 +55,9 @@ public class DrawingContext {
         this.z = z;
         this.fontRenderer = fontRenderer;
         this.itemRenderer = itemRenderer;
+    }
+
+    public DrawingContext of(float x, float y) {
+        return new DrawingContext(matrixStack, width, height, x, y, z, fontRenderer, itemRenderer);
     }
 }

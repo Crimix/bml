@@ -1,7 +1,10 @@
 package com.black_dog20.bml.utils.dimension;
 
 import com.black_dog20.bml.utils.text.TextUtil;
-import net.minecraft.world.dimension.DimensionType;
+import com.black_dog20.bml.utils.translate.TranslationUtil;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 /**
  * Utility class for dimensions.
@@ -27,10 +30,10 @@ public class DimensionUtil {
     /**
      * Get the formatted name of a dimension.
      *
-     * @param dimensionType the dimension type of the dimension.
+     * @param dimension the dimension.
      * @return the formatted name.
      */
-    public static String getFormattedDimensionName(DimensionType dimensionType) {
-        return getFormattedDimensionName(dimensionType.getRegistryName().getPath());
+    public static String getFormattedDimensionName(RegistryKey<World> dimension) {
+        return getFormattedDimensionName(TranslationUtil.translateResourceLocation(dimension.getRegistryName(), ResourceLocation::getPath));
     }
 }
