@@ -1,11 +1,13 @@
-package com.black_dog20.bml.client.overlay.configure;
+package com.black_dog20.bml.internal.client.screen;
 
+import com.black_dog20.bml.client.overlay.configure.IConfigurableOverlay;
 import com.black_dog20.bml.utils.color.Color4i;
 import com.black_dog20.bml.utils.math.MathUtil;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,9 +19,9 @@ public class OverlayConfigWidget extends Widget {
     private boolean isDragging = false;
 
     public OverlayConfigWidget(IConfigurableOverlay overlay) {
-        super(overlay.getPosX(), overlay.getPosY(), overlay.getWidth(), overlay.getHeight(), overlay.getName());
+        super(overlay.getPosX(), overlay.getPosY(), overlay.getWidth(), overlay.getHeight(), StringTextComponent.EMPTY);
         this.overlay = overlay;
-        this.isActive = overlay.getActive();
+        this.isActive = overlay.getSate();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -34,7 +36,8 @@ public class OverlayConfigWidget extends Widget {
         fill(matrixStack, this.x - 2, this.y - 2, this.x + 2 + this.width, this.y + 1 + this.height, color2);
         vLine(matrixStack, this.x + this.width + 2, this.y + this.height + 1, this.y - 3, color1);
         hLine(matrixStack, this.x - 3, this.x + 1 + this.width + 1, this.y + this.height + 1, color1);
-        this.drawString(matrixStack, minecraft.fontRenderer, this.getMessage(), this.x, this.y, 16777215);
+        overlay.getMessage()
+                .ifPresent(msg -> this.drawString(matrixStack, minecraft.fontRenderer, msg, this.x, this.y, 16777215));
     }
 
     @SubscribeEvent
@@ -61,14 +64,14 @@ public class OverlayConfigWidget extends Widget {
         if (isDragging) {
             overlay.setPosition(x, y);
             isDragging = false;
-        } else if (overlay.canBeInactive()) {
-            this.isActive = !overlay.getActive();
-            overlay.setInactive(isActive);
+        } else if (overlay.isStateChangeable()) {
+            this.isActive = !overlay.getSate();
+            overlay.setState(isActive);
         }
     }
 
     private Color4i getColor() {
-        if (overlay.canBeInactive()) {
+        if (overlay.isStateChangeable()) {
             return isActive ? overlay.getActiveColor() : overlay.getInactiveColor();
         } else {
             return overlay.getActiveColor();
