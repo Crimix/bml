@@ -8,11 +8,22 @@ import net.minecraftforge.common.MinecraftForge;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Registry for {@link Overlay}s.
+ */
 @OnlyIn(Dist.CLIENT)
 public class OverlayRegistry {
 
+    /**
+     * Contains all the configurable overlays that have been registered.
+     */
     public static List<IConfigurableOverlay> CONFIGURABLE_OVERLAYS = new ArrayList<>();
 
+    /**
+     * Registers an {@link Overlay}.
+     *
+     * @param overlay the overlay to register.
+     */
     public static void register(Overlay overlay) {
         if (overlay instanceof IConfigurableOverlay)
             CONFIGURABLE_OVERLAYS.add((IConfigurableOverlay) overlay);

@@ -3,7 +3,6 @@ package com.black_dog20.bml.internal.client.screen;
 
 import com.black_dog20.bml.client.overlay.OverlayRegistry;
 import com.black_dog20.bml.client.overlay.configure.IConfigurableOverlay;
-import com.black_dog20.bml.client.overlay.configure.OverlayConfigWidget;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.StringTextComponent;
 

@@ -1,5 +1,6 @@
-package com.black_dog20.bml.client.overlay.configure;
+package com.black_dog20.bml.internal.client.screen;
 
+import com.black_dog20.bml.client.overlay.configure.IConfigurableOverlay;
 import com.black_dog20.bml.utils.color.Color4i;
 import com.black_dog20.bml.utils.math.MathUtil;
 import net.minecraft.client.MainWindow;
@@ -16,9 +17,9 @@ public class OverlayConfigWidget extends Widget {
     private boolean isDragging = false;
 
     public OverlayConfigWidget(IConfigurableOverlay overlay) {
-        super(overlay.getPosX(), overlay.getPosY(), overlay.getWidth(), overlay.getHeight(), overlay.getName());
+        super(overlay.getPosX(), overlay.getPosY(), overlay.getWidth(), overlay.getHeight(), "");
         this.overlay = overlay;
-        this.isActive = overlay.getActive();
+        this.isActive = overlay.getSate();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -33,7 +34,9 @@ public class OverlayConfigWidget extends Widget {
         fill(this.x - 2, this.y - 2, this.x + 2 + this.width, this.y + 1 + this.height, color2);
         vLine(this.x + this.width + 2, this.y + this.height + 1, this.y - 3, color1);
         hLine(this.x - 3, this.x + 1 + this.width + 1, this.y + this.height + 1, color1);
-        this.drawString(minecraft.fontRenderer, this.getMessage(), this.x, this.y, 16777215);
+        overlay.getMessage()
+                .ifPresent(msg -> this.drawString(minecraft.fontRenderer, msg, this.x, this.y, 16777215));
+
     }
 
     @SubscribeEvent
@@ -60,14 +63,14 @@ public class OverlayConfigWidget extends Widget {
         if (isDragging) {
             overlay.setPosition(x, y);
             isDragging = false;
-        } else if (overlay.canBeInactive()) {
-            this.isActive = !overlay.getActive();
-            overlay.setInactive(isActive);
+        } else if (overlay.isStateChangeable()) {
+            this.isActive = !overlay.getSate();
+            overlay.setState(isActive);
         }
     }
 
     private Color4i getColor() {
-        if (overlay.canBeInactive()) {
+        if (overlay.isStateChangeable()) {
             return isActive ? overlay.getActiveColor() : overlay.getInactiveColor();
         } else {
             return overlay.getActiveColor();
