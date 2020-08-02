@@ -1,38 +1,62 @@
 package com.black_dog20.bml.client.rows.columns;
 
-import com.black_dog20.bml.client.rows.Column;
 import com.black_dog20.bml.client.rows.RowDrawingContext;
+import com.black_dog20.bml.utils.text.TextUtil;
 import net.minecraft.client.Minecraft;
 
+/**
+ * String column uses to display strings.
+ */
 public class StringColumn extends Column {
 
-    private final String value;
+    private final String text;
 
-    protected StringColumn(String id, String value, Alignment alignment) {
+    protected StringColumn(String id, String text, Alignment alignment) {
         super(id, alignment);
-        this.value = value;
+        this.text = text;
     }
 
-    public static StringColumn of(String id, String value) {
-        return new StringColumn(id, value, Alignment.LEFT);
+    /**
+     * Creates a new string column with default alignment LEFT.
+     *
+     * @param id   the id of the column.
+     * @param text the text to display.
+     * @return a new StringColumn.
+     */
+    public static StringColumn of(String id, String text) {
+        return new StringColumn(id, text, Alignment.LEFT);
     }
 
-    public static StringColumn of(String id, String value, Alignment alignment) {
-        return new StringColumn(id, value, alignment);
+    /**
+     * Creates a new string column with default alignment LEFT.
+     *
+     * @param id        the id of the column.
+     * @param text      the text to display.
+     * @param alignment the alignment to draw the text using.
+     * @return a new StringColumn.
+     */
+    public static StringColumn of(String id, String text, Alignment alignment) {
+        return new StringColumn(id, text, alignment);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getWidth() {
         if (hasValue())
-            return Minecraft.getInstance().fontRenderer.getStringWidth(value);
+            return Minecraft.getInstance().fontRenderer.getStringWidth(text);
         return 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void render(RowDrawingContext context) {
         if (hasValue()) {
             float x = context.x;
-            int valueWidth = context.fontRenderer.getStringWidth(value);
+            int valueWidth = context.fontRenderer.getStringWidth(text);
             switch (alignment) {
                 case LEFT:
                     break;
@@ -43,10 +67,13 @@ public class StringColumn extends Column {
                     x += (context.columnMaxWidth / 2F - valueWidth / 2F);
                     break;
             }
-            context.fontRenderer.drawStringWithShadow(context.matrixStack, value, x, context.y, -1);
+            context.fontRenderer.drawStringWithShadow(context.matrixStack, text, x, context.y, -1);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getHeight() {
         if (hasValue())
@@ -55,7 +82,7 @@ public class StringColumn extends Column {
     }
 
     private boolean hasValue() {
-        return value != null && !value.isEmpty();
+        return TextUtil.isNotNullOrEmpty(text);
     }
 
 

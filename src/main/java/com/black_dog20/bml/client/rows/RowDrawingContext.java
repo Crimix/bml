@@ -5,8 +5,14 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
 
+/**
+ * Row drawing context.
+ */
 public class RowDrawingContext extends DrawingContext {
 
+    /**
+     * The max width of the column that is being drawn.
+     */
     public final int columnMaxWidth;
 
     public RowDrawingContext(MatrixStack matrixStack, int width, int height, float x, float y, float z, FontRenderer fontRenderer, ItemRenderer itemRenderer, int columnMaxWidth) {

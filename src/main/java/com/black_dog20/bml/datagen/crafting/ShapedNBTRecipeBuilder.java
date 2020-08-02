@@ -199,7 +199,7 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
 
             final Advancement.Builder advancementBuilder = ((Advancement.Builder) ADVANCEMENT_BUILDER.get(this))
                     .withParentId(new ResourceLocation("minecraft", "recipes/root"))
-                    .withCriterion("has_the_recipe", RecipeUnlockedTrigger.func_235675_a_(id))
+                    .withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(id))
                     .withRewards(AdvancementRewards.Builder.recipe(id))
                     .withRequirementsStrategy(IRequirementsStrategy.OR);
 

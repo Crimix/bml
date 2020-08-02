@@ -253,8 +253,8 @@ public abstract class AbstractRadialMenu extends Screen {
     }
 
     @Override
-    public void removed() {
-        super.removed();
+    public void closeScreen() {
+        super.closeScreen();
     }
 
     @Override

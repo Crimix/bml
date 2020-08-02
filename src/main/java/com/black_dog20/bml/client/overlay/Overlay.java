@@ -10,6 +10,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 /**
  * General overlay class.
  * Please extend one of the subclasses.
+ * Please register this using the {@link OverlayRegistry#register(Overlay)}
  */
 @OnlyIn(Dist.CLIENT)
 public abstract class Overlay {

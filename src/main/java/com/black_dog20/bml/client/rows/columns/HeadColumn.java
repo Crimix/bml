@@ -1,6 +1,5 @@
 package com.black_dog20.bml.client.rows.columns;
 
-import com.black_dog20.bml.client.rows.Column;
 import com.black_dog20.bml.client.rows.RowDrawingContext;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
@@ -9,6 +8,9 @@ import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerModelPart;
 
+/**
+ * Head column which displays the players head from their skin.
+ */
 public class HeadColumn extends Column {
 
     private final NetworkPlayerInfo info;
@@ -20,14 +22,20 @@ public class HeadColumn extends Column {
         this.display = Minecraft.getInstance().isIntegratedServerRunning() || Minecraft.getInstance().getConnection().getNetworkManager().isEncrypted();
     }
 
+    /**
+     * Creates a head column from the NetworkPlayerInfo.
+     *
+     * @param id   the id of the column.
+     * @param info the player to display the head from.
+     * @return a head column
+     */
     public static HeadColumn of(String id, NetworkPlayerInfo info) {
         return new HeadColumn(id, info, Alignment.CENTER);
     }
 
-    public static HeadColumn of(String id, NetworkPlayerInfo info, Alignment alignment) {
-        return new HeadColumn(id, info, alignment);
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getWidth() {
         if (display)
@@ -35,6 +43,9 @@ public class HeadColumn extends Column {
         return 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void render(RowDrawingContext context) {
         GameProfile gameprofile = info.getGameProfile();
@@ -55,6 +66,9 @@ public class HeadColumn extends Column {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getHeight() {
         if (display)

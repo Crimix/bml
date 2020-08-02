@@ -1,9 +1,11 @@
 package com.black_dog20.bml.utils.dimension;
 
 import com.black_dog20.bml.utils.text.TextUtil;
-import com.black_dog20.bml.utils.translate.TranslationUtil;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 /**
@@ -19,11 +21,12 @@ public class DimensionUtil {
      * @param dimensionName the unformatted name of the dimension
      * @return the formatted name.
      */
-    public static String getFormattedDimensionName(String dimensionName) {
-        if (!dimensionName.contains(".")) {
-            return TextUtil.capitaliseFirstLetterFully(dimensionName.replaceAll("_", " "));
+    public static TextComponent getFormattedDimensionName(String dimensionName) {
+        if (!dimensionName.contains(".") && !dimensionName.contains(":")) {
+            String name = TextUtil.capitaliseFirstLetterFully(dimensionName.replaceAll("_", " "));
+            return new StringTextComponent(name);
         } else {
-            return dimensionName;
+            return new StringTextComponent(dimensionName);
         }
     }
 
@@ -33,7 +36,34 @@ public class DimensionUtil {
      * @param dimension the dimension.
      * @return the formatted name.
      */
-    public static String getFormattedDimensionName(RegistryKey<World> dimension) {
-        return getFormattedDimensionName(TranslationUtil.translateResourceLocation(dimension.getRegistryName(), ResourceLocation::getPath));
+    public static TextComponent getFormattedDimensionName(RegistryKey<World> dimension) {
+        return getFormattedDimensionName(dimension.getRegistryName(), null);
+    }
+
+    /**
+     * Get the formatted name of a dimension.
+     * If it does not find a translation for the dimension uses the falback which could be the following
+     * "fallbackModId.minecraft:overworld".
+     *
+     * @param dimensionName the resource location for the dimension.
+     * @param fallbackModId the fall back modid for the translation.
+     * @return the formatted name.
+     */
+    public static TextComponent getFormattedDimensionName(ResourceLocation dimensionName, String fallbackModId) {
+        TextComponent name = new TranslationTextComponent(dimensionName.toString());
+        if (name.getString().equals(dimensionName.toString())) {
+            String alt = String.format("%s.%s", dimensionName.getNamespace(), dimensionName.getPath());
+            name = new TranslationTextComponent(alt);
+            if (name.getString().equals(alt) && TextUtil.isNotNullOrEmpty(fallbackModId)) {
+                String fallback = String.format("%s.%s", fallbackModId, dimensionName.toString());
+                name = new TranslationTextComponent(fallback);
+                if (name.getString().equals(fallback)) {
+                    name = getFormattedDimensionName(dimensionName.getPath());
+                }
+            } else {
+                name = getFormattedDimensionName(dimensionName.getPath());
+            }
+        }
+        return name;
     }
 }

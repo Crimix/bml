@@ -87,8 +87,9 @@ public class TranslationUtil {
      * @return the formatted translated text.
      */
     public static TranslationTextComponent translate(ITranslation translation, TextFormatting color) {
-        return (TranslationTextComponent) new TranslationTextComponent(String.format("%s.%s", translation.getModId(), translation.getKey()))
-                .func_240701_a_(color);
+        TranslationTextComponent component = new TranslationTextComponent(String.format("%s.%s", translation.getModId(), translation.getKey()));
+        component.setStyle(component.getStyle().setFormatting(color));
+        return component;
     }
 
     /**
@@ -100,13 +101,14 @@ public class TranslationUtil {
      * @return the formatted translated text.
      */
     public static TranslationTextComponent translate(ITranslation translation, TextFormatting color, Object... objs) {
-        return (TranslationTextComponent) new TranslationTextComponent(String.format("%s.%s", translation.getModId(), translation.getKey()), objs)
-                .func_240701_a_(color);
+        TranslationTextComponent component = new TranslationTextComponent(String.format("%s.%s", translation.getModId(), translation.getKey()), objs);
+        component.setStyle(component.getStyle().setFormatting(color));
+        return component;
     }
 
     /**
      * Tries to translate a resource location, will return the translated string or
-     * return the result of te function to the resource location.
+     * returns the result of the function to the resource location.
      *
      * @param resourceLocation the resource location
      * @param defaultFunc      the function to apply if translation failed.

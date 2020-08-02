@@ -59,7 +59,7 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
      * @param color the color.
      */
     protected void addPrefixed(String key, String text, TextFormatting color) {
-        add(String.format("%s.%s", modid, key), TextUtil.getFormattedText(new StringTextComponent(text).func_240699_a_(color)));
+        add(String.format("%s.%s", modid, key), TextUtil.getFormattedText(new StringTextComponent(text).mergeStyle(color)));
     }
 
     /**
@@ -73,7 +73,7 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
         if (!modid.equals(translation.getModId())) {
             throw new IllegalStateException("Mod id for translation is not the same as for the generator");
         }
-        add(translation.getDescription(), TextUtil.getFormattedText(new StringTextComponent(text).func_240699_a_(color)));
+        add(translation.getDescription(), TextUtil.getFormattedText(new StringTextComponent(text).mergeStyle(color)));
     }
 
     /**
@@ -85,10 +85,6 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
      * @return a formatted string.
      */
     protected String style(String text, TextFormatting... styles) {
-        StringTextComponent styledText = new StringTextComponent(text);
-
-        for (TextFormatting formatting : styles)
-            styledText.func_240699_a_(formatting);
-        return TextUtil.getFormattedText(styledText);
+        return TextUtil.getFormattedText(new StringTextComponent(text).mergeStyle(styles));
     }
 }
