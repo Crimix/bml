@@ -1,7 +1,6 @@
 package com.black_dog20.bml.internal.network.messages;
 
-import com.black_dog20.bml.internal.client.screen.OverlayConfigScreen;
-import net.minecraft.client.Minecraft;
+import com.black_dog20.bml.internal.utils.ClientUtil;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -24,10 +23,7 @@ public class MessageOpenOverlayConfigGui {
 
     public static class Handler {
         public static void handle(MessageOpenOverlayConfigGui msg, Supplier<NetworkEvent.Context> ctx) {
-            ctx.get().enqueueWork(() -> DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-                Minecraft.getInstance().displayGuiScreen(new OverlayConfigScreen());
-            }));
-
+            ctx.get().enqueueWork(() -> DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientUtil::openOverlayConfigScreen));
             ctx.get().setPacketHandled(true);
         }
     }

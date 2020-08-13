@@ -2,12 +2,15 @@ package com.black_dog20.bml.client.overlay.configure;
 
 import com.black_dog20.bml.client.overlay.Overlay;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 /**
  * Abstract implementation of a scaled percentage based overlay.
  * Please extend one of the subclasses.
  */
+@OnlyIn(Dist.CLIENT)
 public abstract class ConfigurablePercentageScaledOverlay extends Overlay implements IConfigurableOverlay {
 
     /**
