@@ -1,19 +1,17 @@
 package com.black_dog20.bml.client.screen;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.DialogTexts;
+import net.minecraft.client.gui.IBidiRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.List;
 import java.util.function.BiConsumer;
 
 /**
@@ -26,7 +24,7 @@ import java.util.function.BiConsumer;
  */
 @OnlyIn(Dist.CLIENT)
 public class ConfirmInputScreen extends Screen {
-    private final List<ITextProperties> listLines = Lists.newArrayList();
+    private IBidiRenderer listLines = IBidiRenderer.field_243257_a;
     /**
      * The text shown for the first button in GuiYesNo
      */
@@ -54,9 +52,8 @@ public class ConfirmInputScreen extends Screen {
 
     protected void init() {
         super.init();
-        this.listLines.clear();
-        this.listLines.addAll(this.font.func_238425_b_(this.message, this.width - 50));
-        textField = new TextFieldWidget(this.font, this.width / 2 - 100, 70 + ((listLines.size() + 1) * 9), 200, 20, StringTextComponent.EMPTY);
+        this.listLines = IBidiRenderer.func_243258_a(this.font, this.message, this.width - 50);
+        textField = new TextFieldWidget(this.font, this.width / 2 - 100, 70 + ((listLines.func_241862_a() + 1) * 9), 200, 20, StringTextComponent.EMPTY);
         this.addButton(textField);
         this.addButton(new Button(this.width / 2 - 155, this.height / 6 + 96, 150, 20, this.confirmButtonText, (p_213002_1_) -> {
             this.callbackFunction.accept(true, textField.getText());
@@ -70,13 +67,7 @@ public class ConfirmInputScreen extends Screen {
     public void render(MatrixStack matrixStack, int p_render_1_, int p_render_2_, float p_render_3_) {
         this.renderBackground(matrixStack);
         this.drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 50, 16777215);
-
-        int i = 70;
-
-        for (ITextProperties textProperties : this.listLines) {
-            this.drawCenteredString(matrixStack, this.font, textProperties, this.width / 2, i, 16777215);
-            i += 9;
-        }
+        this.listLines.func_241863_a(matrixStack, this.width / 2, 70);
         super.render(matrixStack, p_render_1_, p_render_2_, p_render_3_);
     }
 
