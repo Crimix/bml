@@ -1,6 +1,5 @@
 package com.black_dog20.bml.client.radial.api;
 
-import com.black_dog20.bml.Bml;
 import com.black_dog20.bml.client.radial.api.items.IRadialCategory;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.internal.utils.InternalTranslations;
@@ -16,11 +15,11 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
@@ -64,7 +63,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
  * Abstract radial menu to extend to create your own.
  */
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = Bml.MOD_ID)
+@OnlyIn(Dist.CLIENT)
 public abstract class AbstractRadialMenu extends Screen {
 
     public enum State {
@@ -241,7 +240,7 @@ public abstract class AbstractRadialMenu extends Screen {
     }
 
     @SubscribeEvent
-    public static void overlayEvent(RenderGameOverlayEvent.Pre event) {
+    public void overlayEvent(RenderGameOverlayEvent.Pre event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS)
             return;
 

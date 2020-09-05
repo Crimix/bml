@@ -1,12 +1,15 @@
 package com.black_dog20.bml.client.overlay.configure;
 
 import com.black_dog20.bml.utils.color.Color4i;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Optional;
 
 /**
  * Interface for a configurable overlay.
  */
+@OnlyIn(Dist.CLIENT)
 public interface IConfigurableOverlay {
 
     /**
