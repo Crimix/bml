@@ -631,11 +631,7 @@ public abstract class AbstractRadialMenu extends Screen {
     }
 
     private void changeItems(List<IRadialItem> items) {
-        if (items.size() == 1 && items.get(0) instanceof IRadialCategory) {
-            this.items = ((IRadialCategory) items.get(0)).getItems();
-        } else {
-            this.items = items;
-        }
+        this.items = items;
         maxPages = (int) Math.ceil(items.size() / (double) getMaxItemsPerPage());
         currentPage = 1;
         this.visibleItems = getItemForPage(currentPage);
