@@ -67,7 +67,7 @@ public class ITextComponentColumn extends Column {
                     x += (context.columnMaxWidth / 2F - valueWidth / 2F);
                     break;
             }
-            context.fontRenderer.func_238407_a_(context.matrixStack, component, x, context.y, -1);
+            context.fontRenderer.func_243246_a(context.matrixStack, component, x, context.y, -1);
         }
     }
 

@@ -60,7 +60,7 @@ public class ItemstackRadialItem extends TextRadialItem {
     public void drawTooltips(DrawingContext context) {
         if (stack.getCount() > 0) {
             GuiUtils.preItemToolTip(stack);
-            GuiUtils.drawHoveringText(stack, context.matrixStack, getItemToolTip(stack), (int) context.x, (int) context.y, (int) context.width, (int) context.height, -1, context.fontRenderer);
+            //GuiUtils.drawHoveringText(stack, context.matrixStack, getItemToolTip(stack), (int) context.x, (int) context.y, (int) context.width, (int) context.height, -1, context.fontRenderer);
             GuiUtils.postItemToolTip();
         } else {
             super.drawTooltips(context);

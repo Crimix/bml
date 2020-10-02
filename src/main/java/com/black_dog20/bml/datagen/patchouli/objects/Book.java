@@ -127,7 +127,7 @@ public class Book {
     }
 
     public Book withCreativeTab(ItemGroup creative_tab) {
-        this.creative_tab = creative_tab.getTabLabel();
+        this.creative_tab = creative_tab.tabLabel;
         return this;
     }
 

@@ -37,6 +37,7 @@ sourceSets {
     main.resources.srcDirs += 'src/main/generated_resources'
 }
 
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
 	mappings channel: 'snapshot', version: "${mcp_mappings}"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
@@ -124,8 +125,8 @@ dependencies {
 		version: "${project.mc_version}-${project.forge_version}"
 	])
 	
-	compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
+	//compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
+    //runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
 
 }
 
@@ -172,7 +173,7 @@ curseforge {
         releaseType = 'release'
         addGameVersion 'Forge'
         addGameVersion 'Java 8'
-        addGameVersion '1.16.1'
+        addGameVersion '1.16.3'
     }
 }
 
