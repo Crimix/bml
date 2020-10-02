@@ -5,7 +5,6 @@ import com.black_dog20.bml.internal.utils.InternalTranslations;
 import com.black_dog20.bml.utils.text.TextUtil;
 import com.black_dog20.bml.utils.translate.TranslationUtil;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public interface IRadialItem {
      */
     default void drawTooltips(DrawingContext context) {
         List<ITextComponent> tooltips = getTooltips();
-        GuiUtils.drawHoveringText(context.matrixStack, tooltips, (int) context.x, (int) context.y, context.width, context.height, -1, context.fontRenderer);
+        //GuiUtils.drawHoveringText(context.matrixStack, tooltips, (int) context.x, (int) context.y, context.width, context.height, -1, context.fontRenderer);
     }
 
     /**
