@@ -1,6 +1,7 @@
 package com.black_dog20.bml.utils.text;
 
 import com.black_dog20.bml.utils.translate.ITranslation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -24,7 +25,7 @@ public class TextComponentBuilder {
      * @param component the root component.
      * @return A new TextComponentBuilder.
      */
-    public static TextComponentBuilder of(TextComponent component) {
+    public static TextComponentBuilder of(ITextComponent component) {
         TextComponentBuilder builder = new TextComponentBuilder();
         return builder.with((TextComponent) component.deepCopy());
     }
@@ -56,7 +57,7 @@ public class TextComponentBuilder {
      * @return A new TextComponentBuilder.
      */
     public static TextComponentBuilder of(ITranslation translation) {
-        return of((TextComponent) translation.get());
+        return of(translation.get());
     }
 
     /**
@@ -65,11 +66,11 @@ public class TextComponentBuilder {
      * @param component the component to append.
      * @return the current builder.
      */
-    public TextComponentBuilder with(TextComponent component) {
+    public TextComponentBuilder with(ITextComponent component) {
         if (prev != null) {
             root.append(prev);
         }
-        prev = component;
+        prev = (TextComponent) component.deepCopy();
         return this;
     }
 

@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.black_dog20.bml.internal.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "bml.refmap.json",
+  "mixins": [
+    "PlayerListMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

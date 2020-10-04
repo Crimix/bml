@@ -41,7 +41,7 @@ public class FileUtil {
 
             return true;
         } catch (Exception e) {
-            Bml.getLogger().error(e.getMessage());
+            Bml.getLogger().error("Failed to save " + fileName + " because of " + e.getMessage());
             return false;
         }
     }
@@ -74,7 +74,7 @@ public class FileUtil {
                 return supplier.get();
             }
         } catch (Exception e) {
-            Bml.getLogger().error(e.getMessage());
+            Bml.getLogger().error("Failed to load " + fileName + " because of " + e.getMessage());
             return supplier.get();
         }
     }
@@ -87,7 +87,7 @@ public class FileUtil {
      * @return a file pointing to the folder.
      */
     public static File getDirRelativeToWorldFolder(ServerWorld world, String dirName) {
-        Path path = world.getServer().func_240776_a_(FolderName.field_237245_a_);
+        Path path = world.getServer().func_240776_a_(FolderName.field_237253_i_);
         File dir = path.toFile();
         if (!dirName.startsWith("/"))
             dirName = "/" + dirName;

@@ -2,9 +2,10 @@ package com.black_dog20.bml.client.radial.api.items;
 
 import com.black_dog20.bml.client.DrawingContext;
 import com.black_dog20.bml.internal.utils.InternalTranslations;
-import com.black_dog20.bml.utils.text.TextUtil;
+import com.black_dog20.bml.utils.text.TextComponentBuilder;
 import com.black_dog20.bml.utils.translate.TranslationUtil;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public interface IRadialItem {
      */
     default void drawTooltips(DrawingContext context) {
         List<ITextComponent> tooltips = getTooltips();
-        //GuiUtils.drawHoveringText(context.matrixStack, tooltips, (int) context.x, (int) context.y, context.width, context.height, -1, context.fontRenderer);
+        GuiUtils.drawHoveringText(context.matrixStack, tooltips, (int) context.x, (int) context.y, context.width, context.height, -1, context.fontRenderer);
     }
 
     /**
@@ -95,7 +96,11 @@ public interface IRadialItem {
         if (!getContextItems().isEmpty()) {
             if (getContextItems().size() == 1 && skipMenuIfSingleContextItem()) {
                 IRadialItem item = getContextItems().get(0);
-                tooltips.add(TranslationUtil.translate(InternalTranslations.Translations.RIGHT_CLICK_TO, TextUtil.getFormattedText(item.getCenterText()).toLowerCase()));
+                ITextComponent text = TextComponentBuilder.of(InternalTranslations.Translations.RIGHT_CLICK_TO.get())
+                        .space()
+                        .with(item.getCenterText())
+                        .build();
+                tooltips.add(text);
             } else {
                 tooltips.add(TranslationUtil.translate(InternalTranslations.Translations.RIGHT_CLICK_FOR_OPTIONS));
             }

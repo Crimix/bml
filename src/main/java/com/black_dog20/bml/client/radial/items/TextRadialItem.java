@@ -32,8 +32,14 @@ public class TextRadialItem implements IRadialItem {
      */
     @Override
     public void draw(DrawingContext context) {
-        IBidiRenderer lines = IBidiRenderer.func_243258_a(context.fontRenderer, text, 20);
-        lines.func_241863_a(context.matrixStack, (int) context.x, (int) context.y);
+        float y = context.y;
+        IBidiRenderer lines = IBidiRenderer.func_243258_a(context.fontRenderer, text, 60);
+        if (lines.func_241862_a() > 1) {
+            y = y - context.fontRenderer.FONT_HEIGHT / 1.5f;
+        } else {
+            y = y - context.fontRenderer.FONT_HEIGHT / 2.0f;
+        }
+        lines.func_241864_a(context.matrixStack, (int) context.x, (int) y, context.fontRenderer.FONT_HEIGHT, color);
     }
 
     /**

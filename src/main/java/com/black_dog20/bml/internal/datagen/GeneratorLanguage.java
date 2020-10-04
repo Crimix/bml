@@ -18,7 +18,7 @@ public class GeneratorLanguage extends BaseLanguageProvider {
         // Tooltips
         addPrefixed(PAGE_FOOTER, "Page %d of %d");
         addPrefixed(RIGHT_CLICK_FOR_OPTIONS, style("Right click", TextFormatting.BLUE) + " for options");
-        addPrefixed(RIGHT_CLICK_TO, style("Right click", TextFormatting.BLUE) + " to %s");
+        addPrefixed(RIGHT_CLICK_TO, style("Right click", TextFormatting.BLUE) + " to");
         addPrefixed(CONFIRM, "Confirm");
     }
 }

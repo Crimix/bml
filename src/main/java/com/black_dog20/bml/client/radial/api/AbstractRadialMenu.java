@@ -97,6 +97,7 @@ public abstract class AbstractRadialMenu extends Screen {
         super(title);
         this.changeItems(items);
 
+        Minecraft minecraft = Minecraft.getInstance();
         this.startAnimation = minecraft.world.getGameTime() + (double) minecraft.getRenderPartialTicks();
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -634,11 +635,7 @@ public abstract class AbstractRadialMenu extends Screen {
     }
 
     private void changeItems(List<IRadialItem> items) {
-        if (items.size() == 1 && items.get(0) instanceof IRadialCategory) {
-            this.items = ((IRadialCategory) items.get(0)).getItems();
-        } else {
-            this.items = items;
-        }
+        this.items = items;
         maxPages = (int) Math.ceil(items.size() / (double) getMaxItemsPerPage());
         currentPage = 1;
         this.visibleItems = getItemForPage(currentPage);

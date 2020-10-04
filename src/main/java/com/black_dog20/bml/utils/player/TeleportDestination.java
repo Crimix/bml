@@ -17,7 +17,7 @@ public class TeleportDestination {
     private float pitch;
 
     public TeleportDestination(RegistryKey<World> dimension, ServerPlayerEntity player) {
-        this(dimension, player.func_241140_K_(), player.rotationYaw, player.rotationPitch);
+        this(dimension, player.getPosition(), player.rotationYaw, player.rotationPitch);
     }
 
     public TeleportDestination(RegistryKey<World> dimension, BlockPos pos, float yaw, float pitch) {
