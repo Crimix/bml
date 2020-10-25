@@ -39,6 +39,21 @@ public class KeybindsUtil {
     }
 
     /**
+     * Returns if the key is down by its keyBinding while ignore conflict resolution.
+     *
+     * @param keyBinding the keybinding.
+     * @return true if the key is down.
+     */
+    public static boolean isKeyDownIgnoreConflicts(KeyBinding keyBinding) {
+        Minecraft minecraft = Minecraft.getInstance();
+        int keycode = keyBinding.getKey().getKeyCode();
+        if (keyBinding.isInvalid())
+            return false;
+
+        return InputMappings.isKeyDown(minecraft.getMainWindow().getHandle(), keycode);
+    }
+
+    /**
      * Gets the localized formatted name of the keybinding.
      *
      * @param keyBinding the keybinding.
