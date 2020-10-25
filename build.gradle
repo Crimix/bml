@@ -197,10 +197,12 @@ publishing {
     }
     publications {
         mavenJava(MavenPublication) {
+            artifactId 'bml'
             version mc_version + '-' + version_major + '.' + version_minor + '.' + version_patch
             artifact jar
         }
         mavenJava(MavenPublication) {
+            artifactId 'bml'
             version mc_version + '-' + version_major + '.' + version_minor + '.' + version_patch
             artifact sourceJar
         }
