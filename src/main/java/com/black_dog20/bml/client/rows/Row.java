@@ -6,6 +6,7 @@ import com.black_dog20.bml.client.rows.columns.Column;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Row class.
@@ -63,6 +64,20 @@ public class Row {
          */
         public RowBuilder withColumn(Column column) {
             this.columns.add(column);
+            return this;
+        }
+
+        /**
+         * Adds a column.
+         *
+         * @param column    the column to be added.
+         * @param shouldAdd supplier if the column should be added
+         * @return the current builder.
+         */
+        public RowBuilder withColumn(Column column, Supplier<Boolean> shouldAdd) {
+            if (Boolean.TRUE.equals(shouldAdd.get())) {
+                return withColumn(column);
+            }
             return this;
         }
 

@@ -60,7 +60,7 @@ public class KeybindsUtil {
      * @return the localized and formatted name.
      */
     public static String getKeyBindText(KeyBinding keyBinding) {
-        return TextUtil.capitaliseFirstLetterFully(TextUtil.getFormattedText(keyBinding.func_238171_j_()).toLowerCase());
+        return TextUtil.capitaliseFirstLetterFully(keyBinding.func_238171_j_().getString().toLowerCase());
     }
 
     /**

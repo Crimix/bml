@@ -181,6 +181,7 @@ curseforge {
         addGameVersion 'Forge'
         addGameVersion 'Java 8'
         addGameVersion '1.16.3'
+        addGameVersion '1.16.4'
     }
 }
 
