@@ -21,7 +21,7 @@ public class TeleportDestination {
     }
 
     public TeleportDestination(RegistryKey<World> dimension, BlockPos pos, float yaw, float pitch) {
-        this.dimension = dimension.getRegistryName();
+        this.dimension = dimension.func_240901_a_();
         this.x = pos.getX();
         this.y = pos.getY();
         this.z = pos.getZ();
