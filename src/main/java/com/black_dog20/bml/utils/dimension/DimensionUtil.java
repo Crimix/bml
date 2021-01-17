@@ -66,4 +66,24 @@ public class DimensionUtil {
         }
         return name;
     }
+
+    /**
+     * Gets the dimensions registry key.
+     *
+     * @param world The world.
+     * @return the registry key for the dimension for that world.
+     */
+    public static RegistryKey<World> getDimension(World world) {
+        return world.func_234923_W_();
+    }
+
+    /**
+     * Gets the dimensions registry keys resource location.
+     *
+     * @param world The world.
+     * @return the registry key resource location for the dimension for that world.
+     */
+    public static ResourceLocation getDimensionResourceLocation(World world) {
+        return getDimension(world).func_240901_a_();
+    }
 }

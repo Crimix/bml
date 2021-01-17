@@ -3,10 +3,17 @@ package com.black_dog20.bml.api;
 import com.black_dog20.bml.utils.item.NBTUtil;
 import net.minecraft.item.ItemStack;
 
+/**
+ * Interface for soulbinding an item.
+ * Every method can be overridden, to accommodate every system,
+ * as long as {@link ISoulbindable#isSoulbound(ItemStack)} returns true if the stack should be kept when the player dies.
+ *
+ * @author black_dog20
+ */
 public interface ISoulbindable {
 
     default void soulbind(ItemStack stack) {
-        NBTUtil.addTag(stack, NBTUtil.getSoulboundTag());
+        NBTUtil.putBoolean(stack, NBTUtil.getSoulboundTag());
     }
 
     default void unSoulbind(ItemStack stack) {
@@ -14,6 +21,6 @@ public interface ISoulbindable {
     }
 
     default boolean isSoulbound(ItemStack stack) {
-        return NBTUtil.hasTag(stack, NBTUtil.getSoulboundTag());
+        return NBTUtil.getBoolean(stack, NBTUtil.getSoulboundTag());
     }
 }
