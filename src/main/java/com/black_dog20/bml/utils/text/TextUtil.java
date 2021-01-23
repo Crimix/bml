@@ -60,7 +60,7 @@ public class TextUtil {
 
         while (iterator.hasNext()) {
             ITextComponent itextcomponent = iterator.next();
-            String s1 = itextcomponent.getUnformattedComponentText();
+            String s1 = itextcomponent.getUnformattedComponentText().isEmpty() ? itextcomponent.getString() : itextcomponent.getUnformattedComponentText();
             if (!s1.isEmpty()) {
                 String s2 = getFormattingCode(itextcomponent.getStyle());
                 if (!s2.equals(s)) {

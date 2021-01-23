@@ -5,11 +5,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
+import org.lwjgl.glfw.GLFW;
 
 public class KeybindsUtil {
 
     /**
      * Returns if the key is down by its keycode.
+     * Does not support mouse keys.
      *
      * @param keycode the keycode.
      * @return true if the key is down.
@@ -31,7 +33,13 @@ public class KeybindsUtil {
         if (keyBinding.isInvalid())
             return false;
 
-        boolean keyIsDown = InputMappings.isKeyDown(minecraft.getMainWindow().getHandle(), keycode);
+        boolean keyIsDown;
+        if (keyBinding.getKey().getType() == InputMappings.Type.MOUSE) {
+            keyIsDown = GLFW.glfwGetMouseButton(minecraft.getMainWindow().getHandle(), keycode) == 1;
+        } else {
+            keyIsDown = InputMappings.isKeyDown(minecraft.getMainWindow().getHandle(), keycode);
+        }
+
         boolean conflictContextActive = keyBinding.getKeyConflictContext().isActive();
         boolean keyModifierActivate = keyBinding.getKeyModifier().isActive(keyBinding.getKeyConflictContext());
 
@@ -50,7 +58,11 @@ public class KeybindsUtil {
         if (keyBinding.isInvalid())
             return false;
 
-        return InputMappings.isKeyDown(minecraft.getMainWindow().getHandle(), keycode);
+        if (keyBinding.getKey().getType() == InputMappings.Type.MOUSE) {
+            return GLFW.glfwGetMouseButton(minecraft.getMainWindow().getHandle(), keycode) == 1;
+        } else {
+            return InputMappings.isKeyDown(minecraft.getMainWindow().getHandle(), keycode);
+        }
     }
 
     /**

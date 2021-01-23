@@ -183,8 +183,8 @@ public abstract class AbstractRadialMenu extends Screen {
      * @param radiusOut the outer radius.
      */
     public void drawFooter(MatrixStack matrixStack, float width, float y, float radiusOut) {
-        String pageString = InternalTranslations.translateToString(PAGE_FOOTER, currentPage, maxPages);
-        font.drawStringWithShadow(matrixStack, pageString, (width - font.getStringWidth(pageString)) / 2.0f, y, 0xFFFFFFFF);
+        ITextComponent pageString = InternalTranslations.translate(PAGE_FOOTER, currentPage, maxPages);
+        font.func_243246_a(matrixStack, pageString, (width - font.func_238414_a_(pageString)) / 2.0f, y, 0xFFFFFFFF);
     }
 
     /**

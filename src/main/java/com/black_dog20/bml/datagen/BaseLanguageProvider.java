@@ -3,9 +3,12 @@ package com.black_dog20.bml.datagen;
 import com.black_dog20.bml.utils.text.TextUtil;
 import com.black_dog20.bml.utils.translate.ITranslation;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.data.LanguageProvider;
+
+import java.util.function.Supplier;
 
 /**
  * Base class for language providers.
@@ -86,5 +89,28 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
      */
     protected String style(String text, TextFormatting... styles) {
         return TextUtil.getFormattedText(new StringTextComponent(text).mergeStyle(styles));
+    }
+
+    /**
+     * Adds a enchantment and its description to be used by <a href="https://www.curseforge.com/minecraft/mc-mods/enchantment-descriptions">Enchantment Descriptions</a>
+     *
+     * @param key         the enchantment.
+     * @param name        the name of the enchantment
+     * @param description the description of the enchantment.
+     */
+    protected void addEnchantment(Supplier<? extends Enchantment> key, String name, String description) {
+        add(key.get(), name, description);
+    }
+
+    /**
+     * Adds a enchantment and its description to be used by <a href="https://www.curseforge.com/minecraft/mc-mods/enchantment-descriptions">Enchantment Descriptions</a>
+     *
+     * @param key         the enchantment.
+     * @param name        the name of the enchantment
+     * @param description the description of the enchantment.
+     */
+    protected void add(Enchantment key, String name, String description) {
+        add(key.getName(), name);
+        add(String.format("%s.desc", key.getName()), description);
     }
 }

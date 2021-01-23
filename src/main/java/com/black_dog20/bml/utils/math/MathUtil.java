@@ -1,6 +1,7 @@
 package com.black_dog20.bml.utils.math;
 
 import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Utility math helper class.
@@ -65,5 +66,16 @@ public class MathUtil {
             return String.valueOf(value);
 
         return String.format(Locale.US, "%,d", value);
+    }
+
+    /**
+     * Gets a random int between the min and max, including both min and max.
+     *
+     * @param min the min value.
+     * @param max the max value.
+     * @return a random int between min and max inclusive.
+     */
+    public static int random(int min, int max) {
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
 }
