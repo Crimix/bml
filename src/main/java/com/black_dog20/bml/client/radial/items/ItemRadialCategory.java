@@ -6,13 +6,13 @@ import com.black_dog20.bml.internal.utils.InternalTranslations;
 import com.black_dog20.bml.utils.text.TextUtil;
 import com.black_dog20.bml.utils.translate.TranslationUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.client.gui.GuiUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 import java.util.List;
 
@@ -25,12 +25,12 @@ public class ItemRadialCategory extends TextRadialCategory {
 
     private final ItemStack stack;
 
-    public ItemRadialCategory(ItemStack stack, ITextComponent text) {
+    public ItemRadialCategory(ItemStack stack, Component text) {
         super(text);
         this.stack = stack;
     }
 
-    public ItemRadialCategory(ItemStack stack, ITextComponent text, TextFormatting color) {
+    public ItemRadialCategory(ItemStack stack, Component text, ChatFormatting color) {
         super(text, color);
         this.stack = stack;
     }
@@ -41,13 +41,15 @@ public class ItemRadialCategory extends TextRadialCategory {
     @Override
     public void draw(DrawingContext context) {
         if (stack.getCount() > 0) {
-            RenderHelper.enableStandardItemLighting();
-            RenderSystem.pushMatrix();
-            RenderSystem.translatef(-8, -8, context.z);
-            context.itemRenderer.renderItemAndEffectIntoGUI(stack, (int) context.x, (int) context.y);
-            context.itemRenderer.renderItemOverlayIntoGUI(context.fontRenderer, stack, (int) context.x, (int) context.y, "");
-            RenderSystem.popMatrix();
-            RenderHelper.disableStandardItemLighting();
+            PoseStack viewModelPose = RenderSystem.getModelViewStack();
+            viewModelPose.pushPose();
+            viewModelPose.mulPoseMatrix(context.poseStack.last().pose());
+            viewModelPose.translate(-8, -8, context.z);
+            RenderSystem.applyModelViewMatrix();
+            context.itemRenderer.renderAndDecorateItem(stack, (int) context.x, (int) context.y);
+            context.itemRenderer.renderGuiItemDecorations(context.fontRenderer, stack, (int) context.x, (int) context.y, "");
+            viewModelPose.popPose();
+            RenderSystem.applyModelViewMatrix();
         } else {
             super.draw(context);
         }
@@ -60,16 +62,16 @@ public class ItemRadialCategory extends TextRadialCategory {
     public void drawTooltips(DrawingContext context) {
         if (stack.getCount() > 0) {
             GuiUtils.preItemToolTip(stack);
-            GuiUtils.drawHoveringText(stack, context.matrixStack, getItemToolTip(stack), (int) context.x, (int) context.y, (int) context.width, (int) context.height, -1, context.fontRenderer);
+            GuiUtils.drawHoveringText(stack, context.poseStack, getItemToolTip(stack), (int) context.x, (int) context.y, (int) context.width, (int) context.height, -1, context.fontRenderer);
             GuiUtils.postItemToolTip();
         } else {
             super.drawTooltips(context);
         }
     }
 
-    private List<ITextComponent> getItemToolTip(ItemStack stack) {
+    private List<Component> getItemToolTip(ItemStack stack) {
         Minecraft minecraft = Minecraft.getInstance();
-        List<ITextComponent> list = stack.getTooltip(minecraft.player, minecraft.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+        List<Component> list = stack.getTooltipLines(minecraft.player, minecraft.options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL);
         if (!getContextItems().isEmpty()) {
             if (getContextItems().size() == 1 && skipMenuIfSingleContextItem()) {
                 IRadialItem item = getContextItems().get(0);

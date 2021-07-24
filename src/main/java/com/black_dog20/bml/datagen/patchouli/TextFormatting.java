@@ -1,7 +1,7 @@
 package com.black_dog20.bml.datagen.patchouli;
 
 import com.black_dog20.bml.datagen.patchouli.objects.Macro;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.KeyMapping;
 
 /**
  * Utility class to help in formatting texts in books.
@@ -82,8 +82,8 @@ public class TextFormatting {
         return new Format("$(playername)");
     }
 
-    public static Format keybind(KeyBinding keybind) {
-        String desc = keybind.getKeyDescription();
+    public static Format keybind(KeyMapping keybind) {
+        String desc = keybind.getName();
         if (desc.startsWith("key."))
             desc = desc.replaceFirst("key.", "");
         return new Format("$(k:", desc, ")");

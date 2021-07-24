@@ -1,9 +1,9 @@
 package com.black_dog20.bml.datagen.crafting;
 
 import com.google.gson.JsonObject;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import javax.annotation.Nullable;
 
@@ -13,10 +13,10 @@ import javax.annotation.Nullable;
  * @author Choonster
  * @see <a href="https://github.com/Choonster-Minecraft-Mods/TestMod3">TestMod3</a>
  */
-public class FinishedRecipeDelegate implements IFinishedRecipe {
-    protected final IFinishedRecipe baseRecipe;
+public class FinishedRecipeDelegate implements FinishedRecipe {
+    protected final FinishedRecipe baseRecipe;
 
-    public FinishedRecipeDelegate(final IFinishedRecipe baseRecipe) {
+    public FinishedRecipeDelegate(final FinishedRecipe baseRecipe) {
         this.baseRecipe = baseRecipe;
     }
 
@@ -26,8 +26,8 @@ public class FinishedRecipeDelegate implements IFinishedRecipe {
      * @param json A json object.
      */
     @Override
-    public void serialize(final JsonObject json) {
-        baseRecipe.serialize(json);
+    public void serializeRecipeData(final JsonObject json) {
+        baseRecipe.serializeRecipeData(json);
     }
 
     /**
@@ -36,8 +36,8 @@ public class FinishedRecipeDelegate implements IFinishedRecipe {
      * @return the id.
      */
     @Override
-    public ResourceLocation getID() {
-        return baseRecipe.getID();
+    public ResourceLocation getId() {
+        return baseRecipe.getId();
     }
 
     /**
@@ -46,8 +46,8 @@ public class FinishedRecipeDelegate implements IFinishedRecipe {
      * @return the recipe serializer.
      */
     @Override
-    public IRecipeSerializer<?> getSerializer() {
-        return baseRecipe.getSerializer();
+    public RecipeSerializer<?> getType() {
+        return baseRecipe.getType();
     }
 
     /**
@@ -57,8 +57,8 @@ public class FinishedRecipeDelegate implements IFinishedRecipe {
      */
     @Override
     @Nullable
-    public JsonObject getAdvancementJson() {
-        return baseRecipe.getAdvancementJson();
+    public JsonObject serializeAdvancement() {
+        return baseRecipe.serializeAdvancement();
     }
 
     /**
@@ -69,7 +69,7 @@ public class FinishedRecipeDelegate implements IFinishedRecipe {
      */
     @Override
     @Nullable
-    public ResourceLocation getAdvancementID() {
-        return baseRecipe.getAdvancementID();
+    public ResourceLocation getAdvancementId() {
+        return baseRecipe.getAdvancementId();
     }
 }

@@ -9,6 +9,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ClientUtil {
 
     public static void openOverlayConfigScreen() {
-        Minecraft.getInstance().displayGuiScreen(new OverlayConfigScreen());
+        Minecraft.getInstance().setScreen(new OverlayConfigScreen());
     }
 }

@@ -1,10 +1,7 @@
 buildscript {
     repositories {
-        jcenter()
-        maven {
-			name = "forge"
-			url = "http://files.minecraftforge.net/maven"
-		}
+        maven { url = 'https://maven.minecraftforge.net' }
+        mavenCentral()
 		maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
@@ -13,50 +10,66 @@ buildscript {
       		url "https://plugins.gradle.org/m2/"
     	}
         maven {
-            url='https://dist.creeper.host/Sponge/maven'
+            url='https://repo.spongepowered.org/repository/maven-public/'
         }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
-        classpath "com.wynprice.cursemaven:CurseMaven:2.1.1"
+        classpath "net.saliman:gradle-properties-plugin:1.5.1"
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'com.matthewprenger.cursegradle'
-apply plugin: "com.wynprice.cursemaven"
+//apply plugin: 'org.spongepowered.mixin' //TODO add back when mixin are in again
+apply plugin: 'net.saliman.properties'
 apply plugin: 'maven-publish'
 apply plugin: 'idea'
-
-ext.priv = parseConfig(file('private.properties'))
 
 version = version_major + '.' + version_minor + '.' + version_patch
 group = "${mod_group}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = mod_archivesBaseName + "-" + mc_version
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+// Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
-sourceSets {
-    main.resources.srcDirs += 'src/main/generated_resources'
-}
+tasks.withType(JavaCompile).configureEach({
+    it.options.encoding = 'UTF-8'
+})
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
-	mappings channel: 'snapshot', version: "${mcp_mappings}"
+    // The mappings can be changed at any time, and must be in the following format.
+    // Channel:   Version:
+    // snapshot   YYYYMMDD   Snapshot are built nightly.
+    // stable     #          Stables are built at the discretion of the MCP team.
+    // official   MCVersion  Official field/method names from Mojang mapping files
+    //
+    // You must be aware of the Mojang license when using the 'official' mappings.
+    // See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+    //
+    // Use non-default mappings at your own risk. they may not always work.
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: 'official', version: "${project.mc_version}"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    
-     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
             workingDirectory project.file('run')
-            arg "-mixin.config=bml.mixins.json"
+            //arg "-mixin.config=bml.mixins.json" //TODO add back when mixin are in again
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -70,10 +83,14 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-            arg "-mixin.config=bml.mixins.json"
+            //arg "-mixin.config=bml.mixins.json" //TODO add back when mixin are in again
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -89,7 +106,11 @@ minecraft {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -105,31 +126,30 @@ minecraft {
     }
 }
 
+// Include resources generated by data generators.
+sourceSets.main.resources { srcDir 'src/main/generated_resources' }
+
 repositories {
-  jcenter()
-  mavenCentral()
-  maven {
-    // location of the maven that hosts JEI files
-    name = "Progwml6 maven"
-    url = "https://dvs1.progwml6.com/files/maven/"
-  }
-  maven {
-    // location of a maven mirror for JEI files, as a fallback
-    name = "ModMaven"
-    url = "https://modmaven.k-4u.nl/"
-  }
-  maven {
-	name = "forge"
-	url = "https://files.minecraftforge.net/maven/"
-  }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl/"
+    }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
-	minecraft([
-		group  : "${project.forge_group}",
-		name   : "forge",
-		version: "${project.mc_version}-${project.forge_version}"
-	])
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.2'
 	
 	//compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     //runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
@@ -146,23 +166,23 @@ jar {
             "Implementation-Title": "bml",
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"black_dog20",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs": "bml.mixins.json"
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            //"MixinConfigs": "bml.mixins.json" //TODO add back when mixin are in again
         ])
     }
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    classifier = "deobf"
-    destinationDir = file 'build/libs'
+    archiveClassifier.set("deobf")
+    destinationDirectory.set(file('build/libs'))
     mustRunAfter "jar"
 }
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allSource
-    classifier = "sources"
-    destinationDir = file 'build/libs'
+    archiveClassifier.set("sources")
+    destinationDirectory.set(file('build/libs'))
     mustRunAfter "jar"
 }
 
@@ -171,7 +191,7 @@ artifacts {
 }
 
 curseforge {
-    apiKey = priv.apiKey
+    apiKey = curseApiKey
     project {
         addArtifact (sourceJar)
         id = '371791'
@@ -186,22 +206,14 @@ curseforge {
     }
 }
 
-def parseConfig(File config) {
-    config.withReader {
-        def prop = new Properties()
-        prop.load(it)
-        return (new ConfigSlurper().parse(prop))
-    }
-}
-
 publishing {
     repositories {
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/crimix/bml")
             credentials {
-                username = priv.githubUser
-                password = priv.githubToken
+                username = githubUser
+                password = githubToken
             }
         }
     }
@@ -219,8 +231,7 @@ publishing {
     }
 }
 
-apply plugin: 'org.spongepowered.mixin'
-
-mixin {
-    add sourceSets.main, "bml.refmap.json"
-}
+//TODO add back when mixin are in again
+//mixin {
+//    add sourceSets.main, "bml.refmap.json"
+//}

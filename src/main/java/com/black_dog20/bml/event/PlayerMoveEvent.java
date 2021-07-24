@@ -1,6 +1,6 @@
 package com.black_dog20.bml.event;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -18,7 +18,7 @@ public class PlayerMoveEvent extends PlayerEvent {
 
     private final double distance;
 
-    public PlayerMoveEvent(PlayerEntity player, double distance) {
+    public PlayerMoveEvent(Player player, double distance) {
         super(player);
         this.distance = distance;
     }

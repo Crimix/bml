@@ -1,11 +1,11 @@
 package com.black_dog20.bml.utils.player;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 
 public class TeleportDestination {
 
@@ -16,12 +16,12 @@ public class TeleportDestination {
     private float yaw;
     private float pitch;
 
-    public TeleportDestination(RegistryKey<World> dimension, ServerPlayerEntity player) {
-        this(dimension, player.getPosition(), player.rotationYaw, player.rotationPitch);
+    public TeleportDestination(ResourceKey<Level> dimension, ServerPlayer player) {
+        this(dimension, player.blockPosition(), player.getYRot(), player.getXRot());
     }
 
-    public TeleportDestination(RegistryKey<World> dimension, BlockPos pos, float yaw, float pitch) {
-        this.dimension = dimension.func_240901_a_();
+    public TeleportDestination(ResourceKey<Level> dimension, BlockPos pos, float yaw, float pitch) {
+        this.dimension = dimension.location();
         this.x = pos.getX();
         this.y = pos.getY();
         this.z = pos.getZ();
@@ -29,8 +29,8 @@ public class TeleportDestination {
         this.pitch = pitch;
     }
 
-    public RegistryKey<World> getDimension() {
-        return RegistryKey.func_240903_a_(Registry.WORLD_KEY, dimension);
+    public ResourceKey<Level> getDimension() {
+        return ResourceKey.create(Registry.DIMENSION_REGISTRY, dimension);
     }
 
     public BlockPos getPosition() {

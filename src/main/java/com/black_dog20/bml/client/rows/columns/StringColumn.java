@@ -45,7 +45,7 @@ public class StringColumn extends Column {
     @Override
     public int getWidth() {
         if (hasValue())
-            return Minecraft.getInstance().fontRenderer.getStringWidth(text);
+            return Minecraft.getInstance().font.width(text);
         return 0;
     }
 
@@ -56,7 +56,7 @@ public class StringColumn extends Column {
     public void render(RowDrawingContext context) {
         if (hasValue()) {
             float x = context.x;
-            int valueWidth = context.fontRenderer.getStringWidth(text);
+            int valueWidth = context.fontRenderer.width(text);
             switch (alignment) {
                 case LEFT:
                     break;
@@ -67,7 +67,7 @@ public class StringColumn extends Column {
                     x += (context.columnMaxWidth / 2F - valueWidth / 2F);
                     break;
             }
-            context.fontRenderer.drawStringWithShadow(context.matrixStack, text, x, context.y, -1);
+            context.fontRenderer.drawShadow(context.poseStack, text, x, context.y, -1);
         }
     }
 
@@ -77,7 +77,7 @@ public class StringColumn extends Column {
     @Override
     public int getHeight() {
         if (hasValue())
-            return Minecraft.getInstance().fontRenderer.FONT_HEIGHT;
+            return Minecraft.getInstance().font.lineHeight;
         return 0;
     }
 

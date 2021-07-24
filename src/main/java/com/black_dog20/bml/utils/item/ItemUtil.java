@@ -1,6 +1,6 @@
 package com.black_dog20.bml.utils.item;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
@@ -25,6 +25,6 @@ public class ItemUtil {
     }
 
     private static boolean areItemStackInList(ItemStack stack, List<ItemStack> list) {
-        return list.stream().anyMatch(i -> ItemStack.areItemStacksEqual(stack, i));
+        return list.stream().anyMatch(i -> ItemStack.matches(stack, i));
     }
 }

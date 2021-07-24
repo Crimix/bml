@@ -1,11 +1,9 @@
 package com.black_dog20.bml;
 
 import com.black_dog20.bml.init.BmlCrafting;
-import com.black_dog20.bml.internal.capability.ArmorInventoryCapability;
-import com.black_dog20.bml.internal.capability.ArmorInventoryStorage;
 import com.black_dog20.bml.internal.capability.IArmorInventoryCapability;
 import com.black_dog20.bml.internal.network.PacketHandler;
-import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -29,7 +27,7 @@ public class Bml {
         IEventBus event = FMLJavaModLoadingContext.get().getModEventBus();
         event.addListener(this::setup);
         event.addListener(this::setupClient);
-        event.addGenericListener(IRecipeSerializer.class, BmlCrafting::registerRecipeSerialziers);
+        event.addGenericListener(RecipeSerializer.class, BmlCrafting::registerRecipeSerialziers);
         BmlCrafting.RECIPE_SERIALIZERS.register(event);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -37,7 +35,7 @@ public class Bml {
 
     private void setup(FMLCommonSetupEvent event) {
         PacketHandler.register();
-        CapabilityManager.INSTANCE.register(IArmorInventoryCapability.class, new ArmorInventoryStorage(), new ArmorInventoryCapability.Factory());
+        CapabilityManager.INSTANCE.register(IArmorInventoryCapability.class);
         LOGGER.info("Setup Complete!");
     }
 

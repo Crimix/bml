@@ -2,9 +2,9 @@ package com.black_dog20.bml.client.radial.items;
 
 import com.black_dog20.bml.client.DrawingContext;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
-import net.minecraft.client.gui.IBidiRenderer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.MultiLineLabel;
+import net.minecraft.network.chat.Component;
 
 /**
  * Radial item for a text item.
@@ -13,16 +13,16 @@ import net.minecraft.util.text.TextFormatting;
  */
 public class TextRadialItem implements IRadialItem {
 
-    private final ITextComponent text;
+    private final Component text;
     private final int color;
     private boolean hovered;
 
-    public TextRadialItem(ITextComponent text) {
+    public TextRadialItem(Component text) {
         this.text = text;
-        this.color = TextFormatting.WHITE.getColor();
+        this.color = ChatFormatting.WHITE.getColor();
     }
 
-    public TextRadialItem(ITextComponent text, TextFormatting color) {
+    public TextRadialItem(Component text, ChatFormatting color) {
         this.text = text;
         this.color = color.getColor();
     }
@@ -33,13 +33,13 @@ public class TextRadialItem implements IRadialItem {
     @Override
     public void draw(DrawingContext context) {
         float y = context.y;
-        IBidiRenderer lines = IBidiRenderer.func_243258_a(context.fontRenderer, text, 60);
-        if (lines.func_241862_a() > 1) {
-            y = y - context.fontRenderer.FONT_HEIGHT / 1.5f;
+        MultiLineLabel lines = MultiLineLabel.create(context.fontRenderer, text, 60);
+        if (lines.getLineCount() > 1) {
+            y = y - context.fontRenderer.lineHeight / 1.5f;
         } else {
-            y = y - context.fontRenderer.FONT_HEIGHT / 2.0f;
+            y = y - context.fontRenderer.lineHeight / 2.0f;
         }
-        lines.func_241864_a(context.matrixStack, (int) context.x, (int) y, context.fontRenderer.FONT_HEIGHT, color);
+        lines.renderCentered(context.poseStack, (int) context.x, (int) y, context.fontRenderer.lineHeight, color);
     }
 
     /**
@@ -77,7 +77,7 @@ public class TextRadialItem implements IRadialItem {
      * {@inheritDoc}
      */
     @Override
-    public ITextComponent getCenterText() {
+    public Component getCenterText() {
         return text;
     }
 }

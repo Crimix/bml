@@ -1,8 +1,8 @@
 package com.black_dog20.bml.utils.item;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Builder to build an item stack with NBT data.
@@ -12,7 +12,7 @@ import net.minecraft.nbt.CompoundNBT;
 public class NBTItemBuilder {
 
     private final ItemStack stack;
-    private final CompoundNBT compoundNBT;
+    private final CompoundTag compoundNBT;
 
     private NBTItemBuilder(ItemStack stack) {
         this.stack = stack;

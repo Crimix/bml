@@ -1,7 +1,7 @@
 package com.black_dog20.bml.utils;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.UUID;
@@ -20,7 +20,7 @@ public class ModUtil {
      * @param world the world.
      * @return the fake player.
      */
-    public static FakePlayer getFakePlayer(String modId, ServerWorld world) {
+    public static FakePlayer getFakePlayer(String modId, ServerLevel world) {
         GameProfile gameProfile = new GameProfile(UUID.fromString("6365307b-aa82-4e1d-b855-a841b869ef81"), modId);
         return new FakePlayer(world, gameProfile);
     }

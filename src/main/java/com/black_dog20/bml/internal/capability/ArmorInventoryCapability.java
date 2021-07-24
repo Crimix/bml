@@ -1,11 +1,10 @@
 package com.black_dog20.bml.internal.capability;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -70,34 +69,34 @@ public class ArmorInventoryCapability implements IArmorInventoryCapability {
     }
 
     @Override
-    public CompoundNBT writeToNbt() {
+    public CompoundTag writeToNbt() {
         int size = getSize();
-        ListNBT nbtTagList = new ListNBT();
+        ListTag nbtTagList = new ListTag();
         for (int i = 0; i < size; i++) {
             if (!getStackInSlot(i).isEmpty()) {
-                CompoundNBT itemTag = new CompoundNBT();
+                CompoundTag itemTag = new CompoundTag();
                 itemTag.putInt("Slot", i);
-                getStackInSlot(i).write(itemTag);
+                getStackInSlot(i).save(itemTag);
                 nbtTagList.add(itemTag);
             }
         }
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundTag nbt = new CompoundTag();
         nbt.put("Items", nbtTagList);
         nbt.putInt("Size", size);
         return nbt;
     }
 
     @Override
-    public void readFromNbt(CompoundNBT compoundNBT) {
+    public void readFromNbt(CompoundTag compoundNBT) {
         setSize(compoundNBT.contains("Size", Constants.NBT.TAG_INT) ? compoundNBT.getInt("Size") : getSize());
         int size = getSize();
-        ListNBT tagList = compoundNBT.getList("Items", Constants.NBT.TAG_COMPOUND);
+        ListTag tagList = compoundNBT.getList("Items", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
-            CompoundNBT itemTags = tagList.getCompound(i);
+            CompoundTag itemTags = tagList.getCompound(i);
             int slot = itemTags.getInt("Slot");
 
             if (slot >= 0 && slot < size) {
-                setStackInSlot(slot, ItemStack.read(itemTags));
+                setStackInSlot(slot, ItemStack.of(itemTags));
             }
         }
     }
@@ -107,7 +106,7 @@ public class ArmorInventoryCapability implements IArmorInventoryCapability {
         return new Provider();
     }
 
-    public static class Provider implements ICapabilityProvider, ICapabilitySerializable<INBT> {
+    public static class Provider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {
 
         final LazyOptional<IArmorInventoryCapability> optional;
         final IArmorInventoryCapability handler;
@@ -128,16 +127,14 @@ public class ArmorInventoryCapability implements IArmorInventoryCapability {
 
         @SuppressWarnings("ConstantConditions")
         @Override
-        public INBT serializeNBT() {
-
-            return CAP.writeNBT(handler, null);
+        public CompoundTag serializeNBT() {
+            return handler.writeToNbt();
         }
 
         @SuppressWarnings("ConstantConditions")
         @Override
-        public void deserializeNBT(INBT nbt) {
-
-            CAP.readNBT(handler, null, nbt);
+        public void deserializeNBT(CompoundTag nbt) {
+            handler.readFromNbt(nbt);
         }
     }
 }

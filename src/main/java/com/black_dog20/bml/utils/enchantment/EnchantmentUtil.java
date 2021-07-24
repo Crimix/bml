@@ -2,11 +2,11 @@ package com.black_dog20.bml.utils.enchantment;
 
 import com.black_dog20.bml.utils.math.MathUtil;
 import com.black_dog20.bml.utils.stream.StreamUtils;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class EnchantmentUtil {
      * @return the stack enchanted with the random enchantment.
      */
     public static ItemStack addRandomEnchantment(ItemStack stack, boolean allowTreasure, Level level) {
-        Optional<EnchantmentData> enchantmentData = getRandomEnchantmentData(stack, allowTreasure, level);
+        Optional<EnchantmentInstance> enchantmentData = getRandomEnchantmentData(stack, allowTreasure, level);
 
         boolean flag = stack.getItem() == Items.BOOK;
         if (flag) {
@@ -49,12 +49,12 @@ public class EnchantmentUtil {
         if (flag) {
             EnchantedBookItem.addEnchantment(stack, enchantmentData.get());
         } else {
-            stack.addEnchantment(enchantmentData.get().enchantment, enchantmentData.get().enchantmentLevel);
+            stack.enchant(enchantmentData.get().enchantment, enchantmentData.get().level);
         }
         return stack;
     }
 
-    private static Optional<EnchantmentData> getRandomEnchantmentData(ItemStack stack, boolean allowTreasure, Level level) {
+    private static Optional<EnchantmentInstance> getRandomEnchantmentData(ItemStack stack, boolean allowTreasure, Level level) {
 
         return ForgeRegistries.ENCHANTMENTS.getValues().stream()
                 .filter(getEnchantmentFilter(stack, allowTreasure))
@@ -64,14 +64,14 @@ public class EnchantmentUtil {
                 .findFirst();
     }
 
-    private static Function<Enchantment, EnchantmentData> createEnchantmentData(Level level) {
+    private static Function<Enchantment, EnchantmentInstance> createEnchantmentData(Level level) {
         switch (level) {
             case MIN:
-                return e -> new EnchantmentData(e, e.getMinLevel());
+                return e -> new EnchantmentInstance(e, e.getMinLevel());
             case MAX:
-                return e -> new EnchantmentData(e, e.getMaxLevel());
+                return e -> new EnchantmentInstance(e, e.getMaxLevel());
             case RANDOM:
-                return e -> new EnchantmentData(e, MathUtil.random(e.getMinLevel(), e.getMaxLevel()));
+                return e -> new EnchantmentInstance(e, MathUtil.random(e.getMinLevel(), e.getMaxLevel()));
             default:
                 throw new UnsupportedOperationException("Got level which is not supported, level = " + level.name());
         }
@@ -79,6 +79,6 @@ public class EnchantmentUtil {
 
     private static Predicate<Enchantment> getEnchantmentFilter(ItemStack stack, boolean allowTreasure) {
         boolean flag = stack.getItem() == Items.BOOK;
-        return enchantment -> (!enchantment.isTreasureEnchantment() || allowTreasure) && (enchantment.canApplyAtEnchantingTable(stack) || (flag && enchantment.isAllowedOnBooks()));
+        return enchantment -> (!enchantment.isTreasureOnly() || allowTreasure) && (enchantment.canApplyAtEnchantingTable(stack) || (flag && enchantment.isAllowedOnBooks()));
     }
 }

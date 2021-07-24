@@ -1,9 +1,9 @@
 package com.black_dog20.bml.utils.text;
 
 import com.google.common.collect.Streams;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -53,19 +53,19 @@ public class TextUtil {
      * @param textComponent the text component.
      * @return the formatted text.
      */
-    public static String getFormattedText(ITextComponent textComponent) {
+    public static String getFormattedText(Component textComponent) {
         StringBuilder stringbuilder = new StringBuilder();
         String s = "";
-        Iterator<ITextComponent> iterator = stream(textComponent).iterator();
+        Iterator<Component> iterator = stream(textComponent).iterator();
 
         while (iterator.hasNext()) {
-            ITextComponent itextcomponent = iterator.next();
-            String s1 = itextcomponent.getUnformattedComponentText().isEmpty() ? itextcomponent.getString() : itextcomponent.getUnformattedComponentText();
+            Component itextcomponent = iterator.next();
+            String s1 = itextcomponent.getContents().isEmpty() ? itextcomponent.getString() : itextcomponent.getContents();
             if (!s1.isEmpty()) {
                 String s2 = getFormattingCode(itextcomponent.getStyle());
                 if (!s2.equals(s)) {
                     if (!s.isEmpty()) {
-                        stringbuilder.append((Object) TextFormatting.RESET);
+                        stringbuilder.append((Object) ChatFormatting.RESET);
                     }
 
                     stringbuilder.append(s2);
@@ -77,7 +77,7 @@ public class TextUtil {
         }
 
         if (!s.isEmpty()) {
-            stringbuilder.append((Object) TextFormatting.RESET);
+            stringbuilder.append((Object) ChatFormatting.RESET);
         }
 
         return stringbuilder.toString();
@@ -89,38 +89,38 @@ public class TextUtil {
         } else {
             StringBuilder stringbuilder = new StringBuilder();
             if (style.getColor() != null) {
-                String name = style.getColor().field_240741_d_;
+                String name = style.getColor().name;
                 if (isNotNullOrEmpty(name))
-                    stringbuilder.append((Object) TextFormatting.getValueByName(name));
+                    stringbuilder.append((Object) ChatFormatting.getByName(name));
                 else
-                    stringbuilder.append((Object) style.getColor().func_240747_b_());
+                    stringbuilder.append((Object) style.getColor().serialize());
             }
 
-            if (style.getBold()) {
-                stringbuilder.append((Object) TextFormatting.BOLD);
+            if (style.isBold()) {
+                stringbuilder.append((Object) ChatFormatting.BOLD);
             }
 
-            if (style.getItalic()) {
-                stringbuilder.append((Object) TextFormatting.ITALIC);
+            if (style.isItalic()) {
+                stringbuilder.append((Object) ChatFormatting.ITALIC);
             }
 
-            if (style.getUnderlined()) {
-                stringbuilder.append((Object) TextFormatting.UNDERLINE);
+            if (style.isUnderlined()) {
+                stringbuilder.append((Object) ChatFormatting.UNDERLINE);
             }
 
-            if (style.getObfuscated()) {
-                stringbuilder.append((Object) TextFormatting.OBFUSCATED);
+            if (style.isObfuscated()) {
+                stringbuilder.append((Object) ChatFormatting.OBFUSCATED);
             }
 
-            if (style.getStrikethrough()) {
-                stringbuilder.append((Object) TextFormatting.STRIKETHROUGH);
+            if (style.isStrikethrough()) {
+                stringbuilder.append((Object) ChatFormatting.STRIKETHROUGH);
             }
 
             return stringbuilder.toString();
         }
     }
 
-    private static Stream<ITextComponent> stream(ITextComponent textComponent) {
+    private static Stream<Component> stream(Component textComponent) {
         return Streams.concat(Stream.of(textComponent), textComponent.getSiblings().stream().flatMap(i -> stream(i)));
     }
 }

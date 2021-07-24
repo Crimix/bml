@@ -4,10 +4,10 @@ import com.black_dog20.bml.Bml;
 import com.black_dog20.bml.event.ArmorEvent;
 import com.black_dog20.bml.internal.capability.ArmorInventoryCapability;
 import com.black_dog20.bml.internal.capability.IArmorInventoryCapability;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -22,7 +22,7 @@ public class ArmorEventHandler {
 
     @SubscribeEvent
     public static void onCapabilitiesEntity(AttachCapabilitiesEvent<Entity> evt) {
-        if (evt.getObject() instanceof PlayerEntity) {
+        if (evt.getObject() instanceof Player) {
             evt.addCapability(new ResourceLocation(Bml.MOD_ID, "armor_inventory_capability"), ArmorInventoryCapability.createProvider());
         }
     }
@@ -33,9 +33,9 @@ public class ArmorEventHandler {
         LazyOptional<IArmorInventoryCapability> newCap = event.getPlayer().getCapability(ArmorInventoryCapability.CAP);
 
         oldCap.ifPresent(o -> newCap.ifPresent(o::copyTo));
-        for (ItemStack armor : event.getPlayer().inventory.armorInventory) {
+        for (ItemStack armor : event.getPlayer().getInventory().armor) {
             if (!armor.isEmpty()) {
-                if (!event.getPlayer().world.isRemote) {
+                if (!event.getPlayer().level.isClientSide) {
                     MinecraftForge.EVENT_BUS.post(new ArmorEvent.Equip(event.getPlayer(), armor));
                 }
             }
@@ -44,9 +44,9 @@ public class ArmorEventHandler {
 
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        for (ItemStack armor : event.getPlayer().inventory.armorInventory) {
+        for (ItemStack armor : event.getPlayer().getInventory().armor) {
             if (!armor.isEmpty()) {
-                if (!event.getPlayer().world.isRemote) {
+                if (!event.getPlayer().level.isClientSide) {
                     MinecraftForge.EVENT_BUS.post(new ArmorEvent.Equip(event.getPlayer(), armor));
                 }
             }
@@ -61,15 +61,15 @@ public class ArmorEventHandler {
             int size = cap.getSize();
             for (int i = 0; i < size; i++) {
                 ItemStack prev = cap.getStackInSlot(i);
-                ItemStack curr = event.player.inventory.armorInventory.get(i);
-                if (!ItemStack.areItemsEqualIgnoreDurability(prev, curr)) {
+                ItemStack curr = event.player.getInventory().armor.get(i);
+                if (!ItemStack.isSameIgnoreDurability(prev, curr)) {
                     if (!prev.isEmpty()) {
-                        if (!event.player.world.isRemote) {
+                        if (!event.player.level.isClientSide) {
                             MinecraftForge.EVENT_BUS.post(new ArmorEvent.Unequip(event.player, prev));
                         }
                     }
                     if (!curr.isEmpty()) {
-                        if (!event.player.world.isRemote) {
+                        if (!event.player.level.isClientSide) {
                             MinecraftForge.EVENT_BUS.post(new ArmorEvent.Equip(event.player, curr));
                         }
                     }

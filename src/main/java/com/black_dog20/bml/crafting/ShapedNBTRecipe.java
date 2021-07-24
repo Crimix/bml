@@ -2,14 +2,14 @@ package com.black_dog20.bml.crafting;
 
 import com.black_dog20.bml.init.BmlCrafting;
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
 
 import java.util.function.Supplier;
@@ -29,7 +29,7 @@ public class ShapedNBTRecipe extends ShapedRecipe {
      * @return the specialized serializer for this recipe type.
      */
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return BmlCrafting.SHAPED_NBT.get();
     }
 
@@ -41,7 +41,7 @@ public class ShapedNBTRecipe extends ShapedRecipe {
         return () -> new Serializer(ShapedNBTRecipe::new);
     }
 
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ShapedRecipe> {
+    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapedRecipe> {
 
         private final ShapedNBTRecipeConsumer consumer;
 
@@ -49,39 +49,39 @@ public class ShapedNBTRecipe extends ShapedRecipe {
             this.consumer = consumer;
         }
 
-        public ShapedRecipe read(ResourceLocation recipeId, JsonObject json) {
-            final String group = JSONUtils.getString(json, "group", "");
+        public ShapedRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            final String group = GsonHelper.getAsString(json, "group", "");
             final RecipeUtil.ShapedPrimer primer = RecipeUtil.parseShaped(json);
-            final ItemStack result = CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
+            final ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
 
             return consumer.create(recipeId, group, primer.getRecipeWidth(), primer.getRecipeHeight(), primer.getIngredients(), result);
 
         }
 
-        public ShapedRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+        public ShapedRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             int i = buffer.readVarInt();
             int j = buffer.readVarInt();
-            String s = buffer.readString(32767);
+            String s = buffer.readUtf(32767);
             NonNullList<Ingredient> nonnulllist = NonNullList.withSize(i * j, Ingredient.EMPTY);
 
             for (int k = 0; k < nonnulllist.size(); ++k) {
-                nonnulllist.set(k, Ingredient.read(buffer));
+                nonnulllist.set(k, Ingredient.fromNetwork(buffer));
             }
 
-            ItemStack itemstack = buffer.readItemStack();
+            ItemStack itemstack = buffer.readItem();
             return consumer.create(recipeId, s, i, j, nonnulllist, itemstack);
         }
 
-        public void write(PacketBuffer buffer, ShapedRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buffer, ShapedRecipe recipe) {
             buffer.writeVarInt(recipe.getRecipeWidth());
             buffer.writeVarInt(recipe.getRecipeHeight());
-            buffer.writeString(recipe.getGroup());
+            buffer.writeUtf(recipe.getGroup());
 
             for (Ingredient ingredient : recipe.getIngredients()) {
-                ingredient.write(buffer);
+                ingredient.toNetwork(buffer);
             }
 
-            buffer.writeItemStack(recipe.getRecipeOutput());
+            buffer.writeItem(recipe.getResultItem());
         }
     }
 }

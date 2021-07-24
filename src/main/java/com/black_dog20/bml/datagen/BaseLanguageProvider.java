@@ -2,10 +2,10 @@ package com.black_dog20.bml.datagen;
 
 import com.black_dog20.bml.utils.text.TextUtil;
 import com.black_dog20.bml.utils.translate.ITranslation;
+import net.minecraft.ChatFormatting;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.data.LanguageProvider;
 
 import java.util.function.Supplier;
@@ -61,8 +61,8 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
      * @param text  the text.
      * @param color the color.
      */
-    protected void addPrefixed(String key, String text, TextFormatting color) {
-        add(String.format("%s.%s", modid, key), TextUtil.getFormattedText(new StringTextComponent(text).mergeStyle(color)));
+    protected void addPrefixed(String key, String text, ChatFormatting color) {
+        add(String.format("%s.%s", modid, key), TextUtil.getFormattedText(new TextComponent(text).withStyle(color)));
     }
 
     /**
@@ -72,11 +72,11 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
      * @param text        the text.
      * @param color       the color.
      */
-    protected void addPrefixed(ITranslation translation, String text, TextFormatting color) {
+    protected void addPrefixed(ITranslation translation, String text, ChatFormatting color) {
         if (!modid.equals(translation.getModId())) {
             throw new IllegalStateException("Mod id for translation is not the same as for the generator");
         }
-        add(translation.getDescription(), TextUtil.getFormattedText(new StringTextComponent(text).mergeStyle(color)));
+        add(translation.getDescription(), TextUtil.getFormattedText(new TextComponent(text).withStyle(color)));
     }
 
     /**
@@ -87,8 +87,8 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
      * @param styles the styles to apply.
      * @return a formatted string.
      */
-    protected String style(String text, TextFormatting... styles) {
-        return TextUtil.getFormattedText(new StringTextComponent(text).mergeStyle(styles));
+    protected String style(String text, ChatFormatting... styles) {
+        return TextUtil.getFormattedText(new TextComponent(text).withStyle(styles));
     }
 
     /**
@@ -110,7 +110,7 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
      * @param description the description of the enchantment.
      */
     protected void add(Enchantment key, String name, String description) {
-        add(key.getName(), name);
-        add(String.format("%s.desc", key.getName()), description);
+        add(key.getDescriptionId(), name);
+        add(String.format("%s.desc", key.getDescriptionId()), description);
     }
 }

@@ -1,10 +1,10 @@
 package com.black_dog20.bml.internal.network.messages;
 
 import com.black_dog20.bml.internal.utils.ClientUtil;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -14,10 +14,10 @@ public class MessageOpenOverlayConfigGui {
     public MessageOpenOverlayConfigGui() {
     }
 
-    public static void encode(MessageOpenOverlayConfigGui msg, PacketBuffer buffer) {
+    public static void encode(MessageOpenOverlayConfigGui msg, FriendlyByteBuf buffer) {
     }
 
-    public static MessageOpenOverlayConfigGui decode(PacketBuffer buffer) {
+    public static MessageOpenOverlayConfigGui decode(FriendlyByteBuf buffer) {
         return new MessageOpenOverlayConfigGui();
     }
 

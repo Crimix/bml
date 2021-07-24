@@ -1,25 +1,25 @@
 package com.black_dog20.bml.client.widgets;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 
 public class SmallButton extends Button {
-    public SmallButton(int x, int y, int widthIn, int heightIn, ITextComponent buttonText, IPressable callback) {
+    public SmallButton(int x, int y, int widthIn, int heightIn, Component buttonText, OnPress callback) {
         super(x, y, widthIn, heightIn, buttonText, callback);
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (visible) {
             Minecraft minecraft = Minecraft.getInstance();
-            FontRenderer fontrenderer = minecraft.fontRenderer;
-            minecraft.getTextureManager().bindTexture(WIDGETS_LOCATION);
+            Font fontrenderer = minecraft.font;
+            minecraft.getTextureManager().bindForSetup(WIDGETS_LOCATION);
 
-            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
             isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 

@@ -2,16 +2,16 @@ package com.black_dog20.bml.client.rows.columns;
 
 import com.black_dog20.bml.client.rows.RowDrawingContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 
 /**
  * TextComponent column uses to display ITextComponents.
  */
 public class ITextComponentColumn extends Column {
 
-    private final ITextComponent component;
+    private final Component component;
 
-    protected ITextComponentColumn(String id, ITextComponent component, Alignment alignment) {
+    protected ITextComponentColumn(String id, Component component, Alignment alignment) {
         super(id, alignment);
         this.component = component;
     }
@@ -23,7 +23,7 @@ public class ITextComponentColumn extends Column {
      * @param component the text component to display.
      * @return a new ITextComponentColumn.
      */
-    public static ITextComponentColumn of(String id, ITextComponent component) {
+    public static ITextComponentColumn of(String id, Component component) {
         return new ITextComponentColumn(id, component, Alignment.LEFT);
     }
 
@@ -35,7 +35,7 @@ public class ITextComponentColumn extends Column {
      * @param alignment the alignment to draw the text using.
      * @return a new ITextComponentColumn.
      */
-    public static ITextComponentColumn of(String id, ITextComponent component, Alignment alignment) {
+    public static ITextComponentColumn of(String id, Component component, Alignment alignment) {
         return new ITextComponentColumn(id, component, alignment);
     }
 
@@ -45,7 +45,7 @@ public class ITextComponentColumn extends Column {
     @Override
     public int getWidth() {
         if (hasValue())
-            return Minecraft.getInstance().fontRenderer.func_238414_a_(component);
+            return Minecraft.getInstance().font.width(component);
         return 0;
     }
 
@@ -56,7 +56,7 @@ public class ITextComponentColumn extends Column {
     public void render(RowDrawingContext context) {
         if (hasValue()) {
             float x = context.x;
-            int valueWidth = context.fontRenderer.func_238414_a_(component);
+            int valueWidth = context.fontRenderer.width(component);
             switch (alignment) {
                 case LEFT:
                     break;
@@ -67,7 +67,7 @@ public class ITextComponentColumn extends Column {
                     x += (context.columnMaxWidth / 2F - valueWidth / 2F);
                     break;
             }
-            context.fontRenderer.func_243246_a(context.matrixStack, component, x, context.y, -1);
+            context.fontRenderer.drawShadow(context.poseStack, component, x, context.y, -1);
         }
     }
 
@@ -77,7 +77,7 @@ public class ITextComponentColumn extends Column {
     @Override
     public int getHeight() {
         if (hasValue())
-            return Minecraft.getInstance().fontRenderer.FONT_HEIGHT;
+            return Minecraft.getInstance().font.lineHeight;
         return 0;
     }
 

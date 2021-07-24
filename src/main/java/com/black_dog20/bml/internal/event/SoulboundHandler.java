@@ -2,8 +2,8 @@ package com.black_dog20.bml.internal.event;
 
 import com.black_dog20.bml.Bml;
 import com.black_dog20.bml.internal.utils.SoulBoundInventory;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -16,9 +16,9 @@ public class SoulboundHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onPlayerDeath(LivingDeathEvent event) {
-        if (event.getEntity() != null && event.getEntity() instanceof PlayerEntity && !(event.getEntity() instanceof FakePlayer)) {
-            PlayerEntity player = (PlayerEntity) event.getEntity();
-            if (player.world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY))
+        if (event.getEntity() != null && event.getEntity() instanceof Player && !(event.getEntity() instanceof FakePlayer)) {
+            Player player = (Player) event.getEntity();
+            if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
                 return;
             if (event.isCanceled())
                 return;
@@ -34,13 +34,13 @@ public class SoulboundHandler {
 
         if (event.getOriginal() == null || event.getPlayer() == null || event.getPlayer() instanceof FakePlayer)
             return;
-        PlayerEntity player = event.getPlayer();
-        PlayerEntity original = event.getOriginal();
+        Player player = event.getPlayer();
+        Player original = event.getOriginal();
 
-        if (player.world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY))
+        if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
             return;
 
-        if (original == player || original.inventory == player.inventory || (original.inventory.armorInventory == player.inventory.armorInventory && original.inventory.mainInventory == player.inventory.mainInventory))
+        if (original.equals(player) || original.getInventory().equals(player.getInventory()) || (original.getInventory().armor.equals(player.getInventory().armor) && original.getInventory().items.equals(player.getInventory().items)))
             return;
 
         SoulBoundInventory soul = SoulBoundInventory.GetForPlayer(original);

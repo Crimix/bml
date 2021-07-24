@@ -3,10 +3,10 @@ package com.black_dog20.bml.network.messages;
 import com.black_dog20.bml.network.Handlers;
 import com.black_dog20.bml.utils.player.AbstractPlayerPermissions;
 import com.google.gson.Gson;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -26,19 +26,19 @@ public class PacketPermission<T extends AbstractPlayerPermissions> {
         return permissions;
     }
 
-    public static <T extends AbstractPlayerPermissions> void encode(PacketPermission<T> msg, PacketBuffer buffer) {
-        buffer.writeString(msg.clazz.getName(), 32767);
-        buffer.writeString(gson.toJson(msg.permissions), 32767);
+    public static <T extends AbstractPlayerPermissions> void encode(PacketPermission<T> msg, FriendlyByteBuf buffer) {
+        buffer.writeUtf(msg.clazz.getName(), 32767);
+        buffer.writeUtf(gson.toJson(msg.permissions), 32767);
     }
 
-    public static <T extends AbstractPlayerPermissions> PacketPermission<T> decode(PacketBuffer buffer) {
+    public static <T extends AbstractPlayerPermissions> PacketPermission<T> decode(FriendlyByteBuf buffer) {
         Class<T> clazz = (Class<T>) AbstractPlayerPermissions.class;
         try {
-            clazz = (Class<T>) Class.forName(buffer.readString(32767));
+            clazz = (Class<T>) Class.forName(buffer.readUtf(32767));
         } catch (ClassNotFoundException ignored) {
         }
 
-        return new PacketPermission<>(clazz, gson.fromJson(buffer.readString(32767), clazz));
+        return new PacketPermission<>(clazz, gson.fromJson(buffer.readUtf(32767), clazz));
     }
 
     public static class Handler {

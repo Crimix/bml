@@ -3,11 +3,12 @@ package com.black_dog20.bml.internal.client.screen;
 import com.black_dog20.bml.client.overlay.configure.IConfigurableOverlay;
 import com.black_dog20.bml.utils.color.Color4i;
 import com.black_dog20.bml.utils.math.MathUtil;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -15,21 +16,21 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @OnlyIn(Dist.CLIENT)
-public class OverlayConfigWidget extends Widget {
+public class OverlayConfigWidget extends AbstractWidget {
 
     private IConfigurableOverlay overlay;
     private boolean isActive;
     private boolean isDragging = false;
 
     public OverlayConfigWidget(IConfigurableOverlay overlay) {
-        super(overlay.getPosX(), overlay.getPosY(), overlay.getWidth(), overlay.getHeight(), StringTextComponent.EMPTY);
+        super(overlay.getPosX(), overlay.getPosY(), overlay.getWidth(), overlay.getHeight(), TextComponent.EMPTY);
         this.overlay = overlay;
         this.isActive = overlay.getSate();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
-    public void renderButton(MatrixStack matrixStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
+    public void renderButton(PoseStack matrixStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
         Minecraft minecraft = Minecraft.getInstance();
         Color4i color4f = getColor();
         int color1 = color4f.getValue();
@@ -40,7 +41,7 @@ public class OverlayConfigWidget extends Widget {
         vLine(matrixStack, this.x + this.width + 2, this.y + this.height + 1, this.y - 3, color1);
         hLine(matrixStack, this.x - 3, this.x + 1 + this.width + 1, this.y + this.height + 1, color1);
         overlay.getMessage()
-                .ifPresent(msg -> this.drawString(matrixStack, minecraft.fontRenderer, msg, this.x, this.y, 16777215));
+                .ifPresent(msg -> this.drawString(matrixStack, minecraft.font, msg, this.x, this.y, 16777215));
     }
 
     @SubscribeEvent
@@ -54,9 +55,9 @@ public class OverlayConfigWidget extends Widget {
     @Override
     protected void onDrag(double p_onDrag_1_, double p_onDrag_3_, double p_onDrag_5_, double p_onDrag_7_) {
         this.isDragging = true;
-        MainWindow mainWindow = Minecraft.getInstance().getMainWindow();
-        int windowWidth = mainWindow.getScaledWidth();
-        int windowHeight = mainWindow.getScaledHeight();
+        Window mainWindow = Minecraft.getInstance().getWindow();
+        int windowWidth = mainWindow.getGuiScaledWidth();
+        int windowHeight = mainWindow.getGuiScaledHeight();
 
         this.x = MathUtil.clamp(Math.round((float) p_onDrag_1_ - ((float) this.width / 2)), 0, windowWidth - this.width);
         this.y = MathUtil.clamp(Math.round((float) p_onDrag_3_ - ((float) this.height / 2)), 0, windowHeight - this.height);
@@ -79,5 +80,10 @@ public class OverlayConfigWidget extends Widget {
         } else {
             return overlay.getActiveColor();
         }
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput p_169152_) {
+
     }
 }

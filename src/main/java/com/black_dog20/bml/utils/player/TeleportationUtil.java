@@ -1,10 +1,10 @@
 package com.black_dog20.bml.utils.player;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.IWorldInfo;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.LevelData;
 
 /**
  * Utility class for teleporting players.
@@ -20,11 +20,11 @@ public class TeleportationUtil {
      * @param destination the destination to teleport to.
      * @return true if teleported.
      */
-    public static boolean teleportPlayerToDestination(ServerPlayerEntity player, TeleportDestination destination) {
+    public static boolean teleportPlayerToDestination(ServerPlayer player, TeleportDestination destination) {
         try {
-            ServerWorld world = player.server.getWorld(destination.getDimension());
+            ServerLevel world = player.server.getLevel(destination.getDimension());
             BlockPos pos = destination.getPosition();
-            player.teleport(world, pos.getX(), pos.getY(), pos.getZ(), destination.getRotationYaw(), destination.getRotationPitch());
+            player.teleportTo(world, pos.getX(), pos.getY(), pos.getZ(), destination.getRotationYaw(), destination.getRotationPitch());
             return true;
         } catch (Exception e) {
             return false;
@@ -38,11 +38,11 @@ public class TeleportationUtil {
      * @param player the player.
      * @return true if teleported.
      */
-    public static boolean teleportPlayerToSpawn(ServerPlayerEntity player) {
+    public static boolean teleportPlayerToSpawn(ServerPlayer player) {
         try {
-            ServerWorld world = player.server.getWorld(World.field_234918_g_);
-            IWorldInfo worldInfo = world.getWorldInfo();
-            player.teleport(world, worldInfo.getSpawnX(), worldInfo.getSpawnY(), worldInfo.getSpawnZ(), player.rotationYaw, player.rotationPitch);
+            ServerLevel world = player.server.getLevel(Level.OVERWORLD);
+            LevelData worldInfo = world.getLevelData();
+            player.teleportTo(world, worldInfo.getXSpawn(), worldInfo.getYSpawn(), worldInfo.getZSpawn(), player.getYRot(), player.getXRot());
             return true;
         } catch (Exception e) {
             return false;

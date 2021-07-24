@@ -1,6 +1,6 @@
 package com.black_dog20.bml.capability;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 /**
  * Base capability interface.
@@ -22,13 +22,13 @@ public interface IBaseCapability<T> {
      *
      * @return the NBT compound.
      */
-    CompoundNBT writeToNbt();
+    CompoundTag writeToNbt();
 
     /**
      * Read the values from the NBT compound and set them on this capability.
      *
      * @param compoundNBT the NBT compound.
      */
-    void readFromNbt(CompoundNBT compoundNBT);
+    void readFromNbt(CompoundTag compoundNBT);
 
 }

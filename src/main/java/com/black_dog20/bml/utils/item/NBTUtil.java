@@ -1,6 +1,6 @@
 package com.black_dog20.bml.utils.item;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class NBTUtil {
 

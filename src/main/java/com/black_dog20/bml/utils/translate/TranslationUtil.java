@@ -1,9 +1,9 @@
 package com.black_dog20.bml.utils.translate;
 
 import com.black_dog20.bml.utils.text.TextUtil;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Function;
 
@@ -31,7 +31,7 @@ public class TranslationUtil {
      * @param color       the color for the text.
      * @return the formatted translated text as a string.
      */
-    public static String translateToString(ITranslation translation, TextFormatting color) {
+    public static String translateToString(ITranslation translation, ChatFormatting color) {
         return TextUtil.getFormattedText(translate(translation, color));
     }
 
@@ -54,7 +54,7 @@ public class TranslationUtil {
      * @param objs        the objects.
      * @return the formatted translated text as a string.
      */
-    public static String translateToString(ITranslation translation, TextFormatting color, Object... objs) {
+    public static String translateToString(ITranslation translation, ChatFormatting color, Object... objs) {
         return TextUtil.getFormattedText(translate(translation, color, objs));
     }
 
@@ -64,8 +64,8 @@ public class TranslationUtil {
      * @param translation an enum containing the key and modid.
      * @return the formatted translated text.
      */
-    public static TranslationTextComponent translate(ITranslation translation) {
-        return translate(translation, TextFormatting.WHITE);
+    public static TranslatableComponent translate(ITranslation translation) {
+        return translate(translation, ChatFormatting.WHITE);
     }
 
     /**
@@ -75,8 +75,8 @@ public class TranslationUtil {
      * @param objs        the objects.
      * @return the formatted translated text.
      */
-    public static TranslationTextComponent translate(ITranslation translation, Object... objs) {
-        return translate(translation, TextFormatting.WHITE, objs);
+    public static TranslatableComponent translate(ITranslation translation, Object... objs) {
+        return translate(translation, ChatFormatting.WHITE, objs);
     }
 
     /**
@@ -86,9 +86,9 @@ public class TranslationUtil {
      * @param color       the color for the text.
      * @return the formatted translated text.
      */
-    public static TranslationTextComponent translate(ITranslation translation, TextFormatting color) {
-        TranslationTextComponent component = new TranslationTextComponent(String.format("%s.%s", translation.getModId(), translation.getKey()));
-        component.setStyle(component.getStyle().setFormatting(color));
+    public static TranslatableComponent translate(ITranslation translation, ChatFormatting color) {
+        TranslatableComponent component = new TranslatableComponent(String.format("%s.%s", translation.getModId(), translation.getKey()));
+        component.setStyle(component.getStyle().withColor(color));
         return component;
     }
 
@@ -100,9 +100,9 @@ public class TranslationUtil {
      * @param objs        the objects.
      * @return the formatted translated text.
      */
-    public static TranslationTextComponent translate(ITranslation translation, TextFormatting color, Object... objs) {
-        TranslationTextComponent component = new TranslationTextComponent(String.format("%s.%s", translation.getModId(), translation.getKey()), objs);
-        component.setStyle(component.getStyle().setFormatting(color));
+    public static TranslatableComponent translate(ITranslation translation, ChatFormatting color, Object... objs) {
+        TranslatableComponent component = new TranslatableComponent(String.format("%s.%s", translation.getModId(), translation.getKey()), objs);
+        component.setStyle(component.getStyle().withColor(color));
         return component;
     }
 
@@ -115,7 +115,7 @@ public class TranslationUtil {
      * @return translated text or some string based on the resource location.
      */
     public static String translateResourceLocation(ResourceLocation resourceLocation, Function<ResourceLocation, String> defaultFunc) {
-        String s = TextUtil.getFormattedText(new TranslationTextComponent(resourceLocation.toString()));
+        String s = TextUtil.getFormattedText(new TranslatableComponent(resourceLocation.toString()));
         if (s.contains(resourceLocation.getNamespace()))
             return resourceLocation.toString();
         else

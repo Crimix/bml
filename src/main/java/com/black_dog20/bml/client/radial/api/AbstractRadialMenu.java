@@ -6,18 +6,15 @@ import com.black_dog20.bml.client.radial.api.items.IRadialCategory;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.internal.utils.InternalTranslations;
 import com.black_dog20.bml.utils.text.TextUtil;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -26,12 +23,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.black_dog20.bml.internal.utils.InternalTranslations.Translations.*;
+import static com.black_dog20.bml.internal.utils.InternalTranslations.Translations.PAGE_FOOTER;
 
 /*
 Note: This code is heavily inspired and has been modified from David Quintana's solution.
@@ -93,12 +89,12 @@ public abstract class AbstractRadialMenu extends Screen {
     private int maxPages;
     private int currentPage;
 
-    public AbstractRadialMenu(ITextComponent title, List<IRadialItem> items) {
+    public AbstractRadialMenu(Component title, List<IRadialItem> items) {
         super(title);
         this.changeItems(items);
 
         Minecraft minecraft = Minecraft.getInstance();
-        this.startAnimation = minecraft.world.getGameTime() + (double) minecraft.getRenderPartialTicks();
+        this.startAnimation = minecraft.level.getGameTime() + (double) minecraft.getFrameTime();
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -182,9 +178,9 @@ public abstract class AbstractRadialMenu extends Screen {
      * @param y         the y point to draw from.
      * @param radiusOut the outer radius.
      */
-    public void drawFooter(MatrixStack matrixStack, float width, float y, float radiusOut) {
-        ITextComponent pageString = InternalTranslations.translate(PAGE_FOOTER, currentPage, maxPages);
-        font.func_243246_a(matrixStack, pageString, (width - font.func_238414_a_(pageString)) / 2.0f, y, 0xFFFFFFFF);
+    public void drawFooter(PoseStack matrixStack, float width, float y, float radiusOut) {
+        Component pageString = InternalTranslations.translate(PAGE_FOOTER, currentPage, maxPages);
+        font.drawShadow(matrixStack, pageString, (width - font.width(pageString)) / 2.0f, y, 0xFFFFFFFF);
     }
 
     /**
@@ -194,7 +190,7 @@ public abstract class AbstractRadialMenu extends Screen {
      * @param y         the y point to draw from.
      * @param radiusOut the outer radius.
      */
-    public void drawHeader(MatrixStack matrixStack, float width, float y, float radiusOut) {
+    public void drawHeader(PoseStack matrixStack, float width, float y, float radiusOut) {
     }
 
     /**
@@ -202,7 +198,7 @@ public abstract class AbstractRadialMenu extends Screen {
      *
      * @param radiusOut the outer radius.
      */
-    public void drawExtras(MatrixStack matrixStack, float radiusOut) {
+    public void drawExtras(PoseStack matrixStack, float radiusOut) {
 
     }
 
@@ -245,17 +241,17 @@ public abstract class AbstractRadialMenu extends Screen {
 
     @SubscribeEvent
     public static void overlayEvent(RenderGameOverlayEvent.Pre event) {
-        if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS)
-            return;
+//        if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS) TODO Test
+//            return;
 
-        if (Minecraft.getInstance().currentScreen instanceof AbstractRadialMenu) {
+        if (Minecraft.getInstance().screen instanceof AbstractRadialMenu) {
             event.setCanceled(true);
         }
     }
 
     @Override
-    public void closeScreen() {
-        super.closeScreen();
+    public void onClose() {
+        super.onClose();
     }
 
     @Override
@@ -268,13 +264,13 @@ public abstract class AbstractRadialMenu extends Screen {
     public void tick() {
         super.tick();
         if (state == State.INITIALIZING) {
-            startAnimation = minecraft.world.getGameTime() + (double) minecraft.getRenderPartialTicks();
+            startAnimation = minecraft.level.getGameTime() + (double) minecraft.getFrameTime();
             state = State.OPENING;
             animationProgress = 0;
         }
 
         if (isClosed()) {
-            Minecraft.getInstance().displayGuiScreen(null);
+            Minecraft.getInstance().setScreen(null);
         }
         if (!isReady()) {
             return;
@@ -343,13 +339,13 @@ public abstract class AbstractRadialMenu extends Screen {
      */
     public void close() {
         state = State.CLOSING;
-        startAnimation = minecraft.world.getGameTime() + (double) minecraft.getRenderPartialTicks();
+        startAnimation = minecraft.level.getGameTime() + (double) minecraft.getFrameTime();
         animationProgress = 1.0f;
         setHovered(-1);
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         draw(matrixStack, partialTicks, mouseX, mouseY);
     }
@@ -359,7 +355,7 @@ public abstract class AbstractRadialMenu extends Screen {
         return false;
     }
 
-    private void draw(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+    private void draw(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         updateAnimationState(partialTicks);
 
         if (isClosed())
@@ -379,17 +375,17 @@ public abstract class AbstractRadialMenu extends Screen {
         int y = height / 2;
         float z = 0;
 
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.translate(0, animationTop, 0);
 
         drawBackground(matrixStack, x, y, z, radiusIn, radiusOut);
 
-        matrixStack.pop();
+        matrixStack.popPose();
 
         if (isReady()) {
             drawItems(matrixStack, x, y, z, width, height, font, itemRenderer);
 
-            ITextComponent currentCenterText = null;
+            Component currentCenterText = null;
             for (IRadialItem item : visibleItems) {
                 if (item.isHovered()) {
                     if (item.getCenterText() != null)
@@ -400,12 +396,12 @@ public abstract class AbstractRadialMenu extends Screen {
 
             if (currentCenterText != null && shouldDrawCenterText()) {
                 String text = TextUtil.getFormattedText(currentCenterText);
-                font.drawStringWithShadow(matrixStack, text, (width - font.getStringWidth(text)) / 2.0f, (height - font.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
+                font.drawShadow(matrixStack, text, (width - font.width(text)) / 2.0f, (height - font.lineHeight) / 2.0f, 0xFFFFFFFF);
             }
 
             drawTooltips(matrixStack, mouseX, mouseY);
             drawFooter(matrixStack, width, height / 2.0f + radiusOut * 1.05f, radiusOut);
-            drawHeader(matrixStack, width, height / 2.0f - radiusOut * 1.05f - font.FONT_HEIGHT, radiusOut);
+            drawHeader(matrixStack, width, height / 2.0f - radiusOut * 1.05f - font.lineHeight, radiusOut);
             drawExtras(matrixStack, radiusOut);
 
         }
@@ -415,14 +411,14 @@ public abstract class AbstractRadialMenu extends Screen {
         float openAnimation = 0;
         switch (state) {
             case OPENING:
-                openAnimation = (float) ((minecraft.world.getGameTime() + partialTicks - startAnimation) / getOpenAnimationLength());
+                openAnimation = (float) ((minecraft.level.getGameTime() + partialTicks - startAnimation) / getOpenAnimationLength());
                 if (openAnimation >= 1.0 || visibleItems.size() == 0) {
                     openAnimation = 1;
                     state = State.NORMAL;
                 }
                 break;
             case CLOSING:
-                openAnimation = 1 - (float) ((minecraft.world.getGameTime() + partialTicks - startAnimation) / getOpenAnimationLength());
+                openAnimation = 1 - (float) ((minecraft.level.getGameTime() + partialTicks - startAnimation) / getOpenAnimationLength());
                 if (openAnimation <= 0 || visibleItems.size() == 0) {
                     openAnimation = 0;
                     state = State.CLOSED;
@@ -432,7 +428,7 @@ public abstract class AbstractRadialMenu extends Screen {
         animationProgress = openAnimation;
     }
 
-    private void drawTooltips(MatrixStack matrixStack, int mouseX, int mouseY) {
+    private void drawTooltips(PoseStack matrixStack, int mouseX, int mouseY) {
         for (int i = 0; i < visibleItems.size(); i++) {
             IRadialItem item = visibleItems.get(i);
             if (item.isHovered()) {
@@ -442,7 +438,7 @@ public abstract class AbstractRadialMenu extends Screen {
         }
     }
 
-    private void drawItems(MatrixStack matrixStack, int x, int y, float z, int width, int height, FontRenderer font, ItemRenderer itemRenderer) {
+    private void drawItems(PoseStack matrixStack, int x, int y, float z, int width, int height, Font font, ItemRenderer itemRenderer) {
         iterateVisible((item, s, e) -> {
             float middle = (s + e) * 0.5f;
             float posX = x + itemRadius * (float) Math.cos(middle);
@@ -464,15 +460,14 @@ public abstract class AbstractRadialMenu extends Screen {
         }
     }
 
-    private void drawBackground(MatrixStack matrixStack, float x, float y, float z, float radiusIn, float radiusOut) {
-        RenderSystem.disableAlphaTest();
+    private void drawBackground(PoseStack matrixStack, float x, float y, float z, float radiusIn, float radiusOut) {
         RenderSystem.enableBlend();
         RenderSystem.disableTexture();
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder buffer = tessellator.getBuilder();
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
         if (!visibleItems.isEmpty()) {
             iterateVisible((item, s, e) -> {
@@ -485,16 +480,15 @@ public abstract class AbstractRadialMenu extends Screen {
             drawPieArc(buffer, x, y, z, radiusIn, radiusOut, s, e, getBackgroundColor());
         }
 
-        tessellator.draw();
+        tessellator.end();
 
-        RenderSystem.disableAlphaTest();
         RenderSystem.disableBlend();
         RenderSystem.enableTexture();
     }
 
     private void drawPieArc(BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int color) {
         float angle = endAngle - startAngle;
-        int sections = Math.max(1, MathHelper.ceil(angle / PRECISION));
+        int sections = Math.max(1, Mth.ceil(angle / PRECISION));
 
         angle = endAngle - startAngle;
 
@@ -516,16 +510,16 @@ public abstract class AbstractRadialMenu extends Screen {
             float pos2InX = x + radiusIn * (float) Math.cos(angle2);
             float pos2InY = y + radiusIn * (float) Math.sin(angle2);
 
-            buffer.pos(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
         }
     }
 
     @SubscribeEvent
     public void onMouseScroll(GuiScreenEvent.MouseScrollEvent.Pre event) {
-        if (Minecraft.getInstance().currentScreen instanceof AbstractRadialMenu) {
+        if (Minecraft.getInstance().screen instanceof AbstractRadialMenu) {
             if (!isScrollInverted()) {
                 if (event.getScrollDelta() < 0) {
                     nexPage();
@@ -582,14 +576,14 @@ public abstract class AbstractRadialMenu extends Screen {
 
 
         if (ShouldClipMouseToCircle()) {
-            MainWindow mainWindow = minecraft.getMainWindow();
+            Window mainWindow = minecraft.getWindow();
 
-            int windowWidth = mainWindow.getWidth();
-            int windowHeight = mainWindow.getHeight();
+            int windowWidth = mainWindow.getScreenWidth();
+            int windowHeight = mainWindow.getScreenHeight();
 
             double[] xPos = new double[1];
             double[] yPos = new double[1];
-            GLFW.glfwGetCursorPos(mainWindow.getHandle(), xPos, yPos);
+            GLFW.glfwGetCursorPos(mainWindow.getWindow(), xPos, yPos);
 
             double scaledX = xPos[0] - (windowWidth / 2.0f);
             double scaledY = yPos[0] - (windowHeight / 2.0f);
@@ -601,7 +595,7 @@ public abstract class AbstractRadialMenu extends Screen {
                 double fixedX = scaledX * radius / distance;
                 double fixedY = scaledY * radius / distance;
 
-                GLFW.glfwSetCursorPos(mainWindow.getHandle(), (int) (windowWidth / 2 + fixedX), (int) (windowHeight / 2 + fixedY));
+                GLFW.glfwSetCursorPos(mainWindow.getWindow(), (int) (windowWidth / 2 + fixedX), (int) (windowHeight / 2 + fixedY));
             }
         }
     }

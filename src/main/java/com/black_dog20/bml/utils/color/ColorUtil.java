@@ -1,12 +1,12 @@
 package com.black_dog20.bml.utils.color;
 
 import com.black_dog20.bml.utils.math.MathUtil;
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.ForgeHooksClient;
 
 import javax.annotation.Nullable;
@@ -52,7 +52,7 @@ public final class ColorUtil {
         if (fluid == Fluids.WATER) {
             return 0x0094FF;
         }
-        TextureAtlasSprite[] sprites = ForgeHooksClient.getFluidSprites(Minecraft.getInstance().world, BlockPos.ZERO, fluid.getDefaultState());
+        TextureAtlasSprite[] sprites = ForgeHooksClient.getFluidSprites(Minecraft.getInstance().level, BlockPos.ZERO, fluid.defaultFluidState());
         if (sprites.length > 0) {
             return getColor(sprites[0]);
         }
@@ -104,7 +104,7 @@ public final class ColorUtil {
         int iconHeight = textureAtlasSprite.getHeight();
         int frameCount = textureAtlasSprite.getFrameCount();
         if (iconWidth > 0 && iconHeight > 0 && frameCount > 0) {
-            NativeImage[] frames = textureAtlasSprite.frames;
+            NativeImage[] frames = textureAtlasSprite.mainImage;
             return frames[0];
         } else {
             return null;

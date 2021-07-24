@@ -1,6 +1,6 @@
 package com.black_dog20.bml.event;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -21,7 +21,7 @@ public class PlayerOpChangeEvent extends PlayerEvent {
     private final boolean opStatus;
     private final int level;
 
-    public PlayerOpChangeEvent(ServerPlayerEntity player, boolean opStatus, int level) {
+    public PlayerOpChangeEvent(ServerPlayer player, boolean opStatus, int level) {
         super(player);
         this.opStatus = opStatus;
         this.level = level;

@@ -1,6 +1,6 @@
 package com.black_dog20.bml.client.overlay;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -27,14 +27,14 @@ public abstract class Overlay {
          * @param scaledwidth  the scaled width of the window.
          * @param scaledheight the scaled height of the window.
          */
-        public abstract void onRender(MatrixStack matrixStack, int scaledwidth, int scaledheight);
+        public abstract void onRender(PoseStack matrixStack, int scaledwidth, int scaledheight);
 
         @SubscribeEvent
         public void onOverlayRender(RenderGameOverlayEvent.Pre event) {
             if (!doRender(event.getType()))
                 return;
-            int width = Minecraft.getInstance().getMainWindow().getScaledWidth();
-            int height = Minecraft.getInstance().getMainWindow().getScaledHeight();
+            int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+            int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
             onRender(event.getMatrixStack(), width, height);
             if (event.isCancelable())
                 event.setCanceled(doesCancelEvent());
@@ -53,14 +53,14 @@ public abstract class Overlay {
          * @param scaledwidth  the scaled width of the window.
          * @param scaledheight the scaled height of the window.
          */
-        public abstract void onRender(MatrixStack matrixStack, int scaledwidth, int scaledheight);
+        public abstract void onRender(PoseStack matrixStack, int scaledwidth, int scaledheight);
 
         @SubscribeEvent
         public void onOverlayRender(RenderGameOverlayEvent.Post event) {
             if (!doRender(event.getType()))
                 return;
-            int width = Minecraft.getInstance().getMainWindow().getScaledWidth();
-            int height = Minecraft.getInstance().getMainWindow().getScaledHeight();
+            int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+            int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
             onRender(event.getMatrixStack(), width, height);
             if (event.isCancelable())
                 event.setCanceled(doesCancelEvent());

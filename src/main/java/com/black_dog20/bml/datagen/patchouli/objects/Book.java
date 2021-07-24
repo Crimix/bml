@@ -1,7 +1,7 @@
 package com.black_dog20.bml.datagen.patchouli.objects;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -126,8 +126,8 @@ public class Book {
         return this;
     }
 
-    public Book withCreativeTab(ItemGroup creative_tab) {
-        this.creative_tab = creative_tab.tabLabel;
+    public Book withCreativeTab(CreativeModeTab creative_tab) {
+        this.creative_tab = creative_tab.langId;
         return this;
     }
 

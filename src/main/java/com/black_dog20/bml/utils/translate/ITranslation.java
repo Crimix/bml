@@ -1,7 +1,7 @@
 package com.black_dog20.bml.utils.translate;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 
 /**
  * Interface for enums used in translation.
@@ -40,7 +40,7 @@ public interface ITranslation {
      *
      * @return the TranslationTextComponent.
      */
-    default ITextComponent get() {
+    default Component get() {
         return TranslationUtil.translate(this);
     }
 
@@ -50,7 +50,7 @@ public interface ITranslation {
      * @param formatting the text formatting to be applied to it.
      * @return the TranslationTextComponent.
      */
-    default ITextComponent get(TextFormatting formatting) {
+    default Component get(ChatFormatting formatting) {
         return TranslationUtil.translate(this, formatting);
     }
 
@@ -60,7 +60,7 @@ public interface ITranslation {
      * @param objs the objects.
      * @return the TranslationTextComponent.
      */
-    default ITextComponent get(Object... objs) {
+    default Component get(Object... objs) {
         return TranslationUtil.translate(this, objs);
     }
 
@@ -71,7 +71,7 @@ public interface ITranslation {
      * @param objs       the objects.
      * @return the TranslationTextComponent.
      */
-    default ITextComponent get(TextFormatting formatting, Object... objs) {
+    default Component get(ChatFormatting formatting, Object... objs) {
         return TranslationUtil.translate(this, formatting, objs);
     }
 }

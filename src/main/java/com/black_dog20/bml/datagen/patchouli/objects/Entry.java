@@ -1,6 +1,6 @@
 package com.black_dog20.bml.datagen.patchouli.objects;
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;

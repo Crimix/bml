@@ -1,8 +1,8 @@
 package com.black_dog20.bml.client;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.ItemRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 
 /*
 Note: This code is heavily inspired and has been modified from David Quintana's solution.
@@ -37,17 +37,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 public class DrawingContext {
-    public final MatrixStack matrixStack;
+    public final PoseStack poseStack;
     public final int width;
     public final int height;
     public final float x;
     public final float y;
     public final float z;
-    public final FontRenderer fontRenderer;
+    public final Font fontRenderer;
     public final ItemRenderer itemRenderer;
 
-    public DrawingContext(MatrixStack matrixStack, int width, int height, float x, float y, float z, FontRenderer fontRenderer, ItemRenderer itemRenderer) {
-        this.matrixStack = matrixStack;
+    public DrawingContext(PoseStack poseStack, int width, int height, float x, float y, float z, Font fontRenderer, ItemRenderer itemRenderer) {
+        this.poseStack = poseStack;
         this.width = width;
         this.height = height;
         this.x = x;
@@ -58,6 +58,6 @@ public class DrawingContext {
     }
 
     public DrawingContext of(float x, float y) {
-        return new DrawingContext(matrixStack, width, height, x, y, z, fontRenderer, itemRenderer);
+        return new DrawingContext(poseStack, width, height, x, y, z, fontRenderer, itemRenderer);
     }
 }

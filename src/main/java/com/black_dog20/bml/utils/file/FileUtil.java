@@ -4,8 +4,8 @@ import com.black_dog20.bml.Bml;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.FolderName;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.LevelResource;
 
 import java.io.File;
 import java.io.FileReader;
@@ -86,8 +86,8 @@ public class FileUtil {
      * @param dirName the name of the dir.
      * @return a file pointing to the folder.
      */
-    public static File getDirRelativeToWorldFolder(ServerWorld world, String dirName) {
-        Path path = world.getServer().func_240776_a_(FolderName.field_237253_i_);
+    public static File getDirRelativeToWorldFolder(ServerLevel world, String dirName) {
+        Path path = world.getServer().getWorldPath(LevelResource.ROOT);
         File dir = path.toFile();
         if (!dirName.startsWith("/"))
             dirName = "/" + dirName;

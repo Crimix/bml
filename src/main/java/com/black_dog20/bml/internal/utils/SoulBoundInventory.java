@@ -1,11 +1,11 @@
 package com.black_dog20.bml.internal.utils;
 
 import com.black_dog20.bml.api.ISoulbindable;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public class SoulBoundInventory {
 
@@ -14,13 +14,13 @@ public class SoulBoundInventory {
     public final NonNullList<ItemStack> mainInventory;
     public final NonNullList<ItemStack> armorInventory;
     public final NonNullList<ItemStack> offHandInventory;
-    public final PlayerEntity player;
+    public final Player player;
 
-    private SoulBoundInventory(PlayerEntity player, boolean load) {
+    private SoulBoundInventory(Player player, boolean load) {
         this.player = player;
-        this.mainInventory = NonNullList.<ItemStack>withSize(player.inventory.mainInventory.size(), ItemStack.EMPTY);
-        this.armorInventory = NonNullList.<ItemStack>withSize(player.inventory.armorInventory.size(), ItemStack.EMPTY);
-        this.offHandInventory = NonNullList.<ItemStack>withSize(player.inventory.offHandInventory.size(), ItemStack.EMPTY);
+        this.mainInventory = NonNullList.<ItemStack>withSize(player.getInventory().items.size(), ItemStack.EMPTY);
+        this.armorInventory = NonNullList.<ItemStack>withSize(player.getInventory().armor.size(), ItemStack.EMPTY);
+        this.offHandInventory = NonNullList.<ItemStack>withSize(player.getInventory().offhand.size(), ItemStack.EMPTY);
 
         if (load) {
             readFromNBT();
@@ -31,11 +31,11 @@ public class SoulBoundInventory {
         }
     }
 
-    public SoulBoundInventory(PlayerEntity player) {
+    public SoulBoundInventory(Player player) {
         this(player, false);
     }
 
-    public static SoulBoundInventory GetForPlayer(PlayerEntity player) {
+    public static SoulBoundInventory GetForPlayer(Player player) {
         return new SoulBoundInventory(player, true);
     }
 
@@ -44,7 +44,7 @@ public class SoulBoundInventory {
     }
 
     private void copyMain() {
-        NonNullList<ItemStack> old = player.inventory.mainInventory;
+        NonNullList<ItemStack> old = player.getInventory().items;
         for (int i = 0; i < old.size(); i++) {
             ItemStack itemStack = old.get(i);
             if (isSoulbound(itemStack)) {
@@ -55,7 +55,7 @@ public class SoulBoundInventory {
     }
 
     private void copyArmor() {
-        NonNullList<ItemStack> old = player.inventory.armorInventory;
+        NonNullList<ItemStack> old = player.getInventory().armor;
         for (int i = 0; i < old.size(); i++) {
             ItemStack itemStack = old.get(i);
             if (isSoulbound(itemStack)) {
@@ -66,7 +66,7 @@ public class SoulBoundInventory {
     }
 
     private void copyOffHand() {
-        NonNullList<ItemStack> old = player.inventory.offHandInventory;
+        NonNullList<ItemStack> old = player.getInventory().offhand;
         for (int i = 0; i < old.size(); i++) {
             ItemStack itemStack = old.get(i);
             if (isSoulbound(itemStack)) {
@@ -76,65 +76,65 @@ public class SoulBoundInventory {
         }
     }
 
-    public void restoreMain(PlayerEntity player) {
+    public void restoreMain(Player player) {
         NonNullList<ItemStack> old = this.mainInventory;
         for (int i = 0; i < old.size(); i++) {
             ItemStack itemStack = old.get(i);
             if (isSoulbound(itemStack)) {
-                player.inventory.mainInventory.set(i, old.get(i).copy());
+                player.getInventory().items.set(i, old.get(i).copy());
                 old.get(i).setCount(0);
             }
         }
     }
 
 
-    public void restoreArmor(PlayerEntity player) {
+    public void restoreArmor(Player player) {
         NonNullList<ItemStack> old = this.armorInventory;
         for (int i = 0; i < old.size(); i++) {
             ItemStack itemStack = old.get(i);
             if (isSoulbound(itemStack)) {
-                player.inventory.armorInventory.set(i, old.get(i).copy());
+                player.getInventory().armor.set(i, old.get(i).copy());
                 old.get(i).setCount(0);
             }
         }
     }
 
-    public void restoreHand(PlayerEntity player) {
+    public void restoreHand(Player player) {
         NonNullList<ItemStack> old = this.offHandInventory;
         for (int i = 0; i < old.size(); i++) {
             ItemStack itemStack = old.get(i);
             if (isSoulbound(itemStack)) {
-                player.inventory.offHandInventory.set(i, old.get(i));
+                player.getInventory().offhand.set(i, old.get(i));
                 old.get(i).setCount(0);
             }
         }
     }
 
     public void writeToNBT() {
-        ListNBT nbtTagListIn = new ListNBT();
+        ListTag nbtTagListIn = new ListTag();
         for (int i = 0; i < this.mainInventory.size(); ++i) {
             if (!((ItemStack) this.mainInventory.get(i)).isEmpty()) {
-                CompoundNBT nbttagcompound = new CompoundNBT();
+                CompoundTag nbttagcompound = new CompoundTag();
                 nbttagcompound.putByte("Slot", (byte) i);
-                ((ItemStack) this.mainInventory.get(i)).write(nbttagcompound);
+                ((ItemStack) this.mainInventory.get(i)).save(nbttagcompound);
                 nbtTagListIn.add(nbttagcompound);
             }
         }
 
         for (int j = 0; j < this.armorInventory.size(); ++j) {
             if (!((ItemStack) this.armorInventory.get(j)).isEmpty()) {
-                CompoundNBT nbttagcompound1 = new CompoundNBT();
+                CompoundTag nbttagcompound1 = new CompoundTag();
                 nbttagcompound1.putByte("Slot", (byte) (j + 100));
-                ((ItemStack) this.armorInventory.get(j)).write(nbttagcompound1);
+                ((ItemStack) this.armorInventory.get(j)).save(nbttagcompound1);
                 nbtTagListIn.add(nbttagcompound1);
             }
         }
 
         for (int k = 0; k < this.offHandInventory.size(); ++k) {
             if (!((ItemStack) this.offHandInventory.get(k)).isEmpty()) {
-                CompoundNBT nbttagcompound2 = new CompoundNBT();
+                CompoundTag nbttagcompound2 = new CompoundTag();
                 nbttagcompound2.putByte("Slot", (byte) (k + 150));
-                ((ItemStack) this.offHandInventory.get(k)).write(nbttagcompound2);
+                ((ItemStack) this.offHandInventory.get(k)).save(nbttagcompound2);
                 nbtTagListIn.add(nbttagcompound2);
             }
         }
@@ -146,13 +146,13 @@ public class SoulBoundInventory {
         this.armorInventory.clear();
         this.offHandInventory.clear();
 
-        ListNBT nbtTagListIn = (ListNBT) player.getPersistentData().get(SOULBOUND_INVENTORY_TAG);
+        ListTag nbtTagListIn = (ListTag) player.getPersistentData().get(SOULBOUND_INVENTORY_TAG);
         if (nbtTagListIn != null) {
 
             for (int i = 0; i < nbtTagListIn.size(); ++i) {
-                CompoundNBT nbttagcompound = nbtTagListIn.getCompound(i);
+                CompoundTag nbttagcompound = nbtTagListIn.getCompound(i);
                 int j = nbttagcompound.getByte("Slot") & 255;
-                ItemStack itemstack = ItemStack.read(nbttagcompound);
+                ItemStack itemstack = ItemStack.of(nbttagcompound);
 
                 if (!itemstack.isEmpty()) {
                     if (j >= 0 && j < this.mainInventory.size()) {

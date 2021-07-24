@@ -1,7 +1,7 @@
 package com.black_dog20.bml.utils.block;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 
 /**
  * Utility class for block.

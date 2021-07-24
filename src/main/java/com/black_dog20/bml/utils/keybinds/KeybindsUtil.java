@@ -1,10 +1,10 @@
 package com.black_dog20.bml.utils.keybinds;
 
 import com.black_dog20.bml.utils.text.TextUtil;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
+import net.minecraft.client.resources.language.I18n;
 import org.lwjgl.glfw.GLFW;
 
 public class KeybindsUtil {
@@ -18,7 +18,7 @@ public class KeybindsUtil {
      */
     public static boolean isKeyDown(int keycode) {
         Minecraft minecraft = Minecraft.getInstance();
-        return InputMappings.isKeyDown(minecraft.getMainWindow().getHandle(), keycode);
+        return InputConstants.isKeyDown(minecraft.getWindow().getWindow(), keycode);
     }
 
     /**
@@ -27,17 +27,17 @@ public class KeybindsUtil {
      * @param keyBinding the keybinding.
      * @return true if the key is down.
      */
-    public static boolean isKeyDown(KeyBinding keyBinding) {
+    public static boolean isKeyDown(KeyMapping keyBinding) {
         Minecraft minecraft = Minecraft.getInstance();
-        int keycode = keyBinding.getKey().getKeyCode();
-        if (keyBinding.isInvalid())
+        int keycode = keyBinding.getKey().getValue();
+        if (keyBinding.isUnbound())
             return false;
 
         boolean keyIsDown;
-        if (keyBinding.getKey().getType() == InputMappings.Type.MOUSE) {
-            keyIsDown = GLFW.glfwGetMouseButton(minecraft.getMainWindow().getHandle(), keycode) == 1;
+        if (keyBinding.getKey().getType() == InputConstants.Type.MOUSE) {
+            keyIsDown = GLFW.glfwGetMouseButton(minecraft.getWindow().getWindow(), keycode) == 1;
         } else {
-            keyIsDown = InputMappings.isKeyDown(minecraft.getMainWindow().getHandle(), keycode);
+            keyIsDown = InputConstants.isKeyDown(minecraft.getWindow().getWindow(), keycode);
         }
 
         boolean conflictContextActive = keyBinding.getKeyConflictContext().isActive();
@@ -52,16 +52,16 @@ public class KeybindsUtil {
      * @param keyBinding the keybinding.
      * @return true if the key is down.
      */
-    public static boolean isKeyDownIgnoreConflicts(KeyBinding keyBinding) {
+    public static boolean isKeyDownIgnoreConflicts(KeyMapping keyBinding) {
         Minecraft minecraft = Minecraft.getInstance();
-        int keycode = keyBinding.getKey().getKeyCode();
-        if (keyBinding.isInvalid())
+        int keycode = keyBinding.getKey().getValue();
+        if (keyBinding.isUnbound())
             return false;
 
-        if (keyBinding.getKey().getType() == InputMappings.Type.MOUSE) {
-            return GLFW.glfwGetMouseButton(minecraft.getMainWindow().getHandle(), keycode) == 1;
+        if (keyBinding.getKey().getType() == InputConstants.Type.MOUSE) {
+            return GLFW.glfwGetMouseButton(minecraft.getWindow().getWindow(), keycode) == 1;
         } else {
-            return InputMappings.isKeyDown(minecraft.getMainWindow().getHandle(), keycode);
+            return InputConstants.isKeyDown(minecraft.getWindow().getWindow(), keycode);
         }
     }
 
@@ -71,8 +71,8 @@ public class KeybindsUtil {
      * @param keyBinding the keybinding.
      * @return the localized and formatted name.
      */
-    public static String getKeyBindText(KeyBinding keyBinding) {
-        return TextUtil.capitaliseFirstLetterFully(keyBinding.func_238171_j_().getString().toLowerCase());
+    public static String getKeyBindText(KeyMapping keyBinding) {
+        return TextUtil.capitaliseFirstLetterFully(keyBinding.getTranslatedKeyMessage().getString().toLowerCase());
     }
 
     /**
@@ -82,6 +82,6 @@ public class KeybindsUtil {
      * @return the localized and formatted name.
      */
     public static String getKeyBindText(int keycode) {
-        return TextUtil.capitaliseFirstLetterFully(I18n.format(InputMappings.getInputByCode(keycode, -1).getTranslationKey()).toLowerCase());
+        return TextUtil.capitaliseFirstLetterFully(I18n.get(InputConstants.getKey(keycode, -1).getName()).toLowerCase());
     }
 }

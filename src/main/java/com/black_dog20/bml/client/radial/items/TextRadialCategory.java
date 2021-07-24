@@ -4,9 +4,9 @@ import com.black_dog20.bml.client.DrawingContext;
 import com.black_dog20.bml.client.radial.api.items.IRadialCategory;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.utils.text.TextComponentBuilder;
-import net.minecraft.client.gui.IBidiRenderer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.MultiLineLabel;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +18,17 @@ import java.util.List;
  */
 public class TextRadialCategory implements IRadialCategory {
 
-    private final ITextComponent text;
+    private final Component text;
     private final int color;
     private final List<IRadialItem> items = new ArrayList<>();
     private boolean hovered;
 
-    public TextRadialCategory(ITextComponent text) {
+    public TextRadialCategory(Component text) {
         this.text = text;
-        this.color = TextFormatting.WHITE.getColor();
+        this.color = ChatFormatting.WHITE.getColor();
     }
 
-    public TextRadialCategory(ITextComponent text, TextFormatting color) {
+    public TextRadialCategory(Component text, ChatFormatting color) {
         this.text = text;
         this.color = color.getColor();
     }
@@ -38,18 +38,18 @@ public class TextRadialCategory implements IRadialCategory {
      */
     @Override
     public void draw(DrawingContext context) {
-        ITextComponent textComponent = TextComponentBuilder.of("[")
+        Component textComponent = TextComponentBuilder.of("[")
                 .with(text)
                 .with("]")
                 .build();
         float y = context.y;
-        IBidiRenderer lines = IBidiRenderer.func_243258_a(context.fontRenderer, textComponent, 60);
-        if (lines.func_241862_a() > 1) {
-            y = y - context.fontRenderer.FONT_HEIGHT / 1.5f;
+        MultiLineLabel lines = MultiLineLabel.create(context.fontRenderer, textComponent, 60);
+        if (lines.getLineCount() > 1) {
+            y = y - context.fontRenderer.lineHeight / 1.5f;
         } else {
-            y = y - context.fontRenderer.FONT_HEIGHT / 2.0f;
+            y = y - context.fontRenderer.lineHeight / 2.0f;
         }
-        lines.func_241864_a(context.matrixStack, (int) context.x, (int) y, context.fontRenderer.FONT_HEIGHT, color);
+        lines.renderCentered(context.poseStack, (int) context.x, (int) y, context.fontRenderer.lineHeight, color);
     }
 
     /**
@@ -72,7 +72,7 @@ public class TextRadialCategory implements IRadialCategory {
      * {@inheritDoc}
      */
     @Override
-    public ITextComponent getCenterText() {
+    public Component getCenterText() {
         return text;
     }
 

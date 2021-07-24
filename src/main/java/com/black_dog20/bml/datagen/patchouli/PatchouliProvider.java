@@ -6,19 +6,15 @@ import com.black_dog20.bml.datagen.patchouli.objects.Entry;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.HashCache;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import org.apache.commons.lang3.text.translate.JavaUnicodeEscaper;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,7 +28,7 @@ import java.util.Objects;
  *
  * @author black_dog20
  */
-public abstract class PatchouliProvider implements IDataProvider {
+public abstract class PatchouliProvider implements DataProvider {
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
     private final DataGenerator gen;
     private final String modid;
@@ -59,7 +55,7 @@ public abstract class PatchouliProvider implements IDataProvider {
     }
 
     @Override
-    public void act(DirectoryCache cache) throws IOException {
+    public void run(HashCache cache) throws IOException {
         languageFile = getLangFile(cache, locale);
         add();
         Path bookPath = this.gen.getOutputFolder().resolve("data/" + modid + "/patchouli_books/" + bookname);
@@ -118,11 +114,11 @@ public abstract class PatchouliProvider implements IDataProvider {
         categories.add(category);
     }
 
-    private void save(DirectoryCache cache, Object object, Path target) throws IOException {
+    private void save(HashCache cache, Object object, Path target) throws IOException {
         String data = GSON.toJson(object);
         data = JavaUnicodeEscaper.outsideOf(0, 0x7f).translate(data); // Escape unicode after the fact so that it's not double escaped by GSON
-        String hash = IDataProvider.HASH_FUNCTION.hashUnencodedChars(data).toString();
-        if (!Objects.equals(cache.getPreviousHash(target), hash) || !Files.exists(target)) {
+        String hash = DataProvider.SHA1.hashUnencodedChars(data).toString();
+        if (!Objects.equals(cache.getHash(target), hash) || !Files.exists(target)) {
             Files.createDirectories(target.getParent());
 
             try (BufferedWriter bufferedwriter = Files.newBufferedWriter(target)) {
@@ -130,17 +126,17 @@ public abstract class PatchouliProvider implements IDataProvider {
             }
         }
 
-        cache.recordHash(target, hash);
+        cache.putNew(target, hash);
     }
 
     private static String sanitize(String s) {
         return s.toLowerCase().replace(' ', '_');
     }
 
-    private static JsonObject getLangFile(DirectoryCache cache, String locale) {
+    private static JsonObject getLangFile(HashCache cache, String locale) {
         Gson gson = new Gson();
         try {
-            Field field = ObfuscationReflectionHelper.findField(DirectoryCache.class, "field_208329_f");
+            Field field = ObfuscationReflectionHelper.findField(HashCache.class, "newCache");
             field.setAccessible(true);
             Map<Path, String> createdFiles = (Map<Path, String>) field.get(cache);
             for (Path path : createdFiles.keySet()) {
@@ -156,16 +152,16 @@ public abstract class PatchouliProvider implements IDataProvider {
     }
 
     protected String getBlockName(Block block) {
-        if (languageFile.has(block.getTranslationKey())) {
-            return languageFile.get(block.getTranslationKey()).getAsString();
+        if (languageFile.has(block.getDescriptionId())) {
+            return languageFile.get(block.getDescriptionId()).getAsString();
         }
-        throw new IllegalStateException(block.getTranslationKey() + " was not found in lang file");
+        throw new IllegalStateException(block.getDescriptionId() + " was not found in lang file");
     }
 
     protected String getItemName(Item item) {
-        if (languageFile.has(item.getTranslationKey())) {
-            return languageFile.get(item.getTranslationKey()).getAsString();
+        if (languageFile.has(item.getDescriptionId())) {
+            return languageFile.get(item.getDescriptionId()).getAsString();
         }
-        throw new IllegalStateException(item.getTranslationKey() + " was not found in lang file");
+        throw new IllegalStateException(item.getDescriptionId() + " was not found in lang file");
     }
 }

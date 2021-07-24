@@ -1,7 +1,7 @@
 package com.black_dog20.bml.client.overlay.configure;
 
 import com.black_dog20.bml.utils.color.Color4i;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -81,5 +81,5 @@ public interface IConfigurableOverlay {
      *
      * @return the message or {@link Optional#empty()}.
      */
-    Optional<ITextComponent> getMessage();
+    Optional<Component> getMessage();
 }

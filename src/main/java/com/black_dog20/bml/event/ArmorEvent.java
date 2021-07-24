@@ -1,9 +1,9 @@
 package com.black_dog20.bml.event;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -18,9 +18,9 @@ import net.minecraftforge.fml.LogicalSide;
 public class ArmorEvent extends Event {
 
     public ItemStack armor;
-    public PlayerEntity player;
+    public Player player;
 
-    private ArmorEvent(PlayerEntity player, ItemStack armor) {
+    private ArmorEvent(Player player, ItemStack armor) {
         super();
         this.player = player;
         this.armor = armor;
@@ -56,7 +56,7 @@ public class ArmorEvent extends Event {
      **/
     public static class Equip extends ArmorEvent {
 
-        public Equip(PlayerEntity player, ItemStack armor) {
+        public Equip(Player player, ItemStack armor) {
             super(player, armor);
         }
     }
@@ -71,7 +71,7 @@ public class ArmorEvent extends Event {
      **/
     public static class Unequip extends ArmorEvent {
 
-        public Unequip(PlayerEntity player, ItemStack armor) {
+        public Unequip(Player player, ItemStack armor) {
             super(player, armor);
         }
     }
@@ -90,10 +90,10 @@ public class ArmorEvent extends Event {
 
         public TickEvent.Phase phase;
 
-        public Tick(TickEvent.Phase phase, PlayerEntity player, ItemStack armor) {
+        public Tick(TickEvent.Phase phase, Player player, ItemStack armor) {
             super(player, armor);
             this.phase = phase;
-            this.side = player instanceof ServerPlayerEntity ? LogicalSide.SERVER : LogicalSide.CLIENT;
+            this.side = player instanceof ServerPlayer ? LogicalSide.SERVER : LogicalSide.CLIENT;
         }
     }
 }

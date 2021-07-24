@@ -4,8 +4,8 @@ import com.black_dog20.bml.client.DrawingContext;
 import com.black_dog20.bml.internal.utils.InternalTranslations;
 import com.black_dog20.bml.utils.text.TextComponentBuilder;
 import com.black_dog20.bml.utils.translate.TranslationUtil;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +30,8 @@ public interface IRadialItem {
      * @param context the drawing context.
      */
     default void drawTooltips(DrawingContext context) {
-        List<ITextComponent> tooltips = getTooltips();
-        GuiUtils.drawHoveringText(context.matrixStack, tooltips, (int) context.x, (int) context.y, context.width, context.height, -1, context.fontRenderer);
+        List<Component> tooltips = getTooltips();
+        GuiUtils.drawHoveringText(context.poseStack, tooltips, (int) context.x, (int) context.y, context.width, context.height, -1, context.fontRenderer);
     }
 
     /**
@@ -65,7 +65,7 @@ public interface IRadialItem {
      *
      * @return an ITextComponent.
      */
-    ITextComponent getCenterText();
+    Component getCenterText();
 
     /**
      * Gets the context items for this category.
@@ -91,12 +91,12 @@ public interface IRadialItem {
      *
      * @return a list of tooltips.
      */
-    default List<ITextComponent> getTooltips() {
-        List<ITextComponent> tooltips = new ArrayList<>();
+    default List<Component> getTooltips() {
+        List<Component> tooltips = new ArrayList<>();
         if (!getContextItems().isEmpty()) {
             if (getContextItems().size() == 1 && skipMenuIfSingleContextItem()) {
                 IRadialItem item = getContextItems().get(0);
-                ITextComponent text = TextComponentBuilder.of(InternalTranslations.Translations.RIGHT_CLICK_TO.get())
+                Component text = TextComponentBuilder.of(InternalTranslations.Translations.RIGHT_CLICK_TO.get())
                         .space()
                         .with(item.getCenterText())
                         .build();

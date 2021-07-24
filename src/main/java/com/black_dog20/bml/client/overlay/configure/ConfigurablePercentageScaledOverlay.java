@@ -27,8 +27,8 @@ public abstract class ConfigurablePercentageScaledOverlay extends Overlay implem
          */
         @Override
         public void setPosition(int x, int y) {
-            int resX = Math.round(x / (((float) Minecraft.getInstance().getMainWindow().getScaledWidth()) / 100));
-            int resY = Math.round(y / (((float) Minecraft.getInstance().getMainWindow().getScaledHeight()) / 100));
+            int resX = Math.round(x / (((float) Minecraft.getInstance().getWindow().getGuiScaledWidth()) / 100));
+            int resY = Math.round(y / (((float) Minecraft.getInstance().getWindow().getGuiScaledHeight()) / 100));
 
             setPercentagePosition(resX, resY);
         }
@@ -63,7 +63,7 @@ public abstract class ConfigurablePercentageScaledOverlay extends Overlay implem
          */
         @Override
         public int getPosX() {
-            return Math.round((((float) Minecraft.getInstance().getMainWindow().getScaledWidth() / 100) * getPercentagePosX()));
+            return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledWidth() / 100) * getPercentagePosX()));
         }
 
         /**
@@ -73,7 +73,7 @@ public abstract class ConfigurablePercentageScaledOverlay extends Overlay implem
          */
         @Override
         public int getPosY() {
-            return Math.round((((float) Minecraft.getInstance().getMainWindow().getScaledHeight() / 100) * getPercentagePosY()));
+            return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledHeight() / 100) * getPercentagePosY()));
         }
     }
 
@@ -91,8 +91,8 @@ public abstract class ConfigurablePercentageScaledOverlay extends Overlay implem
          */
         @Override
         public void setPosition(int x, int y) {
-            int resX = Math.round(x / (((float) Minecraft.getInstance().getMainWindow().getScaledWidth()) / 100));
-            int resY = Math.round(y / (((float) Minecraft.getInstance().getMainWindow().getScaledHeight()) / 100));
+            int resX = Math.round(x / (((float) Minecraft.getInstance().getWindow().getGuiScaledWidth()) / 100));
+            int resY = Math.round(y / (((float) Minecraft.getInstance().getWindow().getGuiScaledHeight()) / 100));
 
             setPercentagePosition(resX, resY);
         }
@@ -127,7 +127,7 @@ public abstract class ConfigurablePercentageScaledOverlay extends Overlay implem
          */
         @Override
         public int getPosX() {
-            return Math.round((((float) Minecraft.getInstance().getMainWindow().getScaledWidth() / 100) * getPercentagePosX()));
+            return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledWidth() / 100) * getPercentagePosX()));
         }
 
         /**
@@ -137,7 +137,7 @@ public abstract class ConfigurablePercentageScaledOverlay extends Overlay implem
          */
         @Override
         public int getPosY() {
-            return Math.round((((float) Minecraft.getInstance().getMainWindow().getScaledHeight() / 100) * getPercentagePosY()));
+            return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledHeight() / 100) * getPercentagePosY()));
         }
     }
 }

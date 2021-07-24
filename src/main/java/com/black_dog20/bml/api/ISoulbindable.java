@@ -1,7 +1,7 @@
 package com.black_dog20.bml.api;
 
 import com.black_dog20.bml.utils.item.NBTUtil;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Interface for soulbinding an item.

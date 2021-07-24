@@ -3,23 +3,23 @@ package com.black_dog20.bml.client.rows.columns;
 import com.black_dog20.bml.client.rows.RowDrawingContext;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.network.play.NetworkPlayerInfo;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerModelPart;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.PlayerModelPart;
 
 /**
  * Head column which displays the players head from their skin.
  */
 public class HeadColumn extends Column {
 
-    private final NetworkPlayerInfo info;
+    private final PlayerInfo info;
     private final boolean display;
 
-    protected HeadColumn(String id, NetworkPlayerInfo info, Alignment alignment) {
+    protected HeadColumn(String id, PlayerInfo info, Alignment alignment) {
         super(id, alignment);
         this.info = info;
-        this.display = Minecraft.getInstance().isIntegratedServerRunning() || Minecraft.getInstance().getConnection().getNetworkManager().isEncrypted();
+        this.display = Minecraft.getInstance().isLocalServer() || Minecraft.getInstance().getConnection().getConnection().isEncrypted();
     }
 
     /**
@@ -29,7 +29,7 @@ public class HeadColumn extends Column {
      * @param info the player to display the head from.
      * @return a head column
      */
-    public static HeadColumn of(String id, NetworkPlayerInfo info) {
+    public static HeadColumn of(String id, PlayerInfo info) {
         return new HeadColumn(id, info, Alignment.CENTER);
     }
 
@@ -48,20 +48,20 @@ public class HeadColumn extends Column {
      */
     @Override
     public void render(RowDrawingContext context) {
-        GameProfile gameprofile = info.getGameProfile();
-        PlayerEntity entityplayer = Minecraft.getInstance().world.getPlayerByUuid(gameprofile.getId());
+        GameProfile gameprofile = info.getProfile();
+        Player entityplayer = Minecraft.getInstance().level.getPlayerByUUID(gameprofile.getId());
 
         if (display) {
-            boolean flag1 = entityplayer != null && entityplayer.isWearing(PlayerModelPart.CAPE) && ("Dinnerbone".equals(gameprofile.getName()) || "Grumm".equals(gameprofile.getName()));
-            Minecraft.getInstance().getTextureManager().bindTexture(info.getLocationSkin());
+            boolean flag1 = entityplayer != null && entityplayer.isModelPartShown(PlayerModelPart.CAPE) && ("Dinnerbone".equals(gameprofile.getName()) || "Grumm".equals(gameprofile.getName()));
+            Minecraft.getInstance().getTextureManager().bindForSetup(info.getSkinLocation());
             int l2 = 8 + (flag1 ? 8 : 0);
             int i3 = 8 * (flag1 ? -1 : 1);
-            AbstractGui.blit(context.matrixStack, (int) context.x, (int) context.y, 8, 8, 8.0F, (float) l2, 8, i3, 64, 64);
+            GuiComponent.blit(context.poseStack, (int) context.x, (int) context.y, 8, 8, 8.0F, (float) l2, 8, i3, 64, 64);
 
-            if (entityplayer != null && entityplayer.isWearing(PlayerModelPart.HAT)) {
+            if (entityplayer != null && entityplayer.isModelPartShown(PlayerModelPart.HAT)) {
                 int j3 = 8 + (flag1 ? 8 : 0);
                 int k3 = 8 * (flag1 ? -1 : 1);
-                AbstractGui.blit(context.matrixStack, (int) context.x, (int) context.y, 8, 8, 40.0F, (float) j3, 8, k3, 64, 64);
+                GuiComponent.blit(context.poseStack, (int) context.x, (int) context.y, 8, 8, 40.0F, (float) j3, 8, k3, 64, 64);
             }
         }
     }
@@ -72,7 +72,7 @@ public class HeadColumn extends Column {
     @Override
     public int getHeight() {
         if (display)
-            return Minecraft.getInstance().fontRenderer.FONT_HEIGHT;
+            return Minecraft.getInstance().font.lineHeight;
         return 0;
     }
 }

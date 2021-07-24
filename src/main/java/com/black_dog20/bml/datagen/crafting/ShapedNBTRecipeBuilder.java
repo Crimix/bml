@@ -5,21 +5,21 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.ICriterionInstance;
-import net.minecraft.advancements.IRequirementsStrategy;
-import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.ShapedRecipeBuilder;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -34,14 +34,14 @@ import java.util.function.Consumer;
  * @author black_dog20
  */
 public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
-    private static final Method VALIDATE = ObfuscationReflectionHelper.findMethod(ShapedRecipeBuilder.class, "func_200463_a" /* validate */, ResourceLocation.class);
-    private static final Field ADVANCEMENT_BUILDER = ObfuscationReflectionHelper.findField(ShapedRecipeBuilder.class, "field_200479_f" /* advancementBuilder */);
-    private static final Field GROUP = ObfuscationReflectionHelper.findField(ShapedRecipeBuilder.class, "field_200480_g" /* group */);
-    private static final Field PATTERN = ObfuscationReflectionHelper.findField(ShapedRecipeBuilder.class, "field_200477_d" /* pattern */);
-    private static final Field KEY = ObfuscationReflectionHelper.findField(ShapedRecipeBuilder.class, "field_200478_e" /* key */);
+    private static final Method VALIDATE = ObfuscationReflectionHelper.findMethod(ShapedRecipeBuilder.class, "ensureValid" /* validate */, ResourceLocation.class);
+    private static final Field ADVANCEMENT_BUILDER = ObfuscationReflectionHelper.findField(ShapedRecipeBuilder.class, "advancement" /* advancementBuilder */);
+    private static final Field GROUP = ObfuscationReflectionHelper.findField(ShapedRecipeBuilder.class, "group" /* group */);
+    private static final Field PATTERN = ObfuscationReflectionHelper.findField(ShapedRecipeBuilder.class, "rows" /* pattern */);
+    private static final Field KEY = ObfuscationReflectionHelper.findField(ShapedRecipeBuilder.class, "key" /* key */);
 
     private final ItemStack result;
-    private final IRecipeSerializer<?> serializer;
+    private final RecipeSerializer<?> serializer;
     private String itemGroup;
 
     private ShapedNBTRecipeBuilder(final ItemStack result) {
@@ -50,7 +50,7 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
         this.serializer = BmlCrafting.SHAPED_NBT.get();
     }
 
-    private ShapedNBTRecipeBuilder(final ItemStack result, final IRecipeSerializer<?> serializer) {
+    private ShapedNBTRecipeBuilder(final ItemStack result, final RecipeSerializer<?> serializer) {
         super(result.getItem(), result.getCount());
         this.result = result;
         this.serializer = serializer;
@@ -73,7 +73,7 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @param result     the end result of the recipe with its NBT data.
      * @return ShapedNBTRecipeBuilder.
      */
-    public static ShapedNBTRecipeBuilder customShapedNBTRecipe(IRecipeSerializer<?> serializer, final ItemStack result) {
+    public static ShapedNBTRecipeBuilder customShapedNBTRecipe(RecipeSerializer<?> serializer, final ItemStack result) {
         return new ShapedNBTRecipeBuilder(result, serializer);
     }
 
@@ -96,8 +96,8 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @return ShapedNBTRecipeBuilder
      */
     @Override
-    public ShapedNBTRecipeBuilder key(final Character symbol, final ITag<Item> tag) {
-        return (ShapedNBTRecipeBuilder) super.key(symbol, tag);
+    public ShapedNBTRecipeBuilder define(final Character symbol, final Tag<Item> tag) {
+        return (ShapedNBTRecipeBuilder) super.define(symbol, tag);
     }
 
     /**
@@ -108,8 +108,8 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @return ShapedNBTRecipeBuilder
      */
     @Override
-    public ShapedNBTRecipeBuilder key(final Character symbol, final IItemProvider item) {
-        return (ShapedNBTRecipeBuilder) super.key(symbol, item);
+    public ShapedNBTRecipeBuilder define(final Character symbol, final ItemLike item) {
+        return (ShapedNBTRecipeBuilder) super.define(symbol, item);
     }
 
     /**
@@ -120,8 +120,8 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @return ShapedNBTRecipeBuilder
      */
     @Override
-    public ShapedNBTRecipeBuilder key(final Character symbol, final Ingredient ingredient) {
-        return (ShapedNBTRecipeBuilder) super.key(symbol, ingredient);
+    public ShapedNBTRecipeBuilder define(final Character symbol, final Ingredient ingredient) {
+        return (ShapedNBTRecipeBuilder) super.define(symbol, ingredient);
     }
 
     /**
@@ -131,8 +131,8 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @return ShapedNBTRecipeBuilder
      */
     @Override
-    public ShapedNBTRecipeBuilder patternLine(final String pattern) {
-        return (ShapedNBTRecipeBuilder) super.patternLine(pattern);
+    public ShapedNBTRecipeBuilder pattern(final String pattern) {
+        return (ShapedNBTRecipeBuilder) super.pattern(pattern);
     }
 
     /**
@@ -143,8 +143,8 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @return ShapedNBTRecipeBuilder
      */
     @Override
-    public ShapedNBTRecipeBuilder addCriterion(final String name, final ICriterionInstance criterion) {
-        return (ShapedNBTRecipeBuilder) super.addCriterion(name, criterion);
+    public ShapedNBTRecipeBuilder unlockedBy(final String name, final CriterionTriggerInstance criterion) {
+        return (ShapedNBTRecipeBuilder) super.unlockedBy(name, criterion);
     }
 
     /**
@@ -154,8 +154,8 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @return ShapedNBTRecipeBuilder
      */
     @Override
-    public ShapedNBTRecipeBuilder setGroup(final String group) {
-        return (ShapedNBTRecipeBuilder) super.setGroup(group);
+    public ShapedNBTRecipeBuilder group(final String group) {
+        return (ShapedNBTRecipeBuilder) super.group(group);
     }
 
 
@@ -165,8 +165,8 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @param consumer the consumer.
      */
     @Override
-    public void build(final Consumer<IFinishedRecipe> consumer) {
-        build(consumer, result.getItem().getRegistryName());
+    public void save(final Consumer<FinishedRecipe> consumer) {
+        save(consumer, result.getItem().getRegistryName());
     }
 
     /**
@@ -176,12 +176,12 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @param save     the name of the recipe for use in saving it.
      */
     @Override
-    public void build(final Consumer<IFinishedRecipe> consumer, final String save) {
+    public void save(final Consumer<FinishedRecipe> consumer, final String save) {
         final ResourceLocation registryName = result.getItem().getRegistryName();
         if (new ResourceLocation(save).equals(registryName)) {
             throw new IllegalStateException("Shaped Recipe " + save + " should remove its 'save' argument");
         } else {
-            build(consumer, new ResourceLocation(save));
+            save(consumer, new ResourceLocation(save));
         }
     }
 
@@ -192,16 +192,16 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @param id       the id of the recipe for use in saving it.
      */
     @Override
-    public void build(final Consumer<IFinishedRecipe> consumer, final ResourceLocation id) {
+    public void save(final Consumer<FinishedRecipe> consumer, final ResourceLocation id) {
         try {
             // Perform the super class's validation
             VALIDATE.invoke(this, id);
 
             final Advancement.Builder advancementBuilder = ((Advancement.Builder) ADVANCEMENT_BUILDER.get(this))
-                    .withParentId(new ResourceLocation("minecraft", "recipes/root"))
-                    .withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(id))
-                    .withRewards(AdvancementRewards.Builder.recipe(id))
-                    .withRequirementsStrategy(IRequirementsStrategy.OR);
+                    .parent(new ResourceLocation("minecraft", "recipes/root"))
+                    .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
+                    .rewards(AdvancementRewards.Builder.recipe(id))
+                    .requirements(RequirementsStrategy.OR);
 
             String group = (String) GROUP.get(this);
             if (group == null) {
@@ -214,8 +214,8 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
 
             String itemGroupName = itemGroup;
             if (itemGroupName == null) {
-                final ItemGroup itemGroup = Preconditions.checkNotNull(result.getItem().getGroup());
-                itemGroupName = itemGroup.getPath();
+                final CreativeModeTab itemGroup = Preconditions.checkNotNull(result.getItem().getItemCategory());
+                itemGroupName = itemGroup.getRecipeFolderName();
             }
 
             final ResourceLocation advancementID = new ResourceLocation(id.getNamespace(), "recipes/" + itemGroupName + "/" + id.getPath());
@@ -230,23 +230,23 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * Specialized result class for shaped recipes using NBT data.
      */
     public class Result extends ShapedRecipeBuilder.Result {
-        private final CompoundNBT resultNBT;
-        private final IRecipeSerializer<?> serializer;
+        private final CompoundTag resultNBT;
+        private final RecipeSerializer<?> serializer;
 
-        private Result(final ResourceLocation id, final ItemStack result, final String group, final List<String> pattern, final Map<Character, Ingredient> key, final Advancement.Builder advancementBuilder, final ResourceLocation advancementID, final IRecipeSerializer<?> serializer) {
+        private Result(final ResourceLocation id, final ItemStack result, final String group, final List<String> pattern, final Map<Character, Ingredient> key, final Advancement.Builder advancementBuilder, final ResourceLocation advancementID, final RecipeSerializer<?> serializer) {
             super(id, result.getItem(), result.getCount(), group, pattern, key, advancementBuilder, advancementID);
             resultNBT = result.getTag();
             this.serializer = serializer;
         }
 
         @Override
-        public IRecipeSerializer<?> getSerializer() {
+        public RecipeSerializer<?> getType() {
             return serializer;
         }
 
         @Override
-        public void serialize(final JsonObject json) {
-            super.serialize(json);
+        public void serializeRecipeData(final JsonObject json) {
+            super.serializeRecipeData(json);
 
             if (resultNBT != null) {
                 json.getAsJsonObject("result")
