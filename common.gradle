@@ -8,8 +8,8 @@ buildscript {
     }
 }
 
-apply plugin: 'com.matthewprenger.cursegradle'
-apply plugin: 'net.saliman.properties'
+apply plugin: com.matthewprenger.cursegradle.CurseGradlePlugin // Apply it by fully qualified name
+apply plugin: net.saliman.gradle.plugin.properties.PropertiesPlugin // Apply it by fully qualified name
 apply plugin: 'idea'
 apply plugin: 'java'
 
