@@ -1,0 +1,54 @@
+/*
+To use this add the following to your build.gradle.
+BE CAREFULL as anything that references Bml.class or internal classes cannot be shadowed and should just depend on bml instead of shadowing.
+(remember to add a packaged called 'repack' to the root of you mod)
+
+apply from: 'https://raw.githubusercontent.com/Crimix/bml/1.17/shadow.gradle'
+
+dependencies {
+    shadowCompileOnly fg.deobf("com.black_dog20.bml:bml:${bml_version}")
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowCompileOnly]
+    relocate 'com.black_dog20.bml', 'com.yourname.mod.repack.bml' //replace com.yourname.mod with the name and package of you mod
+}
+ */
+
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0"
+    }
+}
+
+apply plugin: com.github.jengelman.gradle.plugins.shadow.ShadowPlugin // Apply it by fully qualified name
+
+configurations {
+    shadowCompileOnly
+    compileOnly.extendsFrom(shadowCompileOnly)
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowCompileOnly]
+    exclude 'com/black_dog20/bml/Bml.class'
+    exclude 'com/black_dog20/bml/Bml.class'
+    exclude 'com/black_dog20/bml/internal/**'
+    exclude 'assets/blackdogsmoddinglibrary/**'
+    exclude 'bml-logo.png'
+    exclude 'bml.mixins.json'
+    exclude 'bml.refmap.json'
+    minimize()
+
+    classifier '' // Replace the default jar
+}
+
+reobf {
+    shadowJar {}
+}
+
+// this replaces jar.finalizedBy('reobfJar') in the standard forge mod buildscript
+tasks.build.dependsOn reobfShadowJar
+jar.finalizedBy('reobfShadowJar')
