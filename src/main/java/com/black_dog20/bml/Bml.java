@@ -55,6 +55,6 @@ public class Bml {
     }
 
     public static boolean isDevBuild() {
-        return "NONE".equals(getVersion());
+        return getVersion().contains("NONE");
     }
 }

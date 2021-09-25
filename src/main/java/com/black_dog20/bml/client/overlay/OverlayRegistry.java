@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Registry for {@link Overlay}s.
+ * Registry for {@link GameOverlay}s.
  */
 @OnlyIn(Dist.CLIENT)
 public class OverlayRegistry {
@@ -20,11 +20,11 @@ public class OverlayRegistry {
     public static List<IConfigurableOverlay> CONFIGURABLE_OVERLAYS = new ArrayList<>();
 
     /**
-     * Registers an {@link Overlay}.
+     * Registers an {@link GameOverlay}.
      *
      * @param overlay the overlay to register.
      */
-    public static void register(Overlay overlay) {
+    public static void register(GameOverlay overlay) {
         if (overlay instanceof IConfigurableOverlay)
             CONFIGURABLE_OVERLAYS.add((IConfigurableOverlay) overlay);
         MinecraftForge.EVENT_BUS.register(overlay);

@@ -20,5 +20,10 @@ public class GeneratorLanguage extends BaseLanguageProvider {
         addPrefixed(RIGHT_CLICK_FOR_OPTIONS, style("Right click", ChatFormatting.BLUE) + " for options");
         addPrefixed(RIGHT_CLICK_TO, style("Right click", ChatFormatting.BLUE) + " to");
         addPrefixed(CONFIRM, "Confirm");
+        addPrefixed(NOT_LEVELABLE, "Unlevelable", ChatFormatting.RED);
+        addPrefixed(MAX_LEVEL, "Max", ChatFormatting.DARK_PURPLE);
+        addPrefixed(LEVEL, "Level");
+        addPrefixed(PROGRESS, "%d (%d/%d)");
+        addPrefixed(SOULBOUND_ACHIEVED, "You feel fused together with your %s, not even death will part you with it now!");
     }
 }

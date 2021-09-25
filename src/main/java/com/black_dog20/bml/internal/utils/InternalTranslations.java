@@ -10,6 +10,11 @@ public class InternalTranslations extends TranslationUtil {
         RIGHT_CLICK_FOR_OPTIONS("radial.right_click_for_options"),
         RIGHT_CLICK_TO("radial.right_click_for"),
         CONFIRM("dialogs.confirm.title"),
+        NOT_LEVELABLE("tooltip.item.not_able_to_level"),
+        MAX_LEVEL("tooltip.item.max_level"),
+        LEVEL("tooltip.item.level"),
+        PROGRESS("tooltip.item.level_progress"),
+        SOULBOUND_ACHIEVED("tooltip.item.soulbound_achieved"),
         ;
 
 

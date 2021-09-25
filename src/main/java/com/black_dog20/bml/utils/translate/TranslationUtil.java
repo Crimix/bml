@@ -2,9 +2,15 @@ package com.black_dog20.bml.utils.translate;
 
 import com.black_dog20.bml.utils.text.TextUtil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.locale.Language;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Arrays;
 import java.util.function.Function;
 
 /**
@@ -121,4 +127,94 @@ public class TranslationUtil {
         else
             return s;
     }
+
+
+    /* =============== START METHODS INSPIRED/BORROWED FROM https://github.com/sciwhiz12/Concord ===============
+     * MIT License
+     *
+     * Copyright (c) 2020 SciWhiz12
+     *
+     * Permission is hereby granted, free of charge, to any person obtaining a copy
+     * of this software and associated documentation files (the "Software"), to deal
+     * in the Software without restriction, including without limitation the rights
+     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     * copies of the Software, and to permit persons to whom the Software is
+     * furnished to do so, subject to the following conditions:
+     *
+     * The above copyright notice and this permission notice shall be included in all
+     * copies or substantial portions of the Software.
+     *
+     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+     * SOFTWARE.
+     */
+
+    /**
+     * Translate either eager or lazy the input translation.
+     *
+     * @param translation       The translation text component.
+     * @param translateOnClient Whether the message gets translated on the client or server before sending.
+     * @return a {@link Component} with the specified message
+     */
+    public static Component createPossibleEagerTranslation(Component translation, boolean translateOnClient) {
+        return translateOnClient ? translation : eagerTranslate(translation);
+    }
+
+    public static Component eagerTranslate(Component component) {
+        if (component instanceof TranslatableComponent translation) {
+            Object[] newArgs = Arrays.stream(translation.getArgs())
+                    .map(TranslationUtil::eagerEvaluateArg)
+                    .toArray();
+
+            TranslatableComponent result = new TranslatableComponent(Language.getInstance().getOrDefault(translation.getKey()), newArgs);
+            result.setStyle(component.getStyle());
+
+            component.getSiblings().stream()
+                    .map(TranslationUtil::eagerEvaluateSiblings)
+                    .forEachOrdered(result::append);
+
+            return eagerEvaluateStyle(result);
+        } else {
+            return component;
+        }
+    }
+
+    private static Object eagerEvaluateArg(Object arg) {
+        if (arg instanceof TranslatableComponent translatableComponent) {
+            return eagerTranslate(translatableComponent);
+        } else if (arg instanceof MutableComponent mutableComponent) {
+            return eagerEvaluateStyle(mutableComponent);
+        } else {
+            return arg;
+        }
+    }
+
+    private static Component eagerEvaluateSiblings(Component sibling) {
+        if (sibling instanceof TranslatableComponent translatableComponent) {
+            return eagerTranslate(translatableComponent);
+        } else if (sibling instanceof MutableComponent mutableComponent) {
+            return eagerEvaluateStyle(mutableComponent);
+        } else {
+            return sibling;
+        }
+    }
+
+    private static <T extends MutableComponent> T eagerEvaluateStyle(T component) {
+        Style style = component.getStyle();
+        HoverEvent hover = style.getHoverEvent();
+        if (hover != null && hover.getAction() == HoverEvent.Action.SHOW_TEXT) {
+            Component hoverText = hover.getValue(HoverEvent.Action.SHOW_TEXT);
+            if (hoverText instanceof TranslatableComponent) {
+                style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, eagerTranslate((TranslatableComponent) hoverText)));
+            }
+        }
+        component.setStyle(style);
+        return component;
+    }
+
+    /* =============== END METHODS INSPIRED/BORROWED FROM https://github.com/sciwhiz12/Concord =============== */
 }

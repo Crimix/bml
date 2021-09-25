@@ -8,16 +8,22 @@ import com.black_dog20.bml.internal.utils.InternalTranslations;
 import com.black_dog20.bml.utils.text.TextUtil;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -178,9 +184,9 @@ public abstract class AbstractRadialMenu extends Screen {
      * @param y         the y point to draw from.
      * @param radiusOut the outer radius.
      */
-    public void drawFooter(PoseStack matrixStack, float width, float y, float radiusOut) {
+    public void drawFooter(PoseStack poseStack, float width, float y, float radiusOut) {
         Component pageString = InternalTranslations.translate(PAGE_FOOTER, currentPage, maxPages);
-        font.drawShadow(matrixStack, pageString, (width - font.width(pageString)) / 2.0f, y, 0xFFFFFFFF);
+        font.drawShadow(poseStack, pageString, (width - font.width(pageString)) / 2.0f, y, 0xFFFFFFFF);
     }
 
     /**
@@ -190,7 +196,7 @@ public abstract class AbstractRadialMenu extends Screen {
      * @param y         the y point to draw from.
      * @param radiusOut the outer radius.
      */
-    public void drawHeader(PoseStack matrixStack, float width, float y, float radiusOut) {
+    public void drawHeader(PoseStack poseStack, float width, float y, float radiusOut) {
     }
 
     /**
@@ -198,7 +204,7 @@ public abstract class AbstractRadialMenu extends Screen {
      *
      * @param radiusOut the outer radius.
      */
-    public void drawExtras(PoseStack matrixStack, float radiusOut) {
+    public void drawExtras(PoseStack poseStack, float radiusOut) {
 
     }
 
@@ -240,9 +246,9 @@ public abstract class AbstractRadialMenu extends Screen {
     }
 
     @SubscribeEvent
-    public static void overlayEvent(RenderGameOverlayEvent.Pre event) {
-//        if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS) TODO Test
-//            return;
+    public static void overlayEvent(RenderGameOverlayEvent.PreLayer event) {
+        if (event.getOverlay() != ForgeIngameGui.CROSSHAIR_ELEMENT)
+            return;
 
         if (Minecraft.getInstance().screen instanceof AbstractRadialMenu) {
             event.setCanceled(true);
@@ -345,9 +351,9 @@ public abstract class AbstractRadialMenu extends Screen {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        draw(matrixStack, partialTicks, mouseX, mouseY);
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+        draw(poseStack, partialTicks, mouseX, mouseY);
     }
 
     @Override
@@ -355,7 +361,7 @@ public abstract class AbstractRadialMenu extends Screen {
         return false;
     }
 
-    private void draw(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+    private void draw(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         updateAnimationState(partialTicks);
 
         if (isClosed())
@@ -375,15 +381,15 @@ public abstract class AbstractRadialMenu extends Screen {
         int y = height / 2;
         float z = 0;
 
-        matrixStack.pushPose();
-        matrixStack.translate(0, animationTop, 0);
+        poseStack.pushPose();
+        poseStack.translate(0, animationTop, 0);
 
-        drawBackground(matrixStack, x, y, z, radiusIn, radiusOut);
+        drawBackground(poseStack, x, y, z, radiusIn, radiusOut);
 
-        matrixStack.popPose();
+        poseStack.popPose();
 
         if (isReady()) {
-            drawItems(matrixStack, x, y, z, width, height, font, itemRenderer);
+            drawItems(poseStack, x, y, z, width, height, font, itemRenderer);
 
             Component currentCenterText = null;
             for (IRadialItem item : visibleItems) {
@@ -396,13 +402,13 @@ public abstract class AbstractRadialMenu extends Screen {
 
             if (currentCenterText != null && shouldDrawCenterText()) {
                 String text = TextUtil.getFormattedText(currentCenterText);
-                font.drawShadow(matrixStack, text, (width - font.width(text)) / 2.0f, (height - font.lineHeight) / 2.0f, 0xFFFFFFFF);
+                font.drawShadow(poseStack, text, (width - font.width(text)) / 2.0f, (height - font.lineHeight) / 2.0f, 0xFFFFFFFF);
             }
 
-            drawTooltips(matrixStack, mouseX, mouseY);
-            drawFooter(matrixStack, width, height / 2.0f + radiusOut * 1.05f, radiusOut);
-            drawHeader(matrixStack, width, height / 2.0f - radiusOut * 1.05f - font.lineHeight, radiusOut);
-            drawExtras(matrixStack, radiusOut);
+            drawTooltips(poseStack, mouseX, mouseY);
+            drawFooter(poseStack, width, height / 2.0f + radiusOut * 1.05f, radiusOut);
+            drawHeader(poseStack, width, height / 2.0f - radiusOut * 1.05f - font.lineHeight, radiusOut);
+            drawExtras(poseStack, radiusOut);
 
         }
     }
@@ -428,23 +434,23 @@ public abstract class AbstractRadialMenu extends Screen {
         animationProgress = openAnimation;
     }
 
-    private void drawTooltips(PoseStack matrixStack, int mouseX, int mouseY) {
+    private void drawTooltips(PoseStack poseStack, int mouseX, int mouseY) {
         for (int i = 0; i < visibleItems.size(); i++) {
             IRadialItem item = visibleItems.get(i);
             if (item.isHovered()) {
-                DrawingContext context = new DrawingContext(matrixStack, width, height, mouseX, mouseY, 0, font, itemRenderer);
+                DrawingContext context = new DrawingContext(poseStack, width, height, mouseX, mouseY, 0, font, itemRenderer);
                 item.drawTooltips(context);
             }
         }
     }
 
-    private void drawItems(PoseStack matrixStack, int x, int y, float z, int width, int height, Font font, ItemRenderer itemRenderer) {
+    private void drawItems(PoseStack poseStack, int x, int y, float z, int width, int height, Font font, ItemRenderer itemRenderer) {
         iterateVisible((item, s, e) -> {
             float middle = (s + e) * 0.5f;
             float posX = x + itemRadius * (float) Math.cos(middle);
             float posY = y + itemRadius * (float) Math.sin(middle);
 
-            DrawingContext context = new DrawingContext(matrixStack, width, height, posX, posY, z, font, itemRenderer);
+            DrawingContext context = new DrawingContext(poseStack, width, height, posX, posY, z, font, itemRenderer);
             item.draw(context);
         });
     }
@@ -460,9 +466,11 @@ public abstract class AbstractRadialMenu extends Screen {
         }
     }
 
-    private void drawBackground(PoseStack matrixStack, float x, float y, float z, float radiusIn, float radiusOut) {
+    private void drawBackground(PoseStack poseStack, float x, float y, float z, float radiusIn, float radiusOut) {
         RenderSystem.enableBlend();
         RenderSystem.disableTexture();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         Tesselator tessellator = Tesselator.getInstance();
@@ -482,8 +490,8 @@ public abstract class AbstractRadialMenu extends Screen {
 
         tessellator.end();
 
-        RenderSystem.disableBlend();
         RenderSystem.enableTexture();
+        RenderSystem.disableBlend();
     }
 
     private void drawPieArc(BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int color) {
