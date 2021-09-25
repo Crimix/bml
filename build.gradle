@@ -133,7 +133,9 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${project.mc_version}-${project.forge_version}"
 
-    annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
+    if (System.getProperty("idea.sync.active") != "true") {
+        annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
+    }
 
 	//compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
     //runtimeOnly fg.deobf("mezz.jei:jei-${jei_version}")
