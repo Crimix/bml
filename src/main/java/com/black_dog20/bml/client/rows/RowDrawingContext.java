@@ -15,8 +15,8 @@ public class RowDrawingContext extends DrawingContext {
      */
     public final int columnMaxWidth;
 
-    public RowDrawingContext(PoseStack matrixStack, int width, int height, float x, float y, float z, Font fontRenderer, ItemRenderer itemRenderer, int columnMaxWidth) {
-        super(matrixStack, width, height, x, y, z, fontRenderer, itemRenderer);
+    public RowDrawingContext(PoseStack poseStack, int width, int height, float x, float y, float z, Font fontRenderer, ItemRenderer itemRenderer, int columnMaxWidth) {
+        super(poseStack, width, height, x, y, z, fontRenderer, itemRenderer);
         this.columnMaxWidth = columnMaxWidth;
     }
 

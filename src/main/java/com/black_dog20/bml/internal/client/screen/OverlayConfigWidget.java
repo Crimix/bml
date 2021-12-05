@@ -30,18 +30,18 @@ public class OverlayConfigWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(PoseStack matrixStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
+    public void renderButton(PoseStack poseStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
         Minecraft minecraft = Minecraft.getInstance();
         Color4i color4f = getColor();
         int color1 = color4f.getValue();
         int color2 = color4f.getValue(100);
-        hLine(matrixStack, this.x - 3, this.x + 1 + this.width + 1, this.y - 3, color1);
-        vLine(matrixStack, this.x - 3, this.y + this.height + 1, this.y - 3, color1);
-        fill(matrixStack, this.x - 2, this.y - 2, this.x + 2 + this.width, this.y + 1 + this.height, color2);
-        vLine(matrixStack, this.x + this.width + 2, this.y + this.height + 1, this.y - 3, color1);
-        hLine(matrixStack, this.x - 3, this.x + 1 + this.width + 1, this.y + this.height + 1, color1);
+        hLine(poseStack, this.x - 3, this.x + 1 + this.width + 1, this.y - 3, color1);
+        vLine(poseStack, this.x - 3, this.y + this.height + 1, this.y - 3, color1);
+        fill(poseStack, this.x - 2, this.y - 2, this.x + 2 + this.width, this.y + 1 + this.height, color2);
+        vLine(poseStack, this.x + this.width + 2, this.y + this.height + 1, this.y - 3, color1);
+        hLine(poseStack, this.x - 3, this.x + 1 + this.width + 1, this.y + this.height + 1, color1);
         overlay.getMessage()
-                .ifPresent(msg -> this.drawString(matrixStack, minecraft.font, msg, this.x, this.y, 16777215));
+                .ifPresent(msg -> this.drawString(poseStack, minecraft.font, msg, this.x, this.y, 16777215));
     }
 
     @SubscribeEvent

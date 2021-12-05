@@ -2,6 +2,7 @@ package com.black_dog20.bml.client.rows.columns;
 
 import com.black_dog20.bml.client.rows.RowDrawingContext;
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -53,7 +54,7 @@ public class HeadColumn extends Column {
 
         if (display) {
             boolean flag1 = entityplayer != null && entityplayer.isModelPartShown(PlayerModelPart.CAPE) && ("Dinnerbone".equals(gameprofile.getName()) || "Grumm".equals(gameprofile.getName()));
-            Minecraft.getInstance().getTextureManager().bindForSetup(info.getSkinLocation());
+            RenderSystem.setShaderTexture(0, info.getSkinLocation());
             int l2 = 8 + (flag1 ? 8 : 0);
             int i3 = 8 * (flag1 ? -1 : 1);
             GuiComponent.blit(context.poseStack, (int) context.x, (int) context.y, 8, 8, 8.0F, (float) l2, 8, i3, 64, 64);

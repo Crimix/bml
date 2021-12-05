@@ -1,5 +1,6 @@
 package com.black_dog20.bml.utils.item;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public class NBTUtil {
@@ -59,6 +60,23 @@ public class NBTUtil {
      */
     public static boolean getBoolean(ItemStack stack, String tag) {
         return stack.getOrCreateTag().getBoolean(tag);
+    }
+
+    /**
+     * Gets the specific tag from the itemstack.
+     *
+     * @param stack the itemstack.
+     * @param tag   the tag.
+     * @param def   the default value.
+     * @return returns the value stored or the default.
+     */
+    public static boolean getBoolean(ItemStack stack, String tag, boolean def) {
+        CompoundTag compoundTag = stack.getOrCreateTag();
+        if (compoundTag.contains(tag)) {
+            return compoundTag.getBoolean(tag);
+        } else {
+            return def;
+        }
     }
 
     /**

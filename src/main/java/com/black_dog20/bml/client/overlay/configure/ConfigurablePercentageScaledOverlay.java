@@ -1,6 +1,6 @@
 package com.black_dog20.bml.client.overlay.configure;
 
-import com.black_dog20.bml.client.overlay.Overlay;
+import com.black_dog20.bml.client.overlay.GameOverlay;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -11,12 +11,12 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
  * Please extend one of the subclasses.
  */
 @OnlyIn(Dist.CLIENT)
-public abstract class ConfigurablePercentageScaledOverlay extends Overlay implements IConfigurableOverlay {
+public abstract class ConfigurablePercentageScaledOverlay extends GameOverlay implements IConfigurableOverlay {
 
     /**
      * Corresponds to {@link RenderGameOverlayEvent.Pre}.
      */
-    public abstract static class Pre extends Overlay.Pre implements IConfigurableOverlay {
+    public abstract static class Pre extends GameOverlay.Pre implements IConfigurableOverlay {
 
         /**
          * Do not override this.
@@ -80,7 +80,7 @@ public abstract class ConfigurablePercentageScaledOverlay extends Overlay implem
     /**
      * Corresponds to {@link RenderGameOverlayEvent.Post}.
      */
-    public abstract static class Post extends Overlay.Post implements IConfigurableOverlay {
+    public abstract static class Post extends GameOverlay.Post implements IConfigurableOverlay {
 
         /**
          * Do not override this.
