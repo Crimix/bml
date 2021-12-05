@@ -184,7 +184,7 @@ curseforge {
         id = '371791'
         changelogType = 'markdown'
         changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/bml/blob/1.17/CHANGELOG.md)'
-        releaseType = 'beta'
+        releaseType = 'release'
         addGameVersion 'Forge'
         addGameVersion 'Java 16'
         addGameVersion '1.17.1'
