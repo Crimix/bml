@@ -1,6 +1,6 @@
 package com.black_dog20.bml.client.radial.items;
 
-import com.black_dog20.bml.client.DrawingContext;
+import com.black_dog20.bml.client.radial.api.RadialDrawingContext;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.MultiLineLabel;
@@ -31,7 +31,7 @@ public class TextRadialItem implements IRadialItem {
      * {@inheritDoc}
      */
     @Override
-    public void draw(DrawingContext context) {
+    public void draw(RadialDrawingContext context) {
         float y = context.y;
         MultiLineLabel lines = MultiLineLabel.create(context.fontRenderer, text, 60);
         if (lines.getLineCount() > 1) {

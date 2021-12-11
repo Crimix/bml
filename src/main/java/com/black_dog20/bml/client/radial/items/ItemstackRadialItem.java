@@ -1,6 +1,6 @@
 package com.black_dog20.bml.client.radial.items;
 
-import com.black_dog20.bml.client.DrawingContext;
+import com.black_dog20.bml.client.radial.api.RadialDrawingContext;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.internal.utils.InternalTranslations;
 import com.black_dog20.bml.utils.text.TextUtil;
@@ -12,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class ItemstackRadialItem extends TextRadialItem {
      * {@inheritDoc}
      */
     @Override
-    public void draw(DrawingContext context) {
+    public void draw(RadialDrawingContext context) {
         if (stack.getCount() > 0) {
             PoseStack viewModelPose = RenderSystem.getModelViewStack();
             viewModelPose.pushPose();
@@ -59,11 +58,9 @@ public class ItemstackRadialItem extends TextRadialItem {
      * {@inheritDoc}
      */
     @Override
-    public void drawTooltips(DrawingContext context) {
+    public void drawTooltips(RadialDrawingContext context) {
         if (stack.getCount() > 0) {
-            GuiUtils.preItemToolTip(stack);
-            GuiUtils.drawHoveringText(stack, context.poseStack, getItemToolTip(stack), (int) context.x, (int) context.y, (int) context.width, (int) context.height, -1, context.fontRenderer);
-            GuiUtils.postItemToolTip();
+            context.getTooltipDrawingHelper().renderTooltip(context.poseStack, getItemToolTip(stack), (int) context.x, (int) context.y);
         } else {
             super.drawTooltips(context);
         }

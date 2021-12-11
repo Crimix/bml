@@ -1,7 +1,6 @@
 package com.black_dog20.bml.client.radial.api;
 
 import com.black_dog20.bml.Bml;
-import com.black_dog20.bml.client.DrawingContext;
 import com.black_dog20.bml.client.radial.api.items.IRadialCategory;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.internal.utils.InternalTranslations;
@@ -21,13 +20,14 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.util.TriConsumer;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -438,8 +438,7 @@ public abstract class AbstractRadialMenu extends Screen {
         for (int i = 0; i < visibleItems.size(); i++) {
             IRadialItem item = visibleItems.get(i);
             if (item.isHovered()) {
-                DrawingContext context = new DrawingContext(poseStack, width, height, mouseX, mouseY, 0, font, itemRenderer);
-                item.drawTooltips(context);
+                item.drawTooltips(createDrawingContext(poseStack, width, height, mouseX, mouseY, 0));
             }
         }
     }
@@ -450,9 +449,13 @@ public abstract class AbstractRadialMenu extends Screen {
             float posX = x + itemRadius * (float) Math.cos(middle);
             float posY = y + itemRadius * (float) Math.sin(middle);
 
-            DrawingContext context = new DrawingContext(poseStack, width, height, posX, posY, z, font, itemRenderer);
-            item.draw(context);
+            item.draw(createDrawingContext(poseStack, width, height, posX, posY, z));
         });
+    }
+
+    @NotNull
+    private RadialDrawingContext createDrawingContext(PoseStack poseStack, int width, int height, float x, float y, float z) {
+        return new RadialDrawingContext(poseStack, width, height, x, y, z, font, itemRenderer, AbstractRadialMenu.this::renderComponentTooltip);
     }
 
     private void iterateVisible(TriConsumer<IRadialItem, Float, Float> consumer) {
@@ -526,7 +529,7 @@ public abstract class AbstractRadialMenu extends Screen {
     }
 
     @SubscribeEvent
-    public void onMouseScroll(GuiScreenEvent.MouseScrollEvent.Pre event) {
+    public void onMouseScroll(ScreenEvent.MouseScrollEvent.Pre event) {
         if (Minecraft.getInstance().screen instanceof AbstractRadialMenu) {
             if (!isScrollInverted()) {
                 if (event.getScrollDelta() < 0) {

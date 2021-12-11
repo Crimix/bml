@@ -11,7 +11,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -45,7 +45,7 @@ public class OverlayConfigWidget extends AbstractWidget {
     }
 
     @SubscribeEvent
-    public void onMouseReleaseEvent(GuiScreenEvent.MouseReleasedEvent.Post event) {
+    public void onMouseReleaseEvent(ScreenEvent.MouseReleasedEvent.Post event) {
         if (isDragging) {
             overlay.setPosition(x, y);
             isDragging = false;

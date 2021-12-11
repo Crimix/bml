@@ -4,12 +4,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
@@ -18,8 +19,9 @@ import java.util.concurrent.Callable;
 
 public class ArmorInventoryCapability implements IArmorInventoryCapability {
 
-    @CapabilityInject(IArmorInventoryCapability.class)
-    public static final Capability<IArmorInventoryCapability> CAP = null;
+    public static Capability<IArmorInventoryCapability> CAP
+            = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     private NonNullList<ItemStack> inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 
@@ -88,9 +90,9 @@ public class ArmorInventoryCapability implements IArmorInventoryCapability {
 
     @Override
     public void readFromNbt(CompoundTag compoundNBT) {
-        setSize(compoundNBT.contains("Size", Constants.NBT.TAG_INT) ? compoundNBT.getInt("Size") : getSize());
+        setSize(compoundNBT.contains("Size", Tag.TAG_INT) ? compoundNBT.getInt("Size") : getSize());
         int size = getSize();
-        ListTag tagList = compoundNBT.getList("Items", Constants.NBT.TAG_COMPOUND);
+        ListTag tagList = compoundNBT.getList("Items", Tag.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag itemTags = tagList.getCompound(i);
             int slot = itemTags.getInt("Slot");

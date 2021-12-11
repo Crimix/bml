@@ -1,6 +1,6 @@
 package com.black_dog20.bml.client.radial.items;
 
-import com.black_dog20.bml.client.DrawingContext;
+import com.black_dog20.bml.client.radial.api.RadialDrawingContext;
 import com.black_dog20.bml.client.radial.api.items.IRadialCategory;
 import com.black_dog20.bml.client.radial.api.items.IRadialItem;
 import com.black_dog20.bml.utils.text.TextComponentBuilder;
@@ -37,7 +37,7 @@ public class TextRadialCategory implements IRadialCategory {
      * {@inheritDoc}
      */
     @Override
-    public void draw(DrawingContext context) {
+    public void draw(RadialDrawingContext context) {
         Component textComponent = TextComponentBuilder.of("[")
                 .with(text)
                 .with("]")

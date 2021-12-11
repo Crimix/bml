@@ -8,6 +8,7 @@ import net.minecraft.data.HashCache;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTables;
@@ -61,9 +62,10 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
      *
      * @param name  the name of the loot table.
      * @param block the block to be dropped from itself.
+     * @param type  the block entity type
      * @return LootTable.Builder.
      */
-    protected LootTable.Builder createStandardTable(String name, Block block) {
+    protected LootTable.Builder createStandardTable(String name, Block block, BlockEntityType<?> type) {
         LootPool.Builder builder = LootPool.lootPool()
                 .name(name)
                 .setRolls(ConstantValue.exactly(1))
@@ -72,7 +74,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
                         .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
                                 .copy("inv", "BlockEntityTag.inv", CopyNbtFunction.MergeStrategy.REPLACE)
                                 .copy("energy", "BlockEntityTag.energy", CopyNbtFunction.MergeStrategy.REPLACE))
-                        .apply(SetContainerContents.setContents()
+                        .apply(SetContainerContents.m_193036_(type)
                                 .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );
         return LootTable.lootTable().withPool(builder);
@@ -82,10 +84,11 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
      * Creates a standard loot table to drop the block when the block is destroyed.
      *
      * @param block the block to be dropped from itself.
+     * @param type  the block entity type
      * @return LootTable.Builder.
      */
-    protected LootTable.Builder createStandardTable(Block block) {
-        return createStandardTable(block.getRegistryName().getPath(), block);
+    protected LootTable.Builder createStandardTable(Block block, BlockEntityType<?> type) {
+        return createStandardTable(block.getRegistryName().getPath(), block, type);
     }
 
     @Override

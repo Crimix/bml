@@ -1,11 +1,10 @@
 package com.black_dog20.bml.client.radial.api.items;
 
-import com.black_dog20.bml.client.DrawingContext;
+import com.black_dog20.bml.client.radial.api.RadialDrawingContext;
 import com.black_dog20.bml.internal.utils.InternalTranslations;
 import com.black_dog20.bml.utils.text.TextComponentBuilder;
 import com.black_dog20.bml.utils.translate.TranslationUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +21,16 @@ public interface IRadialItem {
      *
      * @param context the drawing context.
      */
-    void draw(DrawingContext context);
+    void draw(RadialDrawingContext context);
 
     /**
      * Draw the item's tooltips using the context.
      *
      * @param context the drawing context.
      */
-    default void drawTooltips(DrawingContext context) {
+    default void drawTooltips(RadialDrawingContext context) {
         List<Component> tooltips = getTooltips();
-        GuiUtils.drawHoveringText(context.poseStack, tooltips, (int) context.x, (int) context.y, context.width, context.height, -1, context.fontRenderer);
+        context.getTooltipDrawingHelper().renderTooltip(context.poseStack, tooltips, (int) context.x, (int) context.y);
     }
 
     /**
