@@ -183,11 +183,11 @@ curseforge {
         addArtifact (sourceJar)
         id = '371791'
         changelogType = 'markdown'
-        changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/bml/blob/1.17/CHANGELOG.md)'
+        changelog = 'As always find the changelog here [CHANGELOG](https://github.com/Crimix/bml/blob/1.18/CHANGELOG.md)'
         releaseType = 'release'
         addGameVersion 'Forge'
-        addGameVersion 'Java 16'
-        addGameVersion '1.17.1'
+        addGameVersion 'Java 17'
+        addGameVersion '1.18'
     }
 }
 
