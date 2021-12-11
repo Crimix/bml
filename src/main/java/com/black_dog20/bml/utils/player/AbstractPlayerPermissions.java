@@ -36,7 +36,7 @@ public abstract class AbstractPlayerPermissions {
         permissions.add(permission.getName());
     }
 
-    public void rework(IPermission permission) {
+    public void revoke(IPermission permission) {
         permissions.remove(permission.getName());
     }
 
