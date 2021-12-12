@@ -7,6 +7,7 @@ apply from: 'https://raw.githubusercontent.com/Crimix/bml/1.17/shadow.gradle'
 
 dependencies {
     shadowCompileOnly fg.deobf("com.black_dog20.bml:bml:${bml_version}")
+    runtimeOnly fg.deobf("com.black_dog20.bml:bml:${bml_version}")
 }
 
 shadowJar {
