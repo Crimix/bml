@@ -26,7 +26,7 @@ public abstract class ConfigurablePercentageScaledOverlay extends GameOverlay im
          * @param y the new x position.
          */
         @Override
-        public void setPosition(int x, int y) {
+        public final void setPosition(int x, int y) {
             int resX = Math.round(x / (((float) Minecraft.getInstance().getWindow().getGuiScaledWidth()) / 100));
             int resY = Math.round(y / (((float) Minecraft.getInstance().getWindow().getGuiScaledHeight()) / 100));
 
@@ -62,7 +62,7 @@ public abstract class ConfigurablePercentageScaledOverlay extends GameOverlay im
          * @return the x position on the leftmost top of the overlay.
          */
         @Override
-        public int getPosX() {
+        public final int getPosX() {
             return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledWidth() / 100) * getPercentagePosX()));
         }
 
@@ -72,7 +72,7 @@ public abstract class ConfigurablePercentageScaledOverlay extends GameOverlay im
          * @return the y position on the leftmost top of the overlay.
          */
         @Override
-        public int getPosY() {
+        public final int getPosY() {
             return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledHeight() / 100) * getPercentagePosY()));
         }
     }
@@ -90,7 +90,7 @@ public abstract class ConfigurablePercentageScaledOverlay extends GameOverlay im
          * @param y the new x position.
          */
         @Override
-        public void setPosition(int x, int y) {
+        public final void setPosition(int x, int y) {
             int resX = Math.round(x / (((float) Minecraft.getInstance().getWindow().getGuiScaledWidth()) / 100));
             int resY = Math.round(y / (((float) Minecraft.getInstance().getWindow().getGuiScaledHeight()) / 100));
 
@@ -126,7 +126,7 @@ public abstract class ConfigurablePercentageScaledOverlay extends GameOverlay im
          * @return the x position on the leftmost top of the overlay.
          */
         @Override
-        public int getPosX() {
+        public final int getPosX() {
             return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledWidth() / 100) * getPercentagePosX()));
         }
 
@@ -136,7 +136,135 @@ public abstract class ConfigurablePercentageScaledOverlay extends GameOverlay im
          * @return the y position on the leftmost top of the overlay.
          */
         @Override
-        public int getPosY() {
+        public final int getPosY() {
+            return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledHeight() / 100) * getPercentagePosY()));
+        }
+    }
+
+    /**
+     * Corresponds to {@link RenderGameOverlayEvent.PreLayer}.
+     */
+    public abstract static class PreLayer extends GameOverlay.PreLayer implements IConfigurableOverlay {
+
+        /**
+         * Do not override this.
+         * Please use {@link ConfigurablePercentageScaledOverlay.PreLayer#setPercentagePosition}.
+         *
+         * @param x the new x position.
+         * @param y the new x position.
+         */
+        @Override
+        public final void setPosition(int x, int y) {
+            int resX = Math.round(x / (((float) Minecraft.getInstance().getWindow().getGuiScaledWidth()) / 100));
+            int resY = Math.round(y / (((float) Minecraft.getInstance().getWindow().getGuiScaledHeight()) / 100));
+
+            setPercentagePosition(resX, resY);
+        }
+
+        /**
+         * Changes the position of the overlay.
+         * This should be saved somewhere.
+         *
+         * @param percentageX the new x position in percentage based on the scaled width.
+         * @param percentageY the new y position in percentage based on the scaled height.
+         */
+        public abstract void setPercentagePosition(int percentageX, int percentageY);
+
+        /**
+         * This should be read from a config or something.
+         *
+         * @return the x position in percentage for the leftmost top of the overlay.
+         */
+        public abstract int getPercentagePosX();
+
+        /**
+         * This should be read from a config or something.
+         *
+         * @return the y position in percentage for the leftmost top of the overlay.
+         */
+        public abstract int getPercentagePosY();
+
+        /**
+         * Do not override this.
+         *
+         * @return the x position on the leftmost top of the overlay.
+         */
+        @Override
+        public final int getPosX() {
+            return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledWidth() / 100) * getPercentagePosX()));
+        }
+
+        /**
+         * Do not override this.
+         *
+         * @return the y position on the leftmost top of the overlay.
+         */
+        @Override
+        public final int getPosY() {
+            return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledHeight() / 100) * getPercentagePosY()));
+        }
+    }
+
+    /**
+     * Corresponds to {@link RenderGameOverlayEvent.PostLayer}.
+     */
+    public abstract static class PostLayer extends GameOverlay.PostLayer implements IConfigurableOverlay {
+
+        /**
+         * Do not override this.
+         * Please use {@link ConfigurablePercentageScaledOverlay.PostLayer#setPercentagePosition}.
+         *
+         * @param x the new x position.
+         * @param y the new x position.
+         */
+        @Override
+        public final void setPosition(int x, int y) {
+            int resX = Math.round(x / (((float) Minecraft.getInstance().getWindow().getGuiScaledWidth()) / 100));
+            int resY = Math.round(y / (((float) Minecraft.getInstance().getWindow().getGuiScaledHeight()) / 100));
+
+            setPercentagePosition(resX, resY);
+        }
+
+        /**
+         * Changes the position of the overlay.
+         * This should be saved somewhere.
+         *
+         * @param percentageX the new x position in percentage based on the scaled width.
+         * @param percentageY the new y position in percentage based on the scaled height.
+         */
+        public abstract void setPercentagePosition(int percentageX, int percentageY);
+
+        /**
+         * This should be read from a config or something.
+         *
+         * @return the x position in percentage for the leftmost top of the overlay.
+         */
+        public abstract int getPercentagePosX();
+
+        /**
+         * This should be read from a config or something.
+         *
+         * @return the y position in percentage for the leftmost top of the overlay.
+         */
+        public abstract int getPercentagePosY();
+
+        /**
+         * Do not override this.
+         *
+         * @return the x position on the leftmost top of the overlay.
+         */
+        @Override
+        public final int getPosX() {
+            return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledWidth() / 100) * getPercentagePosX()));
+        }
+
+        /**
+         * Do not override this.
+         *
+         * @return the y position on the leftmost top of the overlay.
+         */
+        @Override
+        public final int getPosY() {
             return Math.round((((float) Minecraft.getInstance().getWindow().getGuiScaledHeight() / 100) * getPercentagePosY()));
         }
     }
