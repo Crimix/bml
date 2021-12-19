@@ -2,11 +2,13 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [1.17.1, 1.1.6] - 2021-12-19
+- Fixed crash and issues relating to RecipeUtil
+
 ## [1.17.1, 1.1.5] - 2021-12-11
 - Port to 1.17.1
 
 ## [1.16.3, 1.1.5] - 2021-01-23
-
 - Added support for mouse in Keybind util.
 - Provide groundwork for new mod.
 - Fixed issue with page footer missing in radial menu.
@@ -14,7 +16,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added more javadoc
 
 ## [1.16.3, 1.1.4] - 2021-01-17
-
 - Added more utils
 - Added more javadoc
 
