@@ -2,20 +2,19 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
-## [1.18.1, 1.1.6] - 2021-12-19
+## [1.18.2, 1.1.7] - 2021-03-18
+- Port to 1.18.2 may be a bit unstable as Forge 1.18.2 is in beta
 
+## [1.18.1, 1.1.6] - 2021-12-19
 - Fixed crash and issues relating to RecipeUtil
 
 ## [1.18.1, 1.1.5] - 2021-12-19
-
 - Port to 1.18.1
 
 ## [1.17.1, 1.1.5] - 2021-12-11
-
 - Port to 1.17.1
 
 ## [1.16.3, 1.1.5] - 2021-01-23
-
 - Added support for mouse in Keybind util.
 - Provide groundwork for new mod.
 - Fixed issue with page footer missing in radial menu.

@@ -12,7 +12,7 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -88,7 +88,7 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
      * @return ShapelessNBTRecipeBuilder
      */
     @Override
-    public ShapelessNBTRecipeBuilder requires(Tag<Item> tag) {
+    public ShapelessNBTRecipeBuilder requires(TagKey<Item> tag) {
         return (ShapelessNBTRecipeBuilder) super.requires(tag);
     }
 

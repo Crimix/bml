@@ -12,7 +12,7 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -96,7 +96,7 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @return ShapedNBTRecipeBuilder
      */
     @Override
-    public ShapedNBTRecipeBuilder define(final Character symbol, final Tag<Item> tag) {
+    public ShapedNBTRecipeBuilder define(final Character symbol, final TagKey<Item> tag) {
         return (ShapedNBTRecipeBuilder) super.define(symbol, tag);
     }
 

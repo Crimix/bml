@@ -22,7 +22,7 @@ public class SmallButton extends Button {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, WIDGETS_LOCATION);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
-            int i = this.getYImage(m_198029_()); //isHoveredOrFocused
+            int i = this.getYImage(isHoveredOrFocused());
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();

@@ -10,7 +10,7 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -187,7 +187,7 @@ curseforge {
         releaseType = 'release'
         addGameVersion 'Forge'
         addGameVersion 'Java 17'
-        addGameVersion '1.18.1'
+        addGameVersion '1.18.2'
     }
 }
 

@@ -74,7 +74,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
                         .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
                                 .copy("inv", "BlockEntityTag.inv", CopyNbtFunction.MergeStrategy.REPLACE)
                                 .copy("energy", "BlockEntityTag.energy", CopyNbtFunction.MergeStrategy.REPLACE))
-                        .apply(SetContainerContents.m_193036_(type)
+                        .apply(SetContainerContents.setContents(type)
                                 .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );
         return LootTable.lootTable().withPool(builder);

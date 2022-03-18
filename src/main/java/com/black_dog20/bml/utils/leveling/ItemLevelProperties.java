@@ -66,7 +66,7 @@ public class ItemLevelProperties {
         }
 
         int level = getCurrentLevel(tool) + 1;
-        int xpToNextLevel = getXpToNextLevel(tool, level - 1);
+        int xpToNextLevel = getXpToNextLevel(tool, level);
 
         return PROGRESS.get(ChatFormatting.GRAY, getCurrentLevel(tool), getCurrentXp(tool), xpToNextLevel);
     }
