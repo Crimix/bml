@@ -5,7 +5,7 @@ buildscript {
     dependencies {
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0' // To publish to curseforge
         classpath "net.saliman:gradle-properties-plugin:1.5.1" // To have private properties
-        classpath "io.github.crimix:ReplacePlaceholdersPlugin:1.0" // To have dynamic placeholder replacement
+        classpath "io.github.crimix:ReplacePlaceholdersPlugin:1.1" // To have dynamic placeholder replacement
     }
 }
 
