@@ -2,7 +2,7 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
-## [1.18.2, 1.1.7] - 2021-03-18
+## [1.18.2, 1.1.7] - 2021-04-03
 - Port to 1.18.2 may be a bit unstable as Forge 1.18.2 is in beta
 
 ## [1.18.1, 1.1.6] - 2021-12-19
