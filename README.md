@@ -1,5 +1,7 @@
-[![](http://cf.way2muchnoise.eu/full_371791_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/bml)
-[![](http://cf.way2muchnoise.eu/versions/371791.svg)](https://www.curseforge.com/minecraft/mc-mods/bml)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fcurseforge-badge-shields-io-caaw7pcenm0t.runkit.sh%2Fdownloads%3FprojectId%3D371791%26mode%3Dfull)](https://minecraft.curseforge.com/projects/bml)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fcurseforge-badge-shields-io-caaw7pcenm0t.runkit.sh%2Fversions%3FprojectId%3D371791)](https://minecraft.curseforge.com/projects/bml)   
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fmodrinth-badge-shields-io-s1co4c2czdpy.runkit.sh/%2Fdownloads%3FprojectId%3DFbqCRYwN%26mode%3Dfull)](https://minecraft.curseforge.com/projects/bml)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fmodrinth-badge-shields-io-s1co4c2czdpy.runkit.sh%2Fversions%3FprojectId%3DFbqCRYwN)](https://minecraft.curseforge.com/projects/bml)
 # BML
 BML or Black_dog's Modding Library is a mod I will be using as the core for my mods going forward.
 It contains logic and utils that can ease my devloping of mods.

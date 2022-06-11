@@ -4,12 +4,14 @@ buildscript {
     }
     dependencies {
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0' // To publish to curseforge
+        classpath 'com.modrinth.minotaur:Minotaur:2.2.1' // To publish to modrinth
         classpath "net.saliman:gradle-properties-plugin:1.5.1" // To have private properties
         classpath "io.github.crimix:ReplacePlaceholdersPlugin:1.1" // To have dynamic placeholder replacement
     }
 }
 
 apply plugin: com.matthewprenger.cursegradle.CurseGradlePlugin // Apply it by fully qualified name
+apply plugin: com.modrinth.minotaur.Minotaur // Apply it by fully qualified name
 apply plugin: net.saliman.gradle.plugin.properties.PropertiesPlugin // Apply it by fully qualified name
 apply plugin: io.github.crimix.replaceplaceholders.ReplacePlaceholdersPlugin // Apply it by fully qualified name
 apply plugin: 'idea'
@@ -40,3 +42,9 @@ repositories {
         }
     }
 }
+
+task releaseMods() {
+
+}
+
+tasks.releaseMods.dependsOn(tasks.modrinth, tasks.curseforge)
