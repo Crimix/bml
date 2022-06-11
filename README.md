@@ -1,7 +1,7 @@
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fcurseforge-badge-shields-io-caaw7pcenm0t.runkit.sh%2Fdownloads%3FprojectId%3D371791%26mode%3Dfull)](https://minecraft.curseforge.com/projects/bml)
 [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fcurseforge-badge-shields-io-caaw7pcenm0t.runkit.sh%2Fversions%3FprojectId%3D371791)](https://minecraft.curseforge.com/projects/bml)   
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fmodrinth-badge-shields-io-s1co4c2czdpy.runkit.sh/%2Fdownloads%3FprojectId%3DFbqCRYwN%26mode%3Dfull)](https://minecraft.curseforge.com/projects/bml)
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fmodrinth-badge-shields-io-s1co4c2czdpy.runkit.sh%2Fversions%3FprojectId%3DFbqCRYwN)](https://minecraft.curseforge.com/projects/bml)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fmodrinth-badge-shields-io-s1co4c2czdpy.runkit.sh/%2Fdownloads%3FprojectId%3DFbqCRYwN%26mode%3Dfull)](https://modrinth.com/mod/bml)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fmodrinth-badge-shields-io-s1co4c2czdpy.runkit.sh%2Fversions%3FprojectId%3DFbqCRYwN)](https://modrinth.com/mod/bml)
 # BML
 BML or Black_dog's Modding Library is a mod I will be using as the core for my mods going forward.
 It contains logic and utils that can ease my devloping of mods.
