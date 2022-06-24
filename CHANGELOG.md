@@ -2,6 +2,9 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [1.18.2, 1.1.8] - 2022-06-24
+- Added new api for my mods to load mod compatibilities when needed
+
 ## [1.18.2, 1.1.7] - 2021-04-03
 - Port to 1.18.2 may be a bit unstable as Forge 1.18.2 is in beta
 
