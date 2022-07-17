@@ -1,6 +1,7 @@
 package com.black_dog20.bml.datagen.patchouli.objects;
 
 import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class Page {
     private String type;
@@ -209,7 +210,7 @@ public class Page {
 
     public static Page SpotlightPage(Item item) {
         return new Page("spotlight")
-                .withItem(item.getRegistryName().toString());
+                .withItem(ForgeRegistries.ITEMS.getKey(item).toString());
     }
 
     public static Page SpotlightPage(String item) {

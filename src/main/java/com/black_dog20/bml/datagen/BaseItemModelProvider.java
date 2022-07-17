@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Base class for item model providers.
@@ -32,7 +33,7 @@ public abstract class BaseItemModelProvider extends ItemModelProvider {
      * @param block the block.
      */
     protected void registerBlockModel(Block block) {
-        String path = block.getRegistryName().getPath();
+        String path = ForgeRegistries.BLOCKS.getKey(block).getPath();
         getBuilder(path).parent(new ModelFile.UncheckedModelFile(modLoc("block/" + path)));
     }
 
@@ -42,7 +43,7 @@ public abstract class BaseItemModelProvider extends ItemModelProvider {
      * @param item the item.
      */
     protected void registerItemModel(Item item) {
-        String path = item.getRegistryName().getPath();
+        String path = ForgeRegistries.ITEMS.getKey(item).getPath();
         singleTexture(path, mcLoc("item/handheld"), "layer0", modLoc("item/" + path));
     }
 }

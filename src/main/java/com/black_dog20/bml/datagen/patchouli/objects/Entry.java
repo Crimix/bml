@@ -1,6 +1,7 @@
 package com.black_dog20.bml.datagen.patchouli.objects;
 
 import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,7 @@ public class Entry {
     }
 
     public static Entry newEntry(String name, String category, Item icon) {
-        return new Entry(name, category, icon.getRegistryName().toString());
+        return new Entry(name, category, ForgeRegistries.ITEMS.getKey(icon).toString());
     }
 
     public static Entry newEntry(String name, Category category, String icon) {
@@ -92,6 +93,6 @@ public class Entry {
     }
 
     public static Entry newEntry(String name, Category category, Item icon) {
-        return new Entry(name, category.getId(), icon.getRegistryName().toString());
+        return new Entry(name, category.getId(), ForgeRegistries.ITEMS.getKey(icon).toString());
     }
 }

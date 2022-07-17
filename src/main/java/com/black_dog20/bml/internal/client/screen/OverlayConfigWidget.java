@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -23,7 +23,7 @@ public class OverlayConfigWidget extends AbstractWidget {
     private boolean isDragging = false;
 
     public OverlayConfigWidget(IConfigurableOverlay overlay) {
-        super(overlay.getPosX(), overlay.getPosY(), overlay.getWidth(), overlay.getHeight(), TextComponent.EMPTY);
+        super(overlay.getPosX(), overlay.getPosY(), overlay.getWidth(), overlay.getHeight(), CommonComponents.EMPTY);
         this.overlay = overlay;
         this.isActive = overlay.getSate();
         MinecraftForge.EVENT_BUS.register(this);
@@ -45,7 +45,7 @@ public class OverlayConfigWidget extends AbstractWidget {
     }
 
     @SubscribeEvent
-    public void onMouseReleaseEvent(ScreenEvent.MouseReleasedEvent.Post event) {
+    public void onMouseReleaseEvent(ScreenEvent.MouseButtonReleased.Post event) {
         if (isDragging) {
             overlay.setPosition(x, y);
             isDragging = false;

@@ -32,9 +32,9 @@ public class SoulboundHandler {
         if (!event.isWasDeath() || event.isCanceled())
             return;
 
-        if (event.getOriginal() == null || event.getPlayer() == null || event.getPlayer() instanceof FakePlayer)
+        if (event.getOriginal() == null || event.getEntity() == null || event.getEntity() instanceof FakePlayer)
             return;
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         Player original = event.getOriginal();
 
         if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))

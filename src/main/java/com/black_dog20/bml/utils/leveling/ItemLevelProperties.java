@@ -45,7 +45,7 @@ public class ItemLevelProperties {
                 boolean isSoulbound = isLevelAbovePercentage(levelableItem.getSoulboundLevel(), nextLevel, tool);
                 compoundNBT.putInt(TAG_LEVEL, nextLevel);
                 if (!wasSoulbound && isSoulbound) {
-                    player.sendMessage(SOULBOUND_ACHIEVED.get(ChatFormatting.AQUA, tool.getHoverName().getString().toLowerCase()), player.getUUID());
+                    player.sendSystemMessage(SOULBOUND_ACHIEVED.get(ChatFormatting.AQUA, tool.getHoverName().getString().toLowerCase()));
                 }
             }
         }

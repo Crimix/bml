@@ -3,7 +3,6 @@ package com.black_dog20.bml;
 import com.black_dog20.bml.init.BmlCrafting;
 import com.black_dog20.bml.internal.capability.ArmorInventoryCapability;
 import com.black_dog20.bml.internal.network.PacketHandler;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -28,7 +27,7 @@ public class Bml {
         event.addListener(this::setup);
         event.addListener(this::setupClient);
         event.addListener(this::registerCapabilities);
-        event.addGenericListener(RecipeSerializer.class, BmlCrafting::registerRecipeSerialziers);
+        event.addListener(BmlCrafting::registerRecipeSerialziers);
         BmlCrafting.RECIPE_SERIALIZERS.register(event);
 
         MinecraftForge.EVENT_BUS.register(this);

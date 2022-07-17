@@ -4,7 +4,7 @@ import com.black_dog20.bml.utils.text.TextUtil;
 import com.black_dog20.bml.utils.translate.ITranslation;
 import net.minecraft.ChatFormatting;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.data.LanguageProvider;
 
@@ -62,7 +62,7 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
      * @param color the color.
      */
     protected void addPrefixed(String key, String text, ChatFormatting color) {
-        add(String.format("%s.%s", modid, key), TextUtil.getFormattedText(new TextComponent(text).withStyle(color)));
+        add(String.format("%s.%s", modid, key), TextUtil.getFormattedText(Component.literal(text).withStyle(color)));
     }
 
     /**
@@ -76,7 +76,7 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
         if (!modid.equals(translation.getModId())) {
             throw new IllegalStateException("Mod id for translation is not the same as for the generator");
         }
-        add(translation.getDescription(), TextUtil.getFormattedText(new TextComponent(text).withStyle(color)));
+        add(translation.getDescription(), TextUtil.getFormattedText(Component.literal(text).withStyle(color)));
     }
 
     /**
@@ -88,7 +88,7 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
      * @return a formatted string.
      */
     protected String style(String text, ChatFormatting... styles) {
-        return TextUtil.getFormattedText(new TextComponent(text).withStyle(styles));
+        return TextUtil.getFormattedText(Component.literal(text).withStyle(styles));
     }
 
     /**

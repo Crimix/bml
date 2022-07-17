@@ -20,9 +20,9 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -246,8 +246,8 @@ public abstract class AbstractRadialMenu extends Screen {
     }
 
     @SubscribeEvent
-    public static void overlayEvent(RenderGameOverlayEvent.PreLayer event) {
-        if (event.getOverlay() != ForgeIngameGui.CROSSHAIR_ELEMENT)
+    public static void overlayEvent(RenderGuiOverlayEvent.Pre event) {
+        if (!event.getOverlay().id().equals(VanillaGuiOverlay.CROSSHAIR.id()))
             return;
 
         if (Minecraft.getInstance().screen instanceof AbstractRadialMenu) {
@@ -529,7 +529,7 @@ public abstract class AbstractRadialMenu extends Screen {
     }
 
     @SubscribeEvent
-    public void onMouseScroll(ScreenEvent.MouseScrollEvent.Pre event) {
+    public void onMouseScroll(ScreenEvent.MouseScrolled.Pre event) {
         if (Minecraft.getInstance().screen instanceof AbstractRadialMenu) {
             if (!isScrollInverted()) {
                 if (event.getScrollDelta() < 0) {

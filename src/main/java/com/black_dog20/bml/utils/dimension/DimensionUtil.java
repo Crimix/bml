@@ -1,9 +1,8 @@
 package com.black_dog20.bml.utils.dimension;
 
 import com.black_dog20.bml.utils.text.TextUtil;
-import net.minecraft.network.chat.BaseComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -21,12 +20,12 @@ public class DimensionUtil {
      * @param dimensionName the unformatted name of the dimension
      * @return the formatted name.
      */
-    public static BaseComponent getFormattedDimensionName(String dimensionName) {
+    public static MutableComponent getFormattedDimensionName(String dimensionName) {
         if (!dimensionName.contains(".") && !dimensionName.contains(":")) {
             String name = TextUtil.capitaliseFirstLetterFully(dimensionName.replaceAll("_", " "));
-            return new TextComponent(name);
+            return Component.literal(name);
         } else {
-            return new TextComponent(dimensionName);
+            return Component.literal(dimensionName);
         }
     }
 
@@ -36,8 +35,8 @@ public class DimensionUtil {
      * @param dimension the dimension.
      * @return the formatted name.
      */
-    public static BaseComponent getFormattedDimensionName(ResourceKey<Level> dimension) {
-        return getFormattedDimensionName(dimension.getRegistryName(), null);
+    public static MutableComponent getFormattedDimensionName(ResourceKey<Level> dimension) {
+        return getFormattedDimensionName(dimension.registry(), null);
     }
 
     /**
@@ -49,14 +48,14 @@ public class DimensionUtil {
      * @param fallbackModId the fall back modid for the translation.
      * @return the formatted name.
      */
-    public static BaseComponent getFormattedDimensionName(ResourceLocation dimensionName, String fallbackModId) {
-        BaseComponent name = new TranslatableComponent(dimensionName.toString());
+    public static MutableComponent getFormattedDimensionName(ResourceLocation dimensionName, String fallbackModId) {
+        MutableComponent name = Component.translatable(dimensionName.toString());
         if (name.getString().equals(dimensionName.toString())) {
             String alt = String.format("%s.%s", dimensionName.getNamespace(), dimensionName.getPath());
-            name = new TranslatableComponent(alt);
+            name = Component.translatable(alt);
             if (name.getString().equals(alt) && TextUtil.isNotNullOrEmpty(fallbackModId)) {
                 String fallback = String.format("%s.%s", fallbackModId, dimensionName.toString());
-                name = new TranslatableComponent(fallback);
+                name = Component.translatable(fallback);
                 if (name.getString().equals(fallback)) {
                     name = getFormattedDimensionName(dimensionName.getPath());
                 }

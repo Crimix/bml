@@ -9,7 +9,6 @@ import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -54,7 +53,7 @@ public class ConfirmInputScreen extends Screen {
     protected void init() {
         super.init();
         this.listLines = MultiLineLabel.create(this.font, this.message, this.width - 50);
-        textField = new EditBox(this.font, this.width / 2 - 100, 70 + ((listLines.getLineCount() + 1) * 9), 200, 20, TextComponent.EMPTY);
+        textField = new EditBox(this.font, this.width / 2 - 100, 70 + ((listLines.getLineCount() + 1) * 9), 200, 20, CommonComponents.EMPTY);
         this.addRenderableWidget(textField);
         this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 96, 150, 20, this.confirmButtonText, (p_213002_1_) -> {
             this.callbackFunction.accept(true, textField.getValue());

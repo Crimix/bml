@@ -7,6 +7,7 @@ import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 /**
  * Base class for blockstate providers.
@@ -109,7 +110,7 @@ public abstract class BaseBlockStateProvider extends BlockStateProvider {
 
         public void buildHorizontal() {
             ModelFile model = models().cube(
-                    block.getRegistryName().getPath(),
+                    ForgeRegistries.BLOCKS.getKey(block).getPath(),
                     bottom,
                     top,
                     front, back, left, right

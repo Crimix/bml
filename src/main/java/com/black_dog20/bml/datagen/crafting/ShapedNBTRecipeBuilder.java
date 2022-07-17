@@ -20,6 +20,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -166,7 +167,7 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      */
     @Override
     public void save(final Consumer<FinishedRecipe> consumer) {
-        save(consumer, result.getItem().getRegistryName());
+        save(consumer, ForgeRegistries.ITEMS.getKey(result.getItem()));
     }
 
     /**
@@ -177,7 +178,7 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      */
     @Override
     public void save(final Consumer<FinishedRecipe> consumer, final String save) {
-        final ResourceLocation registryName = result.getItem().getRegistryName();
+        final ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(result.getItem());
         if (new ResourceLocation(save).equals(registryName)) {
             throw new IllegalStateException("Shaped Recipe " + save + " should remove its 'save' argument");
         } else {

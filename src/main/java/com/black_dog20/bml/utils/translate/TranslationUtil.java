@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Arrays;
@@ -70,7 +70,7 @@ public class TranslationUtil {
      * @param translation an enum containing the key and modid.
      * @return the formatted translated text.
      */
-    public static TranslatableComponent translate(ITranslation translation) {
+    public static MutableComponent translate(ITranslation translation) {
         return translate(translation, ChatFormatting.WHITE);
     }
 
@@ -81,7 +81,7 @@ public class TranslationUtil {
      * @param objs        the objects.
      * @return the formatted translated text.
      */
-    public static TranslatableComponent translate(ITranslation translation, Object... objs) {
+    public static MutableComponent translate(ITranslation translation, Object... objs) {
         return translate(translation, ChatFormatting.WHITE, objs);
     }
 
@@ -92,8 +92,8 @@ public class TranslationUtil {
      * @param color       the color for the text.
      * @return the formatted translated text.
      */
-    public static TranslatableComponent translate(ITranslation translation, ChatFormatting color) {
-        TranslatableComponent component = new TranslatableComponent(String.format("%s.%s", translation.getModId(), translation.getKey()));
+    public static MutableComponent translate(ITranslation translation, ChatFormatting color) {
+        MutableComponent  component = Component.translatable(String.format("%s.%s", translation.getModId(), translation.getKey()));
         component.setStyle(component.getStyle().withColor(color));
         return component;
     }
@@ -106,8 +106,8 @@ public class TranslationUtil {
      * @param objs        the objects.
      * @return the formatted translated text.
      */
-    public static TranslatableComponent translate(ITranslation translation, ChatFormatting color, Object... objs) {
-        TranslatableComponent component = new TranslatableComponent(String.format("%s.%s", translation.getModId(), translation.getKey()), objs);
+    public static MutableComponent translate(ITranslation translation, ChatFormatting color, Object... objs) {
+        MutableComponent component = Component.translatable(String.format("%s.%s", translation.getModId(), translation.getKey()), objs);
         component.setStyle(component.getStyle().withColor(color));
         return component;
     }
@@ -121,7 +121,7 @@ public class TranslationUtil {
      * @return translated text or some string based on the resource location.
      */
     public static String translateResourceLocation(ResourceLocation resourceLocation, Function<ResourceLocation, String> defaultFunc) {
-        String s = TextUtil.getFormattedText(new TranslatableComponent(resourceLocation.toString()));
+        String s = TextUtil.getFormattedText(Component.translatable(resourceLocation.toString()));
         if (s.contains(resourceLocation.getNamespace()))
             return resourceLocation.toString();
         else
@@ -165,39 +165,39 @@ public class TranslationUtil {
     }
 
     public static Component eagerTranslate(Component component) {
-        if (component instanceof TranslatableComponent translation) {
-            Object[] newArgs = Arrays.stream(translation.getArgs())
-                    .map(TranslationUtil::eagerEvaluateArg)
-                    .toArray();
+        if (component instanceof MutableComponent translation) {
+            if (translation.getContents() instanceof TranslatableContents contents) {
+                Object[] newArgs = Arrays.stream(contents.getArgs())
+                        .map(TranslationUtil::eagerEvaluateArg)
+                        .toArray();
 
-            TranslatableComponent result = new TranslatableComponent(Language.getInstance().getOrDefault(translation.getKey()), newArgs);
-            result.setStyle(component.getStyle());
+                MutableComponent result = Component.translatable(Language.getInstance().getOrDefault(contents.getKey()), newArgs);
+                result.setStyle(component.getStyle());
 
-            component.getSiblings().stream()
-                    .map(TranslationUtil::eagerEvaluateSiblings)
-                    .forEachOrdered(result::append);
+                component.getSiblings().stream()
+                        .map(TranslationUtil::eagerEvaluateSiblings)
+                        .forEachOrdered(result::append);
 
-            return eagerEvaluateStyle(result);
-        } else {
-            return component;
+                return eagerEvaluateStyle(result);
+            } else {
+                return eagerEvaluateStyle(translation);
+            }
         }
+
+        return component;
     }
 
     private static Object eagerEvaluateArg(Object arg) {
-        if (arg instanceof TranslatableComponent translatableComponent) {
+        if (arg instanceof MutableComponent translatableComponent) {
             return eagerTranslate(translatableComponent);
-        } else if (arg instanceof MutableComponent mutableComponent) {
-            return eagerEvaluateStyle(mutableComponent);
         } else {
             return arg;
         }
     }
 
     private static Component eagerEvaluateSiblings(Component sibling) {
-        if (sibling instanceof TranslatableComponent translatableComponent) {
+        if (sibling instanceof MutableComponent translatableComponent) {
             return eagerTranslate(translatableComponent);
-        } else if (sibling instanceof MutableComponent mutableComponent) {
-            return eagerEvaluateStyle(mutableComponent);
         } else {
             return sibling;
         }
@@ -208,10 +208,11 @@ public class TranslationUtil {
         HoverEvent hover = style.getHoverEvent();
         if (hover != null && hover.getAction() == HoverEvent.Action.SHOW_TEXT) {
             Component hoverText = hover.getValue(HoverEvent.Action.SHOW_TEXT);
-            if (hoverText instanceof TranslatableComponent) {
-                style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, eagerTranslate((TranslatableComponent) hoverText)));
+            if (hoverText instanceof MutableComponent) {
+                style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, eagerTranslate(hoverText)));
             }
         }
+
         component.setStyle(style);
         return component;
     }

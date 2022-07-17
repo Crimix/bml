@@ -2,9 +2,8 @@ package com.black_dog20.bml.utils.text;
 
 import com.black_dog20.bml.utils.translate.ITranslation;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.function.Supplier;
 
@@ -14,11 +13,11 @@ import java.util.function.Supplier;
  */
 public class TextComponentBuilder {
 
-    private BaseComponent root;
-    private BaseComponent prev;
+    private MutableComponent root;
+    private MutableComponent prev;
 
     private TextComponentBuilder() {
-        root = new TextComponent("");
+        root = Component.literal("");
     }
 
     /**
@@ -29,7 +28,7 @@ public class TextComponentBuilder {
      */
     public static TextComponentBuilder of(Component component) {
         TextComponentBuilder builder = new TextComponentBuilder();
-        return builder.with((BaseComponent) component.copy());
+        return builder.with(component.copy());
     }
 
     /**
@@ -39,7 +38,7 @@ public class TextComponentBuilder {
      * @return A new TextComponentBuilder.
      */
     public static TextComponentBuilder of(String text) {
-        return of(new TextComponent(text));
+        return of(Component.literal(text));
     }
 
     /**
@@ -72,7 +71,7 @@ public class TextComponentBuilder {
         if (prev != null) {
             root.append(prev);
         }
-        prev = (BaseComponent) component.copy();
+        prev = component.copy();
         return this;
     }
 
@@ -83,7 +82,7 @@ public class TextComponentBuilder {
      * @return the current builder.
      */
     public TextComponentBuilder with(String text) {
-        return with(new TextComponent(text));
+        return with(Component.literal(text));
     }
 
     /**
@@ -103,7 +102,7 @@ public class TextComponentBuilder {
      * @return the current builder.
      */
     public TextComponentBuilder with(ITranslation translation) {
-        return with((BaseComponent) translation.get());
+        return with(translation.get());
     }
 
     /**
@@ -112,7 +111,7 @@ public class TextComponentBuilder {
      * @return the current builder.
      */
     public TextComponentBuilder space() {
-        return with(new TextComponent(" "));
+        return with(Component.literal(" "));
     }
 
     /**
@@ -132,7 +131,7 @@ public class TextComponentBuilder {
      *
      * @return the TextComponent.
      */
-    public BaseComponent build() {
+    public MutableComponent build() {
         if (prev != null) {
             root.append(prev);
         }
@@ -254,9 +253,9 @@ public class TextComponentBuilder {
      */
     public TextComponentBuilder with(ITranslation translationTrue, ITranslation translationFalse, Supplier<Boolean> supplier) {
         if (Boolean.TRUE.equals(supplier.get())) {
-            return with((BaseComponent) translationTrue.get());
+            return with(translationTrue.get());
         } else {
-            return with((BaseComponent) translationFalse.get());
+            return with(translationFalse.get());
         }
     }
 
@@ -268,7 +267,7 @@ public class TextComponentBuilder {
      */
     public TextComponentBuilder space(Supplier<Boolean> supplier) {
         if (supplier.get()) {
-            return with(new TextComponent(" "));
+            return with(Component.literal(" "));
         }
         return this;
     }

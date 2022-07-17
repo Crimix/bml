@@ -1,6 +1,7 @@
 package com.black_dog20.bml.datagen.patchouli.objects;
 
 import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class Category {
 
@@ -50,7 +51,7 @@ public class Category {
     }
 
     public static Category newCategory(String id, String name, String category, Item icon) {
-        return new Category(id, name, category, icon.getRegistryName().toString());
+        return new Category(id, name, category, ForgeRegistries.ITEMS.getKey(icon).toString());
     }
 
 }

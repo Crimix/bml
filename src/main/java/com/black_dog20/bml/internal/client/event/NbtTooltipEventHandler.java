@@ -8,7 +8,6 @@ import net.minecraft.nbt.CollectionTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,14 +33,14 @@ public class NbtTooltipEventHandler {
                     Tag tag = nbtTag.get(key);
                     if (tag != null) {
                         if (tag instanceof CollectionTag collectionTag) {
-                            tooltips.add(new TextComponent("#" + key + ":").withStyle(ChatFormatting.DARK_GRAY));
+                            tooltips.add(Component.literal("#" + key + ":").withStyle(ChatFormatting.DARK_GRAY));
                             for (Object o : collectionTag) {
                                 if (o instanceof Tag t) {
-                                    tooltips.add(new TextComponent(" " + t).withStyle(ChatFormatting.DARK_GRAY));
+                                    tooltips.add(Component.literal(" " + t).withStyle(ChatFormatting.DARK_GRAY));
                                 }
                             }
                         } else {
-                            tooltips.add(new TextComponent("#" + key + ": " + tag.getAsString()).withStyle(ChatFormatting.DARK_GRAY));
+                            tooltips.add(Component.literal("#" + key + ": " + tag.getAsString()).withStyle(ChatFormatting.DARK_GRAY));
                         }
 
                     }

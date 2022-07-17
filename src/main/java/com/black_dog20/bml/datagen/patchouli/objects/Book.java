@@ -2,6 +2,7 @@ package com.black_dog20.bml.datagen.patchouli.objects;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -142,7 +143,7 @@ public class Book {
     }
 
     public Book withCustomBookItem(Item custom_book_item) {
-        this.custom_book_item = custom_book_item.getRegistryName().toString();
+        this.custom_book_item = ForgeRegistries.ITEMS.getKey(custom_book_item).toString();
         return this;
     }
 

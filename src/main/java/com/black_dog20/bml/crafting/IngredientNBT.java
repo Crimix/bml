@@ -8,7 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientSerializer;
-import net.minecraftforge.common.crafting.NBTIngredient;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -18,7 +19,7 @@ import java.util.Set;
  *
  * @author black_dog20
  */
-public class IngredientNBT extends NBTIngredient {
+public class IngredientNBT extends StrictNBTIngredient {
 
     protected ItemStack stack;
 
@@ -81,7 +82,7 @@ public class IngredientNBT extends NBTIngredient {
     public JsonElement toJson() {
         JsonObject json = new JsonObject();
         json.addProperty("type", CraftingHelper.getID(Serializer.INSTANCE).toString());
-        json.addProperty("item", stack.getItem().getRegistryName().toString());
+        json.addProperty("item", ForgeRegistries.ITEMS.getKey(stack.getItem()).toString());
         json.addProperty("count", stack.getCount());
         if (stack.hasTag())
             json.addProperty("nbt", stack.getTag().toString());

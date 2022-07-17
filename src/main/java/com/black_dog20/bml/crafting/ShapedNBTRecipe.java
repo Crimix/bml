@@ -41,7 +41,7 @@ public class ShapedNBTRecipe extends ShapedRecipe {
         return () -> new Serializer(ShapedNBTRecipe::new);
     }
 
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapedRecipe> {
+    public static class Serializer implements RecipeSerializer<ShapedRecipe> {
 
         private final ShapedNBTRecipeConsumer consumer;
 

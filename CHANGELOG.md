@@ -2,6 +2,10 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
+## [1.19, 1.1.7] - 2022-xx-xx
+- Port to 1.19
+- Updated to Forge version 41.0.99 to work with the new client refactor and rename refactor
+
 ## [1.18.2, 1.1.8] - 2022-06-24
 - Added new api for my mods to load mod compatibilities when needed
 

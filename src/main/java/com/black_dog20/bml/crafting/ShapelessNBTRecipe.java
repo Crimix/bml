@@ -40,7 +40,7 @@ public class ShapelessNBTRecipe extends ShapelessRecipe {
         return () -> new Serializer(ShapelessNBTRecipe::new);
     }
 
-    public static class Serializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ShapelessRecipe> {
+    public static class Serializer implements RecipeSerializer<ShapelessRecipe> {
 
         private final ShapelessNBTRecipeConsumer consumer;
 

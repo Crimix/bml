@@ -30,13 +30,13 @@ public class ArmorEventHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onPlayerClone(PlayerEvent.Clone event) {
         LazyOptional<IArmorInventoryCapability> oldCap = event.getOriginal().getCapability(ArmorInventoryCapability.CAP);
-        LazyOptional<IArmorInventoryCapability> newCap = event.getPlayer().getCapability(ArmorInventoryCapability.CAP);
+        LazyOptional<IArmorInventoryCapability> newCap = event.getEntity().getCapability(ArmorInventoryCapability.CAP);
 
         oldCap.ifPresent(o -> newCap.ifPresent(o::copyTo));
-        for (ItemStack armor : event.getPlayer().getInventory().armor) {
+        for (ItemStack armor : event.getEntity().getInventory().armor) {
             if (!armor.isEmpty()) {
-                if (!event.getPlayer().level.isClientSide) {
-                    MinecraftForge.EVENT_BUS.post(new ArmorEvent.Equip(event.getPlayer(), armor));
+                if (!event.getEntity().level.isClientSide) {
+                    MinecraftForge.EVENT_BUS.post(new ArmorEvent.Equip(event.getEntity(), armor));
                 }
             }
         }
@@ -44,10 +44,10 @@ public class ArmorEventHandler {
 
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        for (ItemStack armor : event.getPlayer().getInventory().armor) {
+        for (ItemStack armor : event.getEntity().getInventory().armor) {
             if (!armor.isEmpty()) {
-                if (!event.getPlayer().level.isClientSide) {
-                    MinecraftForge.EVENT_BUS.post(new ArmorEvent.Equip(event.getPlayer(), armor));
+                if (!event.getEntity().level.isClientSide) {
+                    MinecraftForge.EVENT_BUS.post(new ArmorEvent.Equip(event.getEntity(), armor));
                 }
             }
         }
