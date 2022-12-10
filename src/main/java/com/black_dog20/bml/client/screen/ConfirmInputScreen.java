@@ -5,7 +5,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.MultiLineLabel;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -55,12 +55,14 @@ public class ConfirmInputScreen extends Screen {
         this.listLines = MultiLineLabel.create(this.font, this.message, this.width - 50);
         textField = new EditBox(this.font, this.width / 2 - 100, 70 + ((listLines.getLineCount() + 1) * 9), 200, 20, CommonComponents.EMPTY);
         this.addRenderableWidget(textField);
-        this.addRenderableWidget(new Button(this.width / 2 - 155, this.height / 6 + 96, 150, 20, this.confirmButtonText, (p_213002_1_) -> {
-            this.callbackFunction.accept(true, textField.getValue());
-        }));
-        this.addRenderableWidget(new Button(this.width / 2 - 155 + 160, this.height / 6 + 96, 150, 20, this.cancelButtonText, (p_213001_1_) -> {
-            this.callbackFunction.accept(false, "");
-        }));
+        this.addRenderableWidget(Button.builder(this.confirmButtonText, ignored -> this.callbackFunction.accept(true, textField.getValue()))
+                .size(150, 20)
+                .pos(this.width / 2 - 155, this.height / 6 + 96)
+                .build());
+        this.addRenderableWidget(Button.builder(this.cancelButtonText, ignored -> this.callbackFunction.accept(false, ""))
+                .size(150, 20)
+                .pos(this.width / 2 - 155 + 160, this.height / 6 + 96)
+                .build());
     }
 
     @Override
@@ -77,7 +79,7 @@ public class ConfirmInputScreen extends Screen {
     public void setButtonDelay(int ticksUntilEnableIn) {
         this.ticksUntilEnable = ticksUntilEnableIn;
 
-        for (Widget widget : this.renderables) {
+        for (Renderable widget : this.renderables) {
             if (widget instanceof AbstractWidget abstractWidget) {
                 if (!(abstractWidget instanceof EditBox)) {
                     abstractWidget.active = false;
@@ -90,7 +92,7 @@ public class ConfirmInputScreen extends Screen {
     public void tick() {
         super.tick();
         if (--this.ticksUntilEnable == 0) {
-            for (Widget widget : this.renderables) {
+            for (Renderable widget : this.renderables) {
                 if (widget instanceof AbstractWidget abstractWidget) {
                     if (!(abstractWidget instanceof EditBox)) {
                         abstractWidget.active = true;

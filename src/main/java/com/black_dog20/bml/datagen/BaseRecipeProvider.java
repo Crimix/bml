@@ -1,10 +1,10 @@
 package com.black_dog20.bml.datagen;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.SpecialRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 
 /**
  * Base class for recipe providers.
@@ -18,11 +18,11 @@ public abstract class BaseRecipeProvider extends RecipeProvider {
     /**
      * The constructor for the provider.
      *
-     * @param generator the data generator.
+     * @param packOutput the pack output.
      * @param modid     the modid.
      */
-    public BaseRecipeProvider(DataGenerator generator, String modid) {
-        super(generator);
+    public BaseRecipeProvider(PackOutput packOutput, String modid) {
+        super(packOutput);
         this.modid = modid;
     }
 
@@ -32,7 +32,7 @@ public abstract class BaseRecipeProvider extends RecipeProvider {
      * @param recipe the special recipe serializer.
      * @return CustomRecipeBuilder.
      */
-    protected SpecialRecipeBuilder specialRecipe(SimpleRecipeSerializer<?> recipe) {
+    protected SpecialRecipeBuilder specialRecipe(SimpleCraftingRecipeSerializer<?> recipe) {
         return SpecialRecipeBuilder.special(recipe);
     }
 

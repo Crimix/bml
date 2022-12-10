@@ -100,14 +100,16 @@ public final class ColorUtil {
 
     @Nullable
     private static NativeImage getNativeImage(TextureAtlasSprite textureAtlasSprite) {
-        int iconWidth = textureAtlasSprite.getWidth();
-        int iconHeight = textureAtlasSprite.getHeight();
-        int frameCount = textureAtlasSprite.getFrameCount();
-        if (iconWidth > 0 && iconHeight > 0 && frameCount > 0) {
-            NativeImage[] frames = textureAtlasSprite.mainImage;
-            return frames[0];
-        } else {
+        int iconWidth = textureAtlasSprite.contents().width();
+        int iconHeight = textureAtlasSprite.contents().height();
+        if (iconWidth <= 0 || iconHeight <= 0) {
             return null;
         }
+
+        NativeImage[] frames = textureAtlasSprite.contents().byMipLevel;
+        if (frames.length == 0) {
+            return null;
+        }
+        return frames[0];
     }
 }

@@ -1,7 +1,6 @@
 package com.black_dog20.bml.datagen.crafting;
 
 import com.black_dog20.bml.init.BmlCrafting;
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
@@ -9,11 +8,11 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -41,18 +40,21 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
     private static final Field PATTERN = ObfuscationReflectionHelper.findField(ShapedRecipeBuilder.class, "rows" /* pattern */);
     private static final Field KEY = ObfuscationReflectionHelper.findField(ShapedRecipeBuilder.class, "key" /* key */);
 
+    private final RecipeCategory category;
     private final ItemStack result;
     private final RecipeSerializer<?> serializer;
     private String itemGroup;
 
-    private ShapedNBTRecipeBuilder(final ItemStack result) {
-        super(result.getItem(), result.getCount());
+    private ShapedNBTRecipeBuilder(final RecipeCategory category, final ItemStack result) {
+        super(category, result.getItem(), result.getCount());
+        this.category = category;
         this.result = result;
         this.serializer = BmlCrafting.SHAPED_NBT.get();
     }
 
-    private ShapedNBTRecipeBuilder(final ItemStack result, final RecipeSerializer<?> serializer) {
-        super(result.getItem(), result.getCount());
+    private ShapedNBTRecipeBuilder(final RecipeCategory category, final ItemStack result, final RecipeSerializer<?> serializer) {
+        super(category, result.getItem(), result.getCount());
+        this.category = category;
         this.result = result;
         this.serializer = serializer;
     }
@@ -63,19 +65,19 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
      * @param result the end result of the recipe with its NBT data.
      * @return ShapedNBTRecipeBuilder.
      */
-    public static ShapedNBTRecipeBuilder shapedNBTRecipe(final ItemStack result) {
-        return new ShapedNBTRecipeBuilder(result);
+    public static ShapedNBTRecipeBuilder shapedNBTRecipe(final RecipeCategory category, final ItemStack result) {
+        return new ShapedNBTRecipeBuilder(category, result);
     }
 
     /**
      * Factory for recipe builder.
      *
-     * @param serializer the custom serializer to use.
      * @param result     the end result of the recipe with its NBT data.
+     * @param serializer the custom serializer to use.
      * @return ShapedNBTRecipeBuilder.
      */
-    public static ShapedNBTRecipeBuilder customShapedNBTRecipe(RecipeSerializer<?> serializer, final ItemStack result) {
-        return new ShapedNBTRecipeBuilder(result, serializer);
+    public static ShapedNBTRecipeBuilder customShapedNBTRecipe(final RecipeCategory category, final ItemStack result, RecipeSerializer<?> serializer) {
+        return new ShapedNBTRecipeBuilder(category, result, serializer);
     }
 
     /**
@@ -215,8 +217,7 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
 
             String itemGroupName = itemGroup;
             if (itemGroupName == null) {
-                final CreativeModeTab itemGroup = Preconditions.checkNotNull(result.getItem().getItemCategory());
-                itemGroupName = itemGroup.getRecipeFolderName();
+                itemGroupName = category.getFolderName();
             }
 
             final ResourceLocation advancementID = new ResourceLocation(id.getNamespace(), "recipes/" + itemGroupName + "/" + id.getPath());
@@ -235,7 +236,7 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
         private final RecipeSerializer<?> serializer;
 
         private Result(final ResourceLocation id, final ItemStack result, final String group, final List<String> pattern, final Map<Character, Ingredient> key, final Advancement.Builder advancementBuilder, final ResourceLocation advancementID, final RecipeSerializer<?> serializer) {
-            super(id, result.getItem(), result.getCount(), group, pattern, key, advancementBuilder, advancementID);
+            super(id, result.getItem(), result.getCount(), group, determineBookCategory(category), pattern, key, advancementBuilder, advancementID);
             resultNBT = result.getTag();
             this.serializer = serializer;
         }

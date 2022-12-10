@@ -62,7 +62,7 @@ public class ArmorEventHandler {
             for (int i = 0; i < size; i++) {
                 ItemStack prev = cap.getStackInSlot(i);
                 ItemStack curr = event.player.getInventory().armor.get(i);
-                if (!ItemStack.isSameIgnoreDurability(prev, curr)) {
+                if (!ItemStack.isSame(prev, curr)) {
                     if (!prev.isEmpty()) {
                         if (!event.player.level.isClientSide) {
                             MinecraftForge.EVENT_BUS.post(new ArmorEvent.Unequip(event.player, prev));

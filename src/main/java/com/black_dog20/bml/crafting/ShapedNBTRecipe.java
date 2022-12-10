@@ -7,6 +7,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
@@ -21,8 +22,8 @@ import java.util.function.Supplier;
  */
 public class ShapedNBTRecipe extends ShapedRecipe {
 
-    public ShapedNBTRecipe(final ResourceLocation id, final String group, final int recipeWidth, final int recipeHeight, final NonNullList<Ingredient> ingredients, final ItemStack recipeOutput) {
-        super(id, group, recipeWidth, recipeHeight, ingredients, recipeOutput);
+    public ShapedNBTRecipe(final ResourceLocation id, final String group, final CraftingBookCategory category, final int recipeWidth, final int recipeHeight, final NonNullList<Ingredient> ingredients, final ItemStack recipeOutput) {
+        super(id, group, category, recipeWidth, recipeHeight, ingredients, recipeOutput);
     }
 
     /**
@@ -53,15 +54,17 @@ public class ShapedNBTRecipe extends ShapedRecipe {
             final String group = GsonHelper.getAsString(json, "group", "");
             final RecipeUtil.ShapedPrimer primer = RecipeUtil.parseShaped(json);
             final ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
+            CraftingBookCategory category = CraftingBookCategory.CODEC.byName(GsonHelper.getAsString(json, "category", null), CraftingBookCategory.MISC);
 
-            return consumer.create(recipeId, group, primer.getRecipeWidth(), primer.getRecipeHeight(), primer.getIngredients(), result);
+            return consumer.create(recipeId, group, category, primer.getRecipeWidth(), primer.getRecipeHeight(), primer.getIngredients(), result);
 
         }
 
         public ShapedRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             int i = buffer.readVarInt();
             int j = buffer.readVarInt();
-            String s = buffer.readUtf(32767);
+            final String group = buffer.readUtf(32767);
+            final String category = buffer.readUtf(32767);
             NonNullList<Ingredient> nonnulllist = NonNullList.withSize(i * j, Ingredient.EMPTY);
 
             for (int k = 0; k < nonnulllist.size(); ++k) {
@@ -69,13 +72,14 @@ public class ShapedNBTRecipe extends ShapedRecipe {
             }
 
             ItemStack itemstack = buffer.readItem();
-            return consumer.create(recipeId, s, i, j, nonnulllist, itemstack);
+            return consumer.create(recipeId, group, CraftingBookCategory.CODEC.byName(category, CraftingBookCategory.MISC), i, j, nonnulllist, itemstack);
         }
 
         public void toNetwork(FriendlyByteBuf buffer, ShapedRecipe recipe) {
             buffer.writeVarInt(recipe.getRecipeWidth());
             buffer.writeVarInt(recipe.getRecipeHeight());
             buffer.writeUtf(recipe.getGroup());
+            buffer.writeUtf(recipe.category().getSerializedName());
 
             for (Ingredient ingredient : recipe.getIngredients()) {
                 ingredient.toNetwork(buffer);

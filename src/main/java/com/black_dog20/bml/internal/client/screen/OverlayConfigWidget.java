@@ -35,19 +35,19 @@ public class OverlayConfigWidget extends AbstractWidget {
         Color4i color4f = getColor();
         int color1 = color4f.getValue();
         int color2 = color4f.getValue(100);
-        hLine(poseStack, this.x - 3, this.x + 1 + this.width + 1, this.y - 3, color1);
-        vLine(poseStack, this.x - 3, this.y + this.height + 1, this.y - 3, color1);
-        fill(poseStack, this.x - 2, this.y - 2, this.x + 2 + this.width, this.y + 1 + this.height, color2);
-        vLine(poseStack, this.x + this.width + 2, this.y + this.height + 1, this.y - 3, color1);
-        hLine(poseStack, this.x - 3, this.x + 1 + this.width + 1, this.y + this.height + 1, color1);
+        hLine(poseStack, this.getX() - 3, this.getX() + 1 + this.width + 1, this.getY() - 3, color1);
+        vLine(poseStack, this.getX() - 3, this.getY() + this.height + 1, this.getY() - 3, color1);
+        fill(poseStack, this.getX() - 2, this.getY() - 2, this.getX() + 2 + this.width, this.getY() + 1 + this.height, color2);
+        vLine(poseStack, this.getX() + this.width + 2, this.getY() + this.height + 1, this.getY() - 3, color1);
+        hLine(poseStack, this.getX() - 3, this.getX() + 1 + this.width + 1, this.getY() + this.height + 1, color1);
         overlay.getMessage()
-                .ifPresent(msg -> this.drawString(poseStack, minecraft.font, msg, this.x, this.y, 16777215));
+                .ifPresent(msg -> this.drawString(poseStack, minecraft.font, msg, this.getX(), this.getY(), 16777215));
     }
 
     @SubscribeEvent
     public void onMouseReleaseEvent(ScreenEvent.MouseButtonReleased.Post event) {
         if (isDragging) {
-            overlay.setPosition(x, y);
+            overlay.setPosition(getX(), getY());
             isDragging = false;
         }
     }
@@ -59,14 +59,14 @@ public class OverlayConfigWidget extends AbstractWidget {
         int windowWidth = mainWindow.getGuiScaledWidth();
         int windowHeight = mainWindow.getGuiScaledHeight();
 
-        this.x = MathUtil.clamp(Math.round((float) p_onDrag_1_ - ((float) this.width / 2)), 0, windowWidth - this.width);
-        this.y = MathUtil.clamp(Math.round((float) p_onDrag_3_ - ((float) this.height / 2)), 0, windowHeight - this.height);
+        this.setX(MathUtil.clamp(Math.round((float) p_onDrag_1_ - ((float) this.width / 2)), 0, windowWidth - this.width));
+        this.setY(MathUtil.clamp(Math.round((float) p_onDrag_3_ - ((float) this.height / 2)), 0, windowHeight - this.height));
     }
 
     @Override
     public void onRelease(double p_onClick_1_, double p_onClick_3_) {
         if (isDragging) {
-            overlay.setPosition(x, y);
+            overlay.setPosition(getX(), getY());
             isDragging = false;
         } else if (overlay.isStateChangeable()) {
             this.isActive = !overlay.getSate();
@@ -83,7 +83,7 @@ public class OverlayConfigWidget extends AbstractWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput p_169152_) {
+    public void updateWidgetNarration(NarrationElementOutput p_169152_) {
 
     }
 }

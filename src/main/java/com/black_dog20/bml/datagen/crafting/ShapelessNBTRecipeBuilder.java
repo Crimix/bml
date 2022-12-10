@@ -1,7 +1,6 @@
 package com.black_dog20.bml.datagen.crafting;
 
 import com.black_dog20.bml.init.BmlCrafting;
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
@@ -9,11 +8,11 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -34,18 +33,21 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
     private static final Field GROUP = ObfuscationReflectionHelper.findField(ShapelessRecipeBuilder.class, "group" /* group */);
     private static final Field INGREDIENTS = ObfuscationReflectionHelper.findField(ShapelessRecipeBuilder.class, "ingredients" /* ingredients */);
 
+    private final RecipeCategory category;
     private final ItemStack result;
     private final RecipeSerializer<?> serializer;
     private String itemGroup;
 
-    private ShapelessNBTRecipeBuilder(final ItemStack result) {
-        super(result.getItem(), result.getCount());
+    private ShapelessNBTRecipeBuilder(final RecipeCategory category, final ItemStack result) {
+        super(category, result.getItem(), result.getCount());
+        this.category = category;
         this.result = result;
         this.serializer = BmlCrafting.SHAPELESS_NBT.get();
     }
 
-    private ShapelessNBTRecipeBuilder(final ItemStack result, final RecipeSerializer<?> serializer) {
-        super(result.getItem(), result.getCount());
+    private ShapelessNBTRecipeBuilder(final RecipeCategory category, final ItemStack result, final RecipeSerializer<?> serializer) {
+        super(category, result.getItem(), result.getCount());
+        this.category = category;
         this.result = result;
         this.serializer = serializer;
     }
@@ -56,8 +58,8 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
      * @param result The end result of the recipe with its NBT data.
      * @return ShapelessNBTRecipeBuilder.
      */
-    public static ShapelessNBTRecipeBuilder shapelessNBTRecipe(final ItemStack result) {
-        return new ShapelessNBTRecipeBuilder(result);
+    public static ShapelessNBTRecipeBuilder shapelessNBTRecipe(final RecipeCategory category, final ItemStack result) {
+        return new ShapelessNBTRecipeBuilder(category, result);
     }
 
     /**
@@ -67,8 +69,8 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
      * @param result     the end result of the recipe with its NBT data.
      * @return ShapelessNBTRecipeBuilder.
      */
-    public static ShapelessNBTRecipeBuilder customShapelessNBTRecipe(final ItemStack result, final RecipeSerializer<?> serializer) {
-        return new ShapelessNBTRecipeBuilder(result, serializer);
+    public static ShapelessNBTRecipeBuilder customShapelessNBTRecipe(final RecipeCategory category, final ItemStack result, final RecipeSerializer<?> serializer) {
+        return new ShapelessNBTRecipeBuilder(category, result, serializer);
     }
 
     /**
@@ -213,8 +215,7 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
 
             String itemGroupName = itemGroup;
             if (itemGroupName == null) {
-                final CreativeModeTab itemGroup = Preconditions.checkNotNull(result.getItem().getItemCategory());
-                itemGroupName = itemGroup.getRecipeFolderName();
+                itemGroupName = category.getFolderName();
             }
 
             @SuppressWarnings("unchecked")
@@ -236,7 +237,7 @@ public class ShapelessNBTRecipeBuilder extends ShapelessRecipeBuilder {
         private final RecipeSerializer<?> serializer;
 
         private Result(final ResourceLocation id, final ItemStack result, final String group, final List<Ingredient> ingredients, final Advancement.Builder advancementBuilder, final ResourceLocation advancementID, final RecipeSerializer<?> serializer) {
-            super(id, result.getItem(), result.getCount(), group, ingredients, advancementBuilder, advancementID);
+            super(id, result.getItem(), result.getCount(), group, determineBookCategory(category), ingredients, advancementBuilder, advancementID);
             resultNBT = result.getTag();
             this.serializer = serializer;
         }

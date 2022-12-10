@@ -1,31 +1,27 @@
 package com.black_dog20.bml.datagen;
 
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.loot.packs.VanillaLootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
 import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
 import net.minecraft.world.level.storage.loot.functions.SetContainerContents;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Base class for loot table providers.
@@ -38,16 +34,16 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
     private static final Logger LOGGER = LogManager.getLogger();
 
     protected final Map<Block, LootTable.Builder> lootTables = new HashMap<>();
-    private final DataGenerator generator;
+    private final PackOutput packOutput;
 
     /**
      * The constructor for the provider.
      *
-     * @param generator the data generator.
+     * @param packOutput the pack output.
      */
-    public BaseLootTableProvider(DataGenerator generator) {
-        super(generator);
-        this.generator = generator;
+    public BaseLootTableProvider(PackOutput packOutput) {
+        super(packOutput, Set.of(), VanillaLootTableProvider.create(packOutput).getTables());
+        this.packOutput = packOutput;
     }
 
     /**
@@ -88,36 +84,5 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
     protected LootTable.Builder createStandardTable(Block block, BlockEntityType<?> type) {
         return createStandardTable(ForgeRegistries.BLOCKS.getKey(block).getPath(), block, type);
     }
-
-    @Override
-    public void run(CachedOutput cache) {
-        addTables();
-
-        Map<ResourceLocation, LootTable> tables = new HashMap<>();
-        for (Map.Entry<Block, LootTable.Builder> entry : lootTables.entrySet()) {
-            tables.put(entry.getKey().getLootTable(), entry.getValue().setParamSet(LootContextParamSets.BLOCK).build());
-        }
-        writeTables(cache, tables);
-    }
-
-    private void writeTables(CachedOutput cache, Map<ResourceLocation, LootTable> tables) {
-        Path outputFolder = this.generator.getOutputFolder();
-        tables.forEach((key, lootTable) -> {
-            Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
-            try {
-                DataProvider.saveStable( cache, LootTables.serialize(lootTable), path);
-            } catch (IOException e) {
-                LOGGER.error("Couldn't write loot table {} because {]", path, e);
-            }
-        });
-    }
-
-    /**
-     * The name of the generator.
-     *
-     * @return
-     */
-    @Override
-    public abstract String getName();
 }
 

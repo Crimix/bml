@@ -2,6 +2,7 @@ package com.black_dog20.bml.datagen.patchouli.objects;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.common.CreativeModeTabRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
@@ -128,7 +129,7 @@ public class Book {
     }
 
     public Book withCreativeTab(CreativeModeTab creative_tab) {
-        this.creative_tab = creative_tab.langId;
+        this.creative_tab = CreativeModeTabRegistry.getName(creative_tab).toString();
         return this;
     }
 

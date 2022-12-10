@@ -1,7 +1,7 @@
 package com.black_dog20.bml.utils.player;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,7 +30,7 @@ public class TeleportDestination {
     }
 
     public ResourceKey<Level> getDimension() {
-        return ResourceKey.create(Registry.DIMENSION_REGISTRY, dimension);
+        return ResourceKey.create(Registries.DIMENSION, dimension);
     }
 
     public BlockPos getPosition() {
