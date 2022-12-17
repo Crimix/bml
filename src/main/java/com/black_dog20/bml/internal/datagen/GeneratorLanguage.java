@@ -3,14 +3,14 @@ package com.black_dog20.bml.internal.datagen;
 import com.black_dog20.bml.Bml;
 import com.black_dog20.bml.datagen.BaseLanguageProvider;
 import net.minecraft.ChatFormatting;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 
 import static com.black_dog20.bml.internal.utils.InternalTranslations.Translations.*;
 
 public class GeneratorLanguage extends BaseLanguageProvider {
 
-    public GeneratorLanguage(DataGenerator gen) {
-        super(gen, Bml.MOD_ID, "en_us");
+    public GeneratorLanguage(PackOutput packOutput) {
+        super(packOutput, Bml.MOD_ID, "en_us");
     }
 
     @Override

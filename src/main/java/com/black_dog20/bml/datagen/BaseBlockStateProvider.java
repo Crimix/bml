@@ -1,6 +1,6 @@
 package com.black_dog20.bml.datagen;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
@@ -20,12 +20,12 @@ public abstract class BaseBlockStateProvider extends BlockStateProvider {
     /**
      * The constructor for the provider.
      *
-     * @param gen          the data generator.
+     * @param packOutput   the pack output.
      * @param modid        the mod id.
      * @param exFileHelper the existing file helper.
      */
-    public BaseBlockStateProvider(DataGenerator gen, String modid, ExistingFileHelper exFileHelper) {
-        super(gen, modid, exFileHelper);
+    public BaseBlockStateProvider(PackOutput packOutput, String modid, ExistingFileHelper exFileHelper) {
+        super(packOutput, modid, exFileHelper);
     }
 
 

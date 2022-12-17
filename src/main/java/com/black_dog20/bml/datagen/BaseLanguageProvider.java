@@ -3,7 +3,7 @@ package com.black_dog20.bml.datagen;
 import com.black_dog20.bml.utils.text.TextUtil;
 import com.black_dog20.bml.utils.translate.ITranslation;
 import net.minecraft.ChatFormatting;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -22,12 +22,12 @@ public abstract class BaseLanguageProvider extends LanguageProvider {
     /**
      * The constructor for the provider.
      *
-     * @param gen    the data generator.
+     * @param packOutput   the pack output.
      * @param modid  the mod id.
      * @param locale the locale.
      */
-    public BaseLanguageProvider(DataGenerator gen, String modid, String locale) {
-        super(gen, modid, locale);
+    public BaseLanguageProvider(PackOutput packOutput, String modid, String locale) {
+        super(packOutput, modid, locale);
         this.modid = modid;
     }
 

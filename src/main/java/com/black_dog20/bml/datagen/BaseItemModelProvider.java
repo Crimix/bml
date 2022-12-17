@@ -1,6 +1,6 @@
 package com.black_dog20.bml.datagen;
 
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
@@ -19,12 +19,12 @@ public abstract class BaseItemModelProvider extends ItemModelProvider {
     /**
      * The constructor for the provider.
      *
-     * @param generator          the data generator.
+     * @param packOutput   the pack output.
      * @param modid              the mod id.
      * @param existingFileHelper the existing file helper.
      */
-    public BaseItemModelProvider(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {
-        super(generator, modid, existingFileHelper);
+    public BaseItemModelProvider(PackOutput packOutput, String modid, ExistingFileHelper existingFileHelper) {
+        super(packOutput, modid, existingFileHelper);
     }
 
     /**
