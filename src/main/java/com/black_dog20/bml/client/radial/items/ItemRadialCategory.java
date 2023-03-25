@@ -45,8 +45,8 @@ public class ItemRadialCategory extends TextRadialCategory {
             viewModelPose.mulPoseMatrix(context.poseStack.last().pose());
             viewModelPose.translate(-8, -8, context.z);
             RenderSystem.applyModelViewMatrix();
-            context.itemRenderer.renderAndDecorateItem(stack, (int) context.x, (int) context.y);
-            context.itemRenderer.renderGuiItemDecorations(context.fontRenderer, stack, (int) context.x, (int) context.y, "");
+            context.itemRenderer.renderAndDecorateItem(context.poseStack, stack, (int) context.x, (int) context.y);
+            context.itemRenderer.renderGuiItemDecorations(context.poseStack, context.fontRenderer, stack, (int) context.x, (int) context.y, "");
             viewModelPose.popPose();
             RenderSystem.applyModelViewMatrix();
         } else {

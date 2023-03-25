@@ -85,7 +85,7 @@ public class ShapedNBTRecipe extends ShapedRecipe {
                 ingredient.toNetwork(buffer);
             }
 
-            buffer.writeItem(recipe.getResultItem());
+            buffer.writeItem(recipe.result);
         }
     }
 }

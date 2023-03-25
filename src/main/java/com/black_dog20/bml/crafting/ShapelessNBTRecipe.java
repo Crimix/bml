@@ -82,7 +82,7 @@ public class ShapelessNBTRecipe extends ShapelessRecipe {
                 ingredient.toNetwork(buffer);
             }
 
-            buffer.writeItem(recipe.getResultItem());
+            buffer.writeItem(recipe.result);
         }
     }
 }

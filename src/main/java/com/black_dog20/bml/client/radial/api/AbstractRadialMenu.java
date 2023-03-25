@@ -471,7 +471,6 @@ public abstract class AbstractRadialMenu extends Screen {
 
     private void drawBackground(PoseStack poseStack, float x, float y, float z, float radiusIn, float radiusOut) {
         RenderSystem.enableBlend();
-        RenderSystem.disableTexture();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -493,7 +492,6 @@ public abstract class AbstractRadialMenu extends Screen {
 
         tessellator.end();
 
-        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
 

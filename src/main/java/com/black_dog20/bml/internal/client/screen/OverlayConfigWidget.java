@@ -30,7 +30,7 @@ public class OverlayConfigWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
+    public void renderWidget(PoseStack poseStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
         Minecraft minecraft = Minecraft.getInstance();
         Color4i color4f = getColor();
         int color1 = color4f.getValue();

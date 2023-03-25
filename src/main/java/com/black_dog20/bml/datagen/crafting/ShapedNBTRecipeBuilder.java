@@ -161,6 +161,11 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
         return (ShapedNBTRecipeBuilder) super.group(group);
     }
 
+    @Override
+    public ShapedNBTRecipeBuilder showNotification(final boolean showNotification) {
+        return (ShapedNBTRecipeBuilder) super.showNotification(showNotification);
+    }
+
 
     /**
      * Builds the recipe.
@@ -222,7 +227,7 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
 
             final ResourceLocation advancementID = new ResourceLocation(id.getNamespace(), "recipes/" + itemGroupName + "/" + id.getPath());
 
-            consumer.accept(new Result(id, result, group, pattern, key, advancementBuilder, advancementID, serializer));
+            consumer.accept(new Result(id, result, group, pattern, key, advancementBuilder, advancementID, serializer, this.showNotification));
         } catch (final IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Failed to build Shaped NBT Recipe " + id, e);
         }
@@ -235,8 +240,8 @@ public class ShapedNBTRecipeBuilder extends ShapedRecipeBuilder {
         private final CompoundTag resultNBT;
         private final RecipeSerializer<?> serializer;
 
-        private Result(final ResourceLocation id, final ItemStack result, final String group, final List<String> pattern, final Map<Character, Ingredient> key, final Advancement.Builder advancementBuilder, final ResourceLocation advancementID, final RecipeSerializer<?> serializer) {
-            super(id, result.getItem(), result.getCount(), group, determineBookCategory(category), pattern, key, advancementBuilder, advancementID);
+        private Result(final ResourceLocation id, final ItemStack result, final String group, final List<String> pattern, final Map<Character, Ingredient> key, final Advancement.Builder advancementBuilder, final ResourceLocation advancementID, final RecipeSerializer<?> serializer, final boolean showNotification) {
+            super(id, result.getItem(), result.getCount(), group, determineBookCategory(category), pattern, key, advancementBuilder, advancementID, showNotification);
             resultNBT = result.getTag();
             this.serializer = serializer;
         }
