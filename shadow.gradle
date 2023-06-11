@@ -49,6 +49,8 @@ reobf {
     shadowJar {}
 }
 
+shadowJar.finalizedBy('reobfJar')
+
 // this replaces jar.finalizedBy('reobfJar') in the standard forge mod buildscript
 tasks.build.dependsOn reobfShadowJar
 jar.finalizedBy('reobfShadowJar')
