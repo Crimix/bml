@@ -27,8 +27,8 @@ sourceSets.main.resources { srcDir 'src/main/generated_resources' }
 
 replaceResourcePlaceholders {
     enabled true
-    filesToExpand "META-INF/mods.toml"
-    extraProperties "version"
+    filesToExpand "META-INF/mods.toml", "pack.mcmeta"
+    extraProperties "version", "mod_id"
 }
 
 repositories {
