@@ -42,7 +42,7 @@ shadowJar {
     exclude 'bml.refmap.json'
     minimize()
 
-    archiveClassifier '' // Replace the default jar
+    archiveClassifier.set('') // Replace the default jar
 }
 
 reobf {
