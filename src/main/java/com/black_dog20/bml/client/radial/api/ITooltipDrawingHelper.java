@@ -1,8 +1,11 @@
 package com.black_dog20.bml.client.radial.api;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ITooltipDrawingHelper {
@@ -10,10 +13,19 @@ public interface ITooltipDrawingHelper {
     /**
      * Draws tooltips
      *
-     * @param poseStack the PoseStack
      * @param tooltips  the tooltips
-     * @param mouseX    mouse x
-     * @param mouseY    mouse y
      */
-    void renderTooltip(PoseStack poseStack, List<Component> tooltips, int mouseX, int mouseY);
+    void renderTooltip(List<FormattedCharSequence> tooltips);
+
+    /**
+     * Draws tooltips
+     *
+     * @param tooltips  the tooltips
+     */
+    default void renderComponentTooltip(List<Component> tooltips) {
+        List<FormattedCharSequence> charSequences = new ArrayList<>();
+        for (Component component : tooltips) {
+            charSequences.addAll(Tooltip.splitTooltip(Minecraft.getInstance(), component));
+        }
+    }
 }

@@ -7,20 +7,20 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Radial item for an itemstack.
+ * Radial category for an itemstack.
  *
  * @author black_dog20
  */
-public class ItemstackRadialItem extends TextRadialItem implements IRadialItemStack {
+public class ItemstackRadialCategory extends TextRadialCategory implements IRadialItemStack {
 
     private final ItemStack stack;
 
-    public ItemstackRadialItem(ItemStack stack, Component text) {
+    public ItemstackRadialCategory(ItemStack stack, Component text) {
         super(text);
         this.stack = stack;
     }
 
-    public ItemstackRadialItem(ItemStack stack, Component text, ChatFormatting color) {
+    public ItemstackRadialCategory(ItemStack stack, Component text, ChatFormatting color) {
         super(text, color);
         this.stack = stack;
     }

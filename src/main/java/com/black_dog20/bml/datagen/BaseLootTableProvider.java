@@ -61,7 +61,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
      */
     protected LootTable.Builder createStandardTable(String name, Block block, BlockEntityType<?> type) {
         LootPool.Builder builder = LootPool.lootPool()
-                .name(name)
+                //.name(name)
                 .setRolls(ConstantValue.exactly(1))
                 .add(LootItem.lootTableItem(block)
                         .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))

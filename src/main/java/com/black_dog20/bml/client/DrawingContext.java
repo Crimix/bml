@@ -1,8 +1,7 @@
 package com.black_dog20.bml.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.gui.GuiGraphics;
 
 /*
 Note: This code is heavily inspired and has been modified from David Quintana's solution.
@@ -37,27 +36,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 public class DrawingContext {
-    public final PoseStack poseStack;
+    public final GuiGraphics guiGraphics;
     public final int width;
     public final int height;
     public final float x;
     public final float y;
     public final float z;
     public final Font fontRenderer;
-    public final ItemRenderer itemRenderer;
 
-    public DrawingContext(PoseStack poseStack, int width, int height, float x, float y, float z, Font fontRenderer, ItemRenderer itemRenderer) {
-        this.poseStack = poseStack;
+    public DrawingContext(GuiGraphics guiGraphics, int width, int height, float x, float y, float z, Font fontRenderer) {
+        this.guiGraphics = guiGraphics;
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
         this.z = z;
         this.fontRenderer = fontRenderer;
-        this.itemRenderer = itemRenderer;
     }
 
     public DrawingContext of(float x, float y) {
-        return new DrawingContext(poseStack, width, height, x, y, z, fontRenderer, itemRenderer);
+        return new DrawingContext(guiGraphics, width, height, x, y, z, fontRenderer);
     }
 }

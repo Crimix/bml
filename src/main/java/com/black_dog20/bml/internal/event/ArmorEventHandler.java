@@ -35,7 +35,7 @@ public class ArmorEventHandler {
         oldCap.ifPresent(o -> newCap.ifPresent(o::copyTo));
         for (ItemStack armor : event.getEntity().getInventory().armor) {
             if (!armor.isEmpty()) {
-                if (!event.getEntity().level.isClientSide) {
+                if (!event.getEntity().level().isClientSide) {
                     MinecraftForge.EVENT_BUS.post(new ArmorEvent.Equip(event.getEntity(), armor));
                 }
             }
@@ -46,7 +46,7 @@ public class ArmorEventHandler {
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         for (ItemStack armor : event.getEntity().getInventory().armor) {
             if (!armor.isEmpty()) {
-                if (!event.getEntity().level.isClientSide) {
+                if (!event.getEntity().level().isClientSide) {
                     MinecraftForge.EVENT_BUS.post(new ArmorEvent.Equip(event.getEntity(), armor));
                 }
             }
@@ -62,14 +62,14 @@ public class ArmorEventHandler {
             for (int i = 0; i < size; i++) {
                 ItemStack prev = cap.getStackInSlot(i);
                 ItemStack curr = event.player.getInventory().armor.get(i);
-                if (!ItemStack.isSame(prev, curr)) {
+                if (!ItemStack.isSameItem(prev, curr)) {
                     if (!prev.isEmpty()) {
-                        if (!event.player.level.isClientSide) {
+                        if (!event.player.level().isClientSide) {
                             MinecraftForge.EVENT_BUS.post(new ArmorEvent.Unequip(event.player, prev));
                         }
                     }
                     if (!curr.isEmpty()) {
-                        if (!event.player.level.isClientSide) {
+                        if (!event.player.level().isClientSide) {
                             MinecraftForge.EVENT_BUS.post(new ArmorEvent.Equip(event.player, curr));
                         }
                     }

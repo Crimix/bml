@@ -13,10 +13,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
@@ -184,9 +183,10 @@ public abstract class AbstractRadialMenu extends Screen {
      * @param y         the y point to draw from.
      * @param radiusOut the outer radius.
      */
-    public void drawFooter(PoseStack poseStack, float width, float y, float radiusOut) {
+    public void drawFooter(GuiGraphics guiGraphics, float width, float y, float radiusOut) {
         Component pageString = InternalTranslations.translate(PAGE_FOOTER, currentPage, maxPages);
-        font.drawShadow(poseStack, pageString, (width - font.width(pageString)) / 2.0f, y, 0xFFFFFFFF);
+        String text = TextUtil.getFormattedText(pageString);
+        guiGraphics.drawString(font, text, (width - font.width(pageString)) / 2.0f, y, 0xFFFFFFFF, true);
     }
 
     /**
@@ -351,9 +351,9 @@ public abstract class AbstractRadialMenu extends Screen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(poseStack, mouseX, mouseY, partialTicks);
-        draw(poseStack, partialTicks, mouseX, mouseY);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        draw(guiGraphics, partialTicks, mouseX, mouseY);
     }
 
     @Override
@@ -361,8 +361,9 @@ public abstract class AbstractRadialMenu extends Screen {
         return false;
     }
 
-    private void draw(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+    private void draw(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         updateAnimationState(partialTicks);
+        PoseStack poseStack = guiGraphics.pose();
 
         if (isClosed())
             return;
@@ -389,7 +390,7 @@ public abstract class AbstractRadialMenu extends Screen {
         poseStack.popPose();
 
         if (isReady()) {
-            drawItems(poseStack, x, y, z, width, height, font, itemRenderer);
+            drawItems(guiGraphics, x, y, z, width, height);
 
             Component currentCenterText = null;
             for (IRadialItem item : visibleItems) {
@@ -402,11 +403,12 @@ public abstract class AbstractRadialMenu extends Screen {
 
             if (currentCenterText != null && shouldDrawCenterText()) {
                 String text = TextUtil.getFormattedText(currentCenterText);
-                font.drawShadow(poseStack, text, (width - font.width(text)) / 2.0f, (height - font.lineHeight) / 2.0f, 0xFFFFFFFF);
+                //TODO CHECK
+                guiGraphics.drawString(font, text, (width - font.width(text)) / 2.0f, (height - font.lineHeight) / 2.0f, 0xFFFFFFFF, true);
             }
 
-            drawTooltips(poseStack, mouseX, mouseY);
-            drawFooter(poseStack, width, height / 2.0f + radiusOut * 1.05f, radiusOut);
+            drawTooltips(guiGraphics, mouseX, mouseY);
+            drawFooter(guiGraphics, width, height / 2.0f + radiusOut * 1.05f, radiusOut);
             drawHeader(poseStack, width, height / 2.0f - radiusOut * 1.05f - font.lineHeight, radiusOut);
             drawExtras(poseStack, radiusOut);
 
@@ -434,28 +436,28 @@ public abstract class AbstractRadialMenu extends Screen {
         animationProgress = openAnimation;
     }
 
-    private void drawTooltips(PoseStack poseStack, int mouseX, int mouseY) {
+    private void drawTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (int i = 0; i < visibleItems.size(); i++) {
             IRadialItem item = visibleItems.get(i);
             if (item.isHovered()) {
-                item.drawTooltips(createDrawingContext(poseStack, width, height, mouseX, mouseY, 0));
+                item.drawTooltips(createDrawingContext(guiGraphics, width, height, mouseX, mouseY, 0));
             }
         }
     }
 
-    private void drawItems(PoseStack poseStack, int x, int y, float z, int width, int height, Font font, ItemRenderer itemRenderer) {
+    private void drawItems(GuiGraphics guiGraphics, int x, int y, float z, int width, int height) {
         iterateVisible((item, s, e) -> {
             float middle = (s + e) * 0.5f;
             float posX = x + itemRadius * (float) Math.cos(middle);
             float posY = y + itemRadius * (float) Math.sin(middle);
 
-            item.draw(createDrawingContext(poseStack, width, height, posX, posY, z));
+            item.draw(createDrawingContext(guiGraphics, width, height, posX, posY, z));
         });
     }
 
     @NotNull
-    private RadialDrawingContext createDrawingContext(PoseStack poseStack, int width, int height, float x, float y, float z) {
-        return new RadialDrawingContext(poseStack, width, height, x, y, z, font, itemRenderer, AbstractRadialMenu.this::renderComponentTooltip);
+    private RadialDrawingContext createDrawingContext(GuiGraphics guiGraphics, int width, int height, float x, float y, float z) {
+        return new RadialDrawingContext(guiGraphics, width, height, x, y, z, font, AbstractRadialMenu.this::setTooltipForNextRenderPass);
     }
 
     private void iterateVisible(TriConsumer<IRadialItem, Float, Float> consumer) {

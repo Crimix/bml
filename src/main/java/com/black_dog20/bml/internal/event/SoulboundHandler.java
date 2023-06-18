@@ -18,7 +18,7 @@ public class SoulboundHandler {
     public static void onPlayerDeath(LivingDeathEvent event) {
         if (event.getEntity() != null && event.getEntity() instanceof Player && !(event.getEntity() instanceof FakePlayer)) {
             Player player = (Player) event.getEntity();
-            if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
+            if (player.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
                 return;
             if (event.isCanceled())
                 return;
@@ -37,7 +37,7 @@ public class SoulboundHandler {
         Player player = event.getEntity();
         Player original = event.getOriginal();
 
-        if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
+        if (player.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
             return;
 
         if (original.equals(player) || original.getInventory().equals(player.getInventory()) || (original.getInventory().armor.equals(player.getInventory().armor) && original.getInventory().items.equals(player.getInventory().items)))

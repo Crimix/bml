@@ -1,7 +1,7 @@
 package com.black_dog20.bml.client.overlay;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
@@ -28,7 +28,7 @@ public abstract class GameOverlay {
          * @param scaledwidth  the scaled width of the window.
          * @param scaledheight the scaled height of the window.
          */
-        public abstract void onRender(PoseStack poseStack, int scaledwidth, int scaledheight);
+        public abstract void onRender(GuiGraphics guiGraphics, int scaledwidth, int scaledheight);
 
         @SubscribeEvent
         public void onOverlayRender(RenderGuiOverlayEvent.Pre event) {
@@ -36,7 +36,7 @@ public abstract class GameOverlay {
                 return;
             int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
-            onRender(event.getPoseStack(), width, height);
+            onRender(event.getGuiGraphics(), width, height);
             if (event.isCancelable())
                 event.setCanceled(doesCancelEvent());
         }
@@ -54,7 +54,7 @@ public abstract class GameOverlay {
          * @param scaledwidth  the scaled width of the window.
          * @param scaledheight the scaled height of the window.
          */
-        public abstract void onRender(PoseStack poseStack, int scaledwidth, int scaledheight);
+        public abstract void onRender(GuiGraphics guiGraphics, int scaledwidth, int scaledheight);
 
         @SubscribeEvent
         public void onOverlayRender(RenderGuiOverlayEvent.Post event) {
@@ -62,7 +62,7 @@ public abstract class GameOverlay {
                 return;
             int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();
             int height = Minecraft.getInstance().getWindow().getGuiScaledHeight();
-            onRender(event.getPoseStack(), width, height);
+            onRender(event.getGuiGraphics(), width, height);
             if (event.isCancelable())
                 event.setCanceled(doesCancelEvent());
         }

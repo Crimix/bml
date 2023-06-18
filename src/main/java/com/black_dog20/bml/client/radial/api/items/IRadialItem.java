@@ -30,7 +30,7 @@ public interface IRadialItem {
      */
     default void drawTooltips(RadialDrawingContext context) {
         List<Component> tooltips = getTooltips();
-        context.getTooltipDrawingHelper().renderTooltip(context.poseStack, tooltips, (int) context.x, (int) context.y);
+        context.getTooltipDrawingHelper().renderComponentTooltip(tooltips);
     }
 
     /**

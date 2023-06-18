@@ -4,8 +4,8 @@ import com.black_dog20.bml.client.rows.RowDrawingContext;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.multiplayer.PlayerInfo;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 
@@ -54,15 +54,16 @@ public class HeadColumn extends Column {
 
         if (display) {
             boolean flag1 = entityplayer != null && entityplayer.isModelPartShown(PlayerModelPart.CAPE) && ("Dinnerbone".equals(gameprofile.getName()) || "Grumm".equals(gameprofile.getName()));
-            RenderSystem.setShaderTexture(0, info.getSkinLocation());
+            ResourceLocation location = info.getSkinLocation();
+            RenderSystem.setShaderTexture(0, location);
             int l2 = 8 + (flag1 ? 8 : 0);
             int i3 = 8 * (flag1 ? -1 : 1);
-            GuiComponent.blit(context.poseStack, (int) context.x, (int) context.y, 8, 8, 8.0F, (float) l2, 8, i3, 64, 64);
+            context.guiGraphics.blit(location, (int) context.x, (int) context.y, 8, 8, 8.0F, (float) l2, 8, i3, 64, 64);
 
             if (entityplayer != null && entityplayer.isModelPartShown(PlayerModelPart.HAT)) {
                 int j3 = 8 + (flag1 ? 8 : 0);
                 int k3 = 8 * (flag1 ? -1 : 1);
-                GuiComponent.blit(context.poseStack, (int) context.x, (int) context.y, 8, 8, 40.0F, (float) j3, 8, k3, 64, 64);
+                context.guiGraphics.blit(location, (int) context.x, (int) context.y, 8, 8, 40.0F, (float) j3, 8, k3, 64, 64);
             }
         }
     }

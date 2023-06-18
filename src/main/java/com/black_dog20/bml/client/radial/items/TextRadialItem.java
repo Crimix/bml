@@ -13,9 +13,9 @@ import net.minecraft.network.chat.Component;
  */
 public class TextRadialItem implements IRadialItem {
 
-    private final Component text;
-    private final int color;
-    private boolean hovered;
+    protected final Component text;
+    protected final int color;
+    protected boolean hovered;
 
     public TextRadialItem(Component text) {
         this.text = text;
@@ -32,14 +32,18 @@ public class TextRadialItem implements IRadialItem {
      */
     @Override
     public void draw(RadialDrawingContext context) {
+        drawComponent(context, text);
+    }
+
+    protected void drawComponent(RadialDrawingContext context, Component component) {
         float y = context.y;
-        MultiLineLabel lines = MultiLineLabel.create(context.fontRenderer, text, 60);
+        MultiLineLabel lines = MultiLineLabel.create(context.fontRenderer, component, 60);
         if (lines.getLineCount() > 1) {
             y = y - context.fontRenderer.lineHeight / 1.5f;
         } else {
             y = y - context.fontRenderer.lineHeight / 2.0f;
         }
-        lines.renderCentered(context.poseStack, (int) context.x, (int) y, context.fontRenderer.lineHeight, color);
+        lines.renderCentered(context.guiGraphics, (int) context.x, (int) y, context.fontRenderer.lineHeight, color);
     }
 
     /**

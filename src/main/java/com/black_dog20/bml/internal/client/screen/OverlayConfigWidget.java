@@ -4,8 +4,8 @@ import com.black_dog20.bml.client.overlay.configure.IConfigurableOverlay;
 import com.black_dog20.bml.utils.color.Color4i;
 import com.black_dog20.bml.utils.math.MathUtil;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.CommonComponents;
@@ -30,18 +30,18 @@ public class OverlayConfigWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
+    public void renderWidget(GuiGraphics guiGraphics, int p_renderButton_1_, int p_renderButton_2_, float p_renderButton_3_) {
         Minecraft minecraft = Minecraft.getInstance();
         Color4i color4f = getColor();
         int color1 = color4f.getValue();
         int color2 = color4f.getValue(100);
-        hLine(poseStack, this.getX() - 3, this.getX() + 1 + this.width + 1, this.getY() - 3, color1);
-        vLine(poseStack, this.getX() - 3, this.getY() + this.height + 1, this.getY() - 3, color1);
-        fill(poseStack, this.getX() - 2, this.getY() - 2, this.getX() + 2 + this.width, this.getY() + 1 + this.height, color2);
-        vLine(poseStack, this.getX() + this.width + 2, this.getY() + this.height + 1, this.getY() - 3, color1);
-        hLine(poseStack, this.getX() - 3, this.getX() + 1 + this.width + 1, this.getY() + this.height + 1, color1);
+        guiGraphics.hLine(this.getX() - 3, this.getX() + 1 + this.width + 1, this.getY() - 3, color1);
+        guiGraphics.vLine(this.getX() - 3, this.getY() + this.height + 1, this.getY() - 3, color1);
+        guiGraphics.fill(this.getX() - 2, this.getY() - 2, this.getX() + 2 + this.width, this.getY() + 1 + this.height, color2);
+        guiGraphics.vLine(this.getX() + this.width + 2, this.getY() + this.height + 1, this.getY() - 3, color1);
+        guiGraphics.hLine(this.getX() - 3, this.getX() + 1 + this.width + 1, this.getY() + this.height + 1, color1);
         overlay.getMessage()
-                .ifPresent(msg -> this.drawString(poseStack, minecraft.font, msg, this.getX(), this.getY(), 16777215));
+                .ifPresent(msg -> guiGraphics.drawString(minecraft.font, msg, this.getX(), this.getY(), 16777215));
     }
 
     @SubscribeEvent

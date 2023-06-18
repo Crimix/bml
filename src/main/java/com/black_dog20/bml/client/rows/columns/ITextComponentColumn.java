@@ -67,7 +67,7 @@ public class ITextComponentColumn extends Column {
                     x += (context.columnMaxWidth / 2F - valueWidth / 2F);
                     break;
             }
-            context.fontRenderer.drawShadow(context.poseStack, component, x, context.y, -1);
+            context.guiGraphics.drawString(context.fontRenderer, component, (int)x, (int)context.y, -1, true);
         }
     }
 
