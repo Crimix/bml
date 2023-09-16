@@ -49,9 +49,6 @@
   "1.19.4": {
     "1.1.8": "https://github.com/Crimix/bml/blob/1.19.4/CHANGELOG.md"
   },
-  "1.20": {
-    "1.1.8": "https://github.com/Crimix/bml/blob/1.20/CHANGELOG.md"
-  },
   "1.20.1": {
     "1.1.8": "https://github.com/Crimix/bml/blob/1.20/CHANGELOG.md"
   },
@@ -82,8 +79,6 @@
     "1.19.3-recommended": "1.1.8",
     "1.19.4-latest": "1.1.8",
     "1.19.4-recommended": "1.1.8",
-    "1.20-latest": "1.1.8",
-    "1.20-recommended": "1.1.8",
     "1.20.1-latest": "1.1.8",
     "1.20.1-recommended": "1.1.8"
   }
